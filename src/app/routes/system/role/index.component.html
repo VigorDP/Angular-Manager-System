@@ -1,0 +1,38 @@
+<page-header title="角色管理" autoBreadcrumb="false" fixed="true" [action]="action">
+  <ng-template #action>
+    <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
+      <i nz-icon nzType="plus"></i>
+      <span>新增角色</span>
+    </button>
+  </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="100">
+    <se label="角色名称" col="4" style="margin-bottom: 0">
+      <input nz-input [(ngModel)]="query.name" name="name" />
+    </se>
+    <se col="4">
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+</nz-card>
+
+<!-- 新建或修改模板 -->
+<ng-template #modalContent>
+  <form nz-form se-container labelWidth="90">
+    <se label="角色名称" col="1" required>
+      <input nz-input [(ngModel)]="selectedRow.name" name="name" />
+    </se>
+    <se label="分配权限" col="1" required>
+      <nz-tree [nzData]="userRightTree" [nzCheckedKeys]="moduleIds" [nzSelectedKeys]="moduleIds" nzMultiple nzCheckable
+        (nzCheckBoxChange)="nzEvent($event)"></nz-tree>
+    </se>
+  </form>
+</ng-template>

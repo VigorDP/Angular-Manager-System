@@ -1,0 +1,80 @@
+<page-header title="物业公司账号管理" autoBreadcrumb="false" fixed="true" [action]="action">
+  <ng-template #action>
+    <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
+      <i nz-icon nzType="plus"></i>
+      <span>新建物业公司账号</span>
+    </button>
+  </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="110">
+    <se label="所属物业公司" col="4">
+      <nz-select name="company" [(ngModel)]="query.enterpriseGroupId" [nzPlaceHolder]="'请选择所属物业公司'"
+        [nzShowSearch]="true">
+        <nz-option *ngFor="let i of companyList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="姓名" col="4">
+      <input nz-input [(ngModel)]="query.name" name="name" />
+    </se>
+    <se label="用户名" col="4">
+      <input nz-input [(ngModel)]="query.account" name="account" />
+    </se>
+    <se label="角色" col="4">
+      <nz-select name="role" [(ngModel)]="query.ramId" [nzPlaceHolder]="'请选择角色'" [nzShowSearch]="true">
+        <nz-option *ngFor="let i of roleList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="手机号" col="4">
+      <input nz-input [(ngModel)]="query.tel" name="tel" />
+    </se>
+    <se col="4">
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+</nz-card>
+
+
+<!-- 新建或修改账号模板 -->
+<ng-template #modalContent>
+  <form nz-form se-container labelWidth="140">
+    <se label="用户名" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.account" name="account" />
+    </se>
+    <se label="所属物业公司" col="2" required>
+      <nz-select name="enterpriseGroupId" [(ngModel)]="selectedRow.enterpriseGroupId" [nzPlaceHolder]="'请选择所属物业公司'"
+        [nzShowSearch]="true">
+        <nz-option *ngFor="let i of companyList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="姓名" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.name" name="name" />
+    </se>
+    <se label="手机号" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
+    </se>
+    <se label="性别" col="2" required>
+      <nz-select name="gender" [(ngModel)]="selectedRow.genderEnum" [nzPlaceHolder]="'请选择性别'" [nzShowSearch]="true">
+        <nz-option *ngFor="let i of genderList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="用户密码" col="2" required>
+      <input nz-input type="password" [(ngModel)]="selectedRow.pwd" name="pwd" />
+    </se>
+    <se label="确认密码" col="2" required>
+      <input nz-input type="password" [(ngModel)]="selectedRow.pwdRepeat" name="pwdRepeat" />
+    </se>
+    <se label="角色" col="2" required>
+      <nz-select name="role" [(ngModel)]="selectedRow.roleCateEnum" [nzPlaceHolder]="'请选择角色'" [nzShowSearch]="true">
+        <nz-option *ngFor="let i of roleList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+  </form>
+</ng-template>

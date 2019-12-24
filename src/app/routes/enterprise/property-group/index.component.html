@@ -1,0 +1,122 @@
+<page-header title="物业集团公司管理" autoBreadcrumb="false" fixed="true" [action]="action">
+  <ng-template #action>
+    <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
+      <i nz-icon nzType="plus"></i>
+      <span>新增物业集团公司</span>
+    </button>
+  </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="130">
+    <se label="所属省份" col="4">
+      <nz-select [(ngModel)]="query.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleProvinceSelected($event)">
+        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属城市" col="4">
+      <nz-select [(ngModel)]="query.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleCitySelected($event)">
+        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属区/县" col="4">
+      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="物业集团公司名称" col="4">
+      <input nz-input [(ngModel)]="query.name " name="name " />
+    </se>
+    <se label="下属物业公司" col="4">
+      <input nz-input [(ngModel)]="query.enterpriseName" name="enterpriseName" />
+    </se>
+    <se label="负责人" col="4">
+      <input nz-input [(ngModel)]="query.contact" name="contact" />
+    </se>
+    <se label="负责人手机号" col="4">
+      <input nz-input [(ngModel)]="query.contactTel" name="contactTel" />
+    </se>
+    <!-- <se label="审核状态" col="4">
+      <nz-select [(ngModel)]="query.grade" name="status" [nzPlaceHolder]="'请选择'" >
+        <nz-option *ngFor="let i of status" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se> -->
+    <se col="4">
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+</nz-card>
+
+<!-- 新建或修改物业集团公司模板 -->
+<ng-template #modalContent>
+  <form nz-form se-container labelWidth="140">
+    <se label="物业集团公司名称" col="1" required>
+      <input nz-input [(ngModel)]="selectedRow.name" name="name" />
+    </se>
+    <se label="法人" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.delegate" name="delegate" />
+    </se>
+    <se label="负责人" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.contact " name="contact " />
+    </se>
+    <se label="法人身份证国徽面" col="2" required>
+      <app-img-upload (getImgUrl)="getImgUrl($event,'front')" [inputUrls]="[selectedRow.idFrontUrl]"></app-img-upload>
+    </se>
+    <se label="法人身份证人像面" col="2" required>
+      <app-img-upload (getImgUrl)="getImgUrl($event,'back')" [inputUrls]="[selectedRow.idBackUrl]"></app-img-upload>
+    </se>
+    <se label="负责人手机号" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.contactTel " name="contactTel " />
+    </se>
+    <se label="公司座机号" col="2">
+      <input nz-input [(ngModel)]="selectedRow.landPhone " name="landPhone " />
+    </se>
+    <se label="营业执照(三合一)" col="2" required>
+      <app-img-upload (getImgUrl)="getImgUrl($event,'licenseUrl')" [inputUrls]="[selectedRow.licenseUrl]">
+      </app-img-upload>
+    </se>
+    <se label="纳税人识别码" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.taxCode  " name="taxCode  " />
+    </se>
+    <se label="对公银行" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.publicBank " name="publicBank " />
+    </se>
+    <se label="对公账户" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.publicAccount " name="publicAccount " />
+    </se>
+    <se label="开户行地址" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.bankAddress " name="bankAddress " />
+    </se>
+    <se label="所属省份" col="2">
+      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleProvinceSelected($event)">
+        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属城市" col="2">
+      <nz-select [(ngModel)]="selectedRow.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleCitySelected($event)">
+        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属地区" col="2">
+      <nz-select [(ngModel)]="selectedRow.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="公司详细地址" col="1">
+      <input nz-input [(ngModel)]="selectedRow.address " name="address " />
+    </se>
+    <se label="备注" col="1">
+      <input nz-input [(ngModel)]="selectedRow.descr " name="descr " />
+    </se>
+  </form>
+</ng-template>

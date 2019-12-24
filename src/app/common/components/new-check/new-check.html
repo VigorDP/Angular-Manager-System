@@ -1,0 +1,28 @@
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="title" [nzMaskClosable]="false" [nzZIndex]="5" nzWidth="500"
+  [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+  <ng-template #modalContent>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>审核结果</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-radio-group [(ngModel)]="ownerData.flag">
+          <label nz-radio [nzValue]="o.name" *ngFor="let o of AllowList">{{ o.alias }}</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">不通过原因</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <textarea rows="4" nz-input [(ngModel)]="ownerData.checkReason" [disabled]="ownerData.flag" maxlength="50"
+          placeholder="不超过50个字"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <div style="text-align: center">
+      <button nz-button nzType="primary" (click)="handleOk()">确认</button>
+      <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+    </div>
+  </ng-template>
+</nz-modal>
