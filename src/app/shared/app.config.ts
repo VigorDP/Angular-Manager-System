@@ -8,7 +8,7 @@
 
 export const config = {
   app: {
-    name: '智慧社区云平台管理系统(集团版)',
+    name: '智慧社区云平台管理系统(物业版)',
     description: '基于 Angular 技术栈的管理系统',
   },
   user: {

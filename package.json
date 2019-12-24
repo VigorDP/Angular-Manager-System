@@ -1,8 +1,8 @@
 {
-  "name": "hl-manage-frontend",
+  "name": "hl-social-frontend",
   "version": "1.0.0",
   "scripts": {
-    "start": "ng serve -c=hmr -o --port 4202",
+    "start": "ng serve -c=hmr -o --port 4203",
     "build": "node --max_old_space_size=5120 ./node_modules/@angular/cli/bin/ng build --prod",
     "lint": "npm run lint:ts && npm run lint:style",
     "color-less": "node scripts/color-less.js",

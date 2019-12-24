@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "hl-group-frontend": {
+    "hl-social-frontend": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -62,16 +62,16 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "hl-group-frontend:build",
+            "browserTarget": "hl-social-frontend:build",
             "hmrWarning": false,
             "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "hl-group-frontend:build:production"
+              "browserTarget": "hl-social-frontend:build:production"
             },
             "hmr": {
-              "browserTarget": "hl-group-frontend:build:hmr",
+              "browserTarget": "hl-social-frontend:build:hmr",
               "hmr": true
             }
           }
@@ -90,7 +90,7 @@
       }
     }
   },
-  "defaultProject": "hl-group-frontend",
+  "defaultProject": "hl-social-frontend",
   "schematics": {
     "ng-alain:module": {
       "routing": true,
