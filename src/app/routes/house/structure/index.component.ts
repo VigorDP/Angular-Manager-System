@@ -21,7 +21,7 @@ import {
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectComponent implements OnInit {
+export class StructureComponent implements OnInit {
   query = query;
   pages = pages;
   total = total;

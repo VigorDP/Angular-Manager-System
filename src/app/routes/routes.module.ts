@@ -13,7 +13,7 @@ import { UserRegisterComponent } from './passport/register/register.component';
 import { UserRegisterResultComponent } from './passport/register-result/register-result.component';
 
 // 业务页面
-import { PersonComponent } from './system/person/index.component';
+import { PersonComponent } from './system/account/index.component';
 import { RoleComponent } from './system/role/index.component';
 
 export const COMPONENTS = [
@@ -33,22 +33,26 @@ const routes: Routes = [
       {
         path: 'system',
         children: [
-          { path: '', redirectTo: 'person', pathMatch: 'full' },
-          { path: 'person', component: PersonComponent, data: { title: '人员管理' } },
+          { path: '', redirectTo: 'account', pathMatch: 'full' },
+          { path: 'account', component: PersonComponent, data: { title: '账号管理' } },
           { path: 'role', component: RoleComponent, data: { title: '角色管理' } },
         ],
       },
       {
-        path: 'enterprise',
-        loadChildren: () => import('./enterprise/enterprise.module').then(m => m.EnterpriseModule),
-      },
-      {
-        path: 'account',
-        loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
-      },
-      {
         path: 'social',
         loadChildren: () => import('./social/social.module').then(m => m.SocialModule),
+      },
+      {
+        path: 'house',
+        loadChildren: () => import('./house/house.module').then(m => m.HouseModule),
+      },
+      {
+        path: 'people',
+        loadChildren: () => import('./people/people.module').then(m => m.PeopleModule),
+      },
+      {
+        path: 'fee',
+        loadChildren: () => import('./fee/fee.module').then(m => m.FeeModule),
       },
     ],
   },

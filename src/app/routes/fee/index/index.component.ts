@@ -21,7 +21,7 @@ import {
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectComponent implements OnInit {
+export class FeeComponent implements OnInit {
   query = query;
   pages = pages;
   total = total;
@@ -119,7 +119,7 @@ export class ProjectComponent implements OnInit {
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新建社区' : '编辑社区',
+      nzTitle: type === 'add' ? '新增住户' : '编辑住户',
       nzContent: tpl,
       nzWidth: 800,
       nzOnOk: () => {

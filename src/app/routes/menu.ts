@@ -22,8 +22,8 @@ export const menus: Menu[] = [
         icon: 'anticon-home',
         children: [
           {
-            text: '人员管理',
-            link: '/system/person',
+            text: '账号管理',
+            link: '/system/account',
             reuse: false,
           },
           {
@@ -34,43 +34,36 @@ export const menus: Menu[] = [
         ],
       },
       {
-        text: '企业管理',
-        link: '/enterprise',
-        icon: 'anticon-fire',
-        children: [
-          {
-            text: '物业集团公司',
-            link: '/enterprise/property-group',
-            reuse: false,
-          },
-          {
-            text: '物业公司',
-            link: '/enterprise/property',
-            reuse: false,
-          },
-        ],
-      },
-      {
-        text: '企业账号管理',
-        link: '/account',
-        icon: 'anticon-user',
-        children: [
-          {
-            text: '物业集团公司',
-            link: '/account/property-group',
-            reuse: false,
-          },
-          {
-            text: '物业公司',
-            link: '/account/property',
-            reuse: false,
-          },
-        ],
-      },
-      {
         text: '社区管理',
         link: '/social',
         icon: 'anticon-folder',
+      },
+      {
+        text: '房屋管理',
+        link: '/house',
+        icon: 'anticon-apartment',
+        children: [
+          {
+            text: '户室信息',
+            link: '/house/usage',
+            reuse: false,
+          },
+          {
+            text: '楼栋结构',
+            link: '/house/structure',
+            reuse: false,
+          },
+        ],
+      },
+      {
+        text: '住户管理',
+        link: '/people',
+        icon: 'anticon-user',
+      },
+      {
+        text: '缴费管理',
+        link: '/fee',
+        icon: 'anticon-money-collect',
       },
     ],
   },

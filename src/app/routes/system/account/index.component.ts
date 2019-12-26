@@ -109,7 +109,7 @@ export class PersonComponent implements OnInit {
       });
     }
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新建成员' : '编辑成员',
+      nzTitle: type === 'add' ? '新建账号' : '编辑账号',
       nzContent: tpl,
       nzOnOk: () => {
         if (this.checkValid()) {

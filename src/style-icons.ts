@@ -9,7 +9,8 @@ import {
   HomeOutline,
   UserOutline,
   FolderOutline,
-  FireOutline,
+  ApartmentOutline,
+  MoneyCollectOutline,
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS = [
@@ -21,5 +22,6 @@ export const ICONS = [
   HomeOutline,
   UserOutline,
   FolderOutline,
-  FireOutline,
+  ApartmentOutline,
+  MoneyCollectOutline,
 ];
