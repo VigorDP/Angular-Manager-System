@@ -37,7 +37,7 @@ export class ResponseInterceptor implements HttpInterceptor {
                   this.router.navigate([this.tokenService.login_url]);
                 }
                 // tslint:disable-next-line: no-unused-expression
-                response.body.msg && this.messageService.error(message);
+                this.messageService.error(message);
               } else {
                 this.messageService.success(response.body.msg);
               }
