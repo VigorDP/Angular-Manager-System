@@ -1,9 +1,9 @@
 {
-  "/hl/manager/": {
-    "target": "http://120.79.243.165:6001",
+  "/hl/social/": {
+    "target": "http://120.79.243.165:6004",
     "changeOrigin":true,
     "pathRewrite": {
-      "/hl/manager/": "/hl/manager/"
+      "/hl/social/": "/hl/social/"
     },
     "secure": false
   }

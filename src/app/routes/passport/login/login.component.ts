@@ -72,7 +72,6 @@ export class UserLoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const { token = '' } = this.tokenService.get() || {};
-    console.log('object', token);
     if (token) {
       const id = this.msg.loading('自动登陆中...', { nzDuration: 0 }).messageId;
       setTimeout(() => {
@@ -133,6 +132,8 @@ export class UserLoginComponent implements OnInit, OnDestroy {
               ...config.user,
               name: res.data.name,
               id: res.data.id,
+              role: res.data.role,
+              ramId: res.data.ramId,
             });
             this.router.navigateByUrl('system/person', { replaceUrl: true });
           }

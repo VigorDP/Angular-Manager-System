@@ -1,15 +1,15 @@
 import { _HttpClient } from '@delon/theme';
 import { Injectable } from '@angular/core';
 
-const PREFIX = '/hl/manager/';
+const PREFIX = '/hl/social/';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
   constructor(private http: _HttpClient) {}
   // 登录
-  login = (params: any) => this.http.post(`${PREFIX}operator/login`, params);
+  login = (params: any) => this.http.post(`${PREFIX}propertyAccount/login `, params);
   // 退出登录
-  logout = () => this.http.get(`${PREFIX}operator/logout`);
+  logout = () => this.http.get(`${PREFIX}propertyAccount/logout`);
   // 角色管理-获取角色列表
   getRoleList = (params: any) => this.http.post(`${PREFIX}ramRole/list`, params);
   // 角色管理-删除角色
