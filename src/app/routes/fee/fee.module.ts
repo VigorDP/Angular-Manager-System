@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared';
 import { Routes, RouterModule } from '@angular/router';
-import { FeeComponent } from './index/index.component';
+import { FeeOfflineComponent } from '@app/routes/fee/fee-offline/index.component';
+import { FeeStandardComponent } from '@app/routes/fee/fee-standard/index.component';
 
-const COMPONENTS = [FeeComponent];
+const COMPONENTS = [FeeOfflineComponent, FeeStandardComponent];
 
 const routes: Routes = [
-  { path: '', redirectTo: 'index', pathMatch: 'full' },
-  { path: 'index', component: FeeComponent, data: { title: '缴费管理' } },
+  { path: '', redirectTo: 'offline', pathMatch: 'full' },
+  { path: 'offline', component: FeeOfflineComponent, data: { title: '线下缴费' } },
+  { path: 'standard', component: FeeStandardComponent, data: { title: '物业费用标准设置' } },
 ];
 
 @NgModule({
@@ -15,4 +17,5 @@ const routes: Routes = [
   declarations: [...COMPONENTS],
   exports: [RouterModule],
 })
-export class FeeModule {}
+export class FeeModule {
+}

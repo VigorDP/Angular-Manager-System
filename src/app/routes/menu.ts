@@ -64,6 +64,18 @@ export const menus: Menu[] = [
         text: '缴费管理',
         link: '/fee',
         icon: 'anticon-money-collect',
+        children: [
+          {
+            text: '线下缴费',
+            link: '/fee/offline',
+            reuse: false,
+          },
+          {
+            text: '费用标准管理',
+            link: '/fee/standard',
+            reuse: false,
+          },
+        ],
       },
     ],
   },
