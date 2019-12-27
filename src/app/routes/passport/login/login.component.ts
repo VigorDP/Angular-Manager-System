@@ -134,6 +134,8 @@ export class UserLoginComponent implements OnInit, OnDestroy {
               id: res.data.id,
               role: res.data.role,
               ramId: res.data.ramId,
+              propertyCompanyId: res.data.propertyCompanyId,
+              propertyCompanyName: res.data.propertyCompanyName,
             });
             this.router.navigateByUrl('system/account', { replaceUrl: true });
           }

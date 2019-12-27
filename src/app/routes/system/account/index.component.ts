@@ -87,7 +87,7 @@ export class PersonComponent implements OnInit {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getPersonList({ ...this.query, loading: true }).subscribe(res => {
+    this.api.getPropertyAccountList({ ...this.query, loading: true }).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -102,7 +102,7 @@ export class PersonComponent implements OnInit {
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     if (type === 'edit') {
-      this.api.getPersonInfo({ id: this.selectedRow.id }).subscribe(res => {
+      this.api.getPropertyAccountInfo({ id: this.selectedRow.id }).subscribe(res => {
         if (res.code === '0') {
           this.selectedRow = { ...this.selectedRow, ...res.data };
         }
@@ -114,7 +114,7 @@ export class PersonComponent implements OnInit {
       nzOnOk: () => {
         if (this.checkValid()) {
           this.loading = true;
-          this.api.savePerson(this.selectedRow).subscribe(() => this.getData());
+          this.api.savePropertyAccount(this.selectedRow).subscribe(() => this.getData());
         } else {
           return false;
         }
@@ -164,7 +164,7 @@ export class PersonComponent implements OnInit {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deletePerson([this.selectedRow.id]).subscribe(() => {
+        this.api.deletePropertyAccount([this.selectedRow.id]).subscribe(() => {
           this.getData();
           this.st.clearCheck();
         });
