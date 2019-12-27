@@ -21,7 +21,7 @@ import {
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeeComponent implements OnInit {
+export class FeeOfflineComponent implements OnInit {
   query = query;
   pages = pages;
   total = total;
@@ -30,19 +30,31 @@ export class FeeComponent implements OnInit {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '社区名称', index: 'name' },
-    { title: '社区负责人', index: 'contact' },
-    { title: '联系电话', index: 'contactTel' },
-    { title: '地址', index: 'address' },
-    { title: '社区面积（平方米）', index: 'area' },
-    { title: '备注', index: 'descr' },
-    { title: '创建人', index: 'creator' },
-    { title: '创建时间', index: 'gmtCreate' },
+    { title: '', index: 'id', type: 'checkbox' },
+    { title: '业主姓名', index: 'name' },
+    { title: '所在楼栋单元', index: 'contact' },
+    { title: '所在房间', index: 'contactTel' },
+    { title: '收费项目', index: 'address' },
+    { title: '收费标准', index: 'area' },
+    { title: '应缴纳月份', index: 'descr' },
+    { title: '应缴纳费用', index: 'creator' },
+    { title: '缴纳状态', index: 'gmtCreate' },
+    { title: '缴费方式', index: 'gmtCreate' },
+    { title: '是否催缴', index: 'gmtCreate' },
+    { title: '缴费时间', index: 'gmtCreate' },
     {
       title: '操作',
       fixed: 'right',
       width: 100,
       buttons: [
+        {
+          text: '线下缴费',
+          icon: 'edit',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.addOrEditOrView(this.tpl, 'view');
+          },
+        },
         {
           text: '查看',
           icon: 'eye',
@@ -70,10 +82,11 @@ export class FeeComponent implements OnInit {
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
-    this.getData();
+    // this.getData();
   }
 
   getData(pageIndex?: number) {
