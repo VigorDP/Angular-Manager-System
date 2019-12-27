@@ -70,4 +70,7 @@ export class RestService {
   getSocialProjectList = (params: any) => this.http.post(`${PREFIX}social/list`, params);
   // 社区管理-详情
   getSocialProjectInfo = (params: any) => this.http.get(`${PREFIX}social/info`, params);
+
+  // 上传base64图像
+  uploadBase64 = (params: any) => this.http.get(`${PREFIX}uploader/base64/upload`, params);
 }

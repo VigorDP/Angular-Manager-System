@@ -20,8 +20,8 @@ import { NgxAmapModule } from 'ngx-amap';
 const THIRDMODULES = [NgZorroAntdModule, CountdownModule];
 
 // your componets & directives
-import { ImgUploadComponent, NewCheckComponent } from '@app/common';
-const COMPONENTS = [ImgUploadComponent, NewCheckComponent];
+import { ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, CommunityListComponent } from '@app/common';
+const COMPONENTS = [ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, CommunityListComponent];
 const DIRECTIVES = [];
 
 @NgModule({

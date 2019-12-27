@@ -76,7 +76,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       const id = this.msg.loading('自动登陆中...', { nzDuration: 0 }).messageId;
       setTimeout(() => {
         this.msg.remove(id);
-        this.router.navigateByUrl('system/person', { replaceUrl: true });
+        this.router.navigateByUrl('system/account', { replaceUrl: true });
       }, 1000);
     }
   }
@@ -135,7 +135,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
               role: res.data.role,
               ramId: res.data.ramId,
             });
-            this.router.navigateByUrl('system/person', { replaceUrl: true });
+            this.router.navigateByUrl('system/account', { replaceUrl: true });
           }
         });
     } else {

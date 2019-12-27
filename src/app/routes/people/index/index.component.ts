@@ -168,4 +168,12 @@ export class PeopleComponent implements OnInit {
   handleCitySelected(e) {
     this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
   }
+
+  getImage(e) {
+    this.api.uploadBase64({ base64: e }).subscribe(res => {
+      if (res.code === 0) {
+        this.selectedRow.faceImg = res.link;
+      }
+    });
+  }
 }

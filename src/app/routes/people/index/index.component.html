@@ -85,7 +85,8 @@
         [(ngModel)]="selectedRow.beginDate"></nz-date-picker>
     </se>
     <se label="人脸采集" col="3" required>
-      <app-img-upload (getImgUrl)="getImgUrl($event,'back')" [inputUrls]="[selectedRow.idBackUrl]"></app-img-upload>
+      <app-img-upload (getImgUrl)="getImgUrl($event,'back')" [inputUrls]="[selectedRow.faceImg]"></app-img-upload>
+      <web-capture-img (img)="getImage($event)"></web-capture-img>
     </se>
     <se label="身份证国徽面" col="3" required>
       <app-img-upload (getImgUrl)="getImgUrl($event,'front')" [inputUrls]="[selectedRow.idFrontUrl]"></app-img-upload>

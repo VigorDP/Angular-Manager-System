@@ -48,3 +48,11 @@ export const SexList: any = [
     value: 'FEMALE',
   },
 ];
+
+export interface PageResult<T> {
+  total: number;
+  totalPage: number;
+  pageSize: number;
+  pageNo: number;
+  rows: Array<T>;
+}
