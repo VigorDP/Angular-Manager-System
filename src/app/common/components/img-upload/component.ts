@@ -10,9 +10,8 @@ import { UploadFile, NzMessageService } from 'ng-zorro-antd';
 export class ImgUploadComponent implements OnInit, OnChanges {
   @Input() number = 1;
   @Input() inputUrls = [];
+  @Input() action = '/hl/manager/uploader/img/upload';
   @Output() public getImgUrl = new EventEmitter<any>();
-
-  action = '/hl/manager/uploader/img/upload';
 
   showUploadList = {
     showPreviewIcon: true,

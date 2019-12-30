@@ -30,25 +30,31 @@ export class StructureComponent implements OnInit {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '社区名称', index: 'name' },
-    { title: '社区负责人', index: 'contact' },
-    { title: '联系电话', index: 'contactTel' },
-    { title: '地址', index: 'address' },
-    { title: '社区面积（平方米）', index: 'area' },
+    { title: '楼栋名称', index: 'name' },
+    { title: '单元数量', index: 'buildingUnit' },
+    { title: '地上层数', index: 'upstairFloors' },
+    { title: '地下层数', index: 'downstairFloors' },
+    { title: '每层户数', index: 'households' },
     { title: '备注', index: 'descr' },
-    { title: '创建人', index: 'creator' },
-    { title: '创建时间', index: 'gmtCreate' },
     {
       title: '操作',
       fixed: 'right',
       width: 100,
       buttons: [
         {
-          text: '查看',
-          icon: 'eye',
+          text: '编辑',
+          icon: 'edit',
           click: (item: any) => {
             this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'view');
+            this.addOrEditOrView(this.tpl, 'edit');
+          },
+        },
+        {
+          text: '删除',
+          icon: 'delete',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.delete();
           },
         },
       ],
@@ -79,7 +85,8 @@ export class StructureComponent implements OnInit {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getSocialProjectList(this.query).subscribe(res => {
+    this.query.socialId = 3;
+    this.api.getBuildingList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -118,22 +125,77 @@ export class StructureComponent implements OnInit {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    if (type === 'edit') {
+      this.api.getBuildingInfo({ id: this.selectedRow.id }).subscribe(res => {
+        if (res.code === '0') {
+          this.selectedRow = { ...this.selectedRow, ...res.data };
+        }
+      });
+    }
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新建社区' : '编辑社区',
+      nzTitle: type === 'add' ? '新增结构' : '编辑结构',
       nzContent: tpl,
+      nzOkDisabled: type === 'view',
       nzWidth: 800,
       nzOnOk: () => {
-        this.loading = true;
-        // this.http.post('/api/package/save', this.selectedRow).subscribe(() => this.getData());
+        if (this.checkValid()) {
+          return new Promise(resolve => {
+            this.api
+              .saveBuilding({
+                ...this.selectedRow,
+                socialId: 3,
+                // roleCateEnum: this.roleList.find(role => role.value === this.selectedRow.ramId).value2,
+              })
+              .subscribe(res => {
+                if (res.code === '0') {
+                  resolve();
+                  this.getData();
+                } else {
+                  resolve(false);
+                }
+              });
+          });
+        } else {
+          return false;
+        }
+      },
+    });
+  }
+  delete() {
+    this.modalSrv.confirm({
+      nzTitle: '是否确定删除该项？',
+      nzOkType: 'danger',
+      nzOnOk: () => {
+        this.api.deleteBuilding([this.selectedRow.id]).subscribe(() => {
+          this.getData();
+          this.st.clearCheck();
+        });
       },
     });
   }
 
-  handleProvinceSelected(e) {
-    this.cityList = getCityOrAreaListByCode(e);
-  }
-
-  handleCitySelected(e) {
-    this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
+  checkValid() {
+    const { buildingName, buildingNo, upstairFloors, households, buildingUnit } = this.selectedRow;
+    if (!buildingNo) {
+      this.msg.info('请输入楼栋编号');
+      return false;
+    }
+    if (!buildingName) {
+      this.msg.info('请输入楼栋名称');
+      return false;
+    }
+    if (!upstairFloors) {
+      this.msg.info('请输入地上楼层数');
+      return false;
+    }
+    if (!households) {
+      this.msg.info('请输入每层户数');
+      return false;
+    }
+    if (!buildingUnit) {
+      this.msg.info('请输入楼栋单元数量');
+      return false;
+    }
+    return true;
   }
 }

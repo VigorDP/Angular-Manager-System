@@ -1,4 +1,4 @@
-<page-header title="住户管理" autoBreadcrumb="false" fixed="true" [action]="action">
+<page-header title="住户管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
     <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
@@ -13,36 +13,33 @@
       <input nz-input [(ngModel)]="query.name" name="name" />
     </se>
     <se label="性别" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="query.gender" name="gender" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="角色" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="query.residentIdRel" name="residentIdRel" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="所在楼栋单元" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="query.building" name="building" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="所在房间" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="query.roomNo" name="roomNo" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="手机号码" col="4">
-      <input nz-input [(ngModel)]="query.contactTel" name="contactTel" />
+      <input nz-input [(ngModel)]="query.tel" name="tel" />
     </se>
-    <se label="座机号码" col="4">
-      <input nz-input [(ngModel)]="query.contact" name="contact " />
-    </se>
-    <se label="身份证号码" col="4">
-      <input nz-input [(ngModel)]="query.contactTel" name="contactTel" />
+    <se label="证件号码" col="4">
+      <input nz-input [(ngModel)]="query.credentialNo" name="credentialNo" />
     </se>
     <se label="认证状态" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="query.certificationStatus" name="certificationStatus" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>

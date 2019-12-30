@@ -15,6 +15,8 @@ import {
   data,
   selectedRows,
   selectedRow,
+  checkMobile,
+  getNameByCode,
 } from '@app/common';
 
 @Component({
@@ -30,7 +32,7 @@ export class ProjectComponent implements OnInit {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '社区名称', index: 'name' },
+    { title: '社区名称', index: 'socialName' },
     { title: '社区负责人', index: 'contact' },
     { title: '联系电话', index: 'contactTel' },
     { title: '地址', index: 'address' },
@@ -44,11 +46,27 @@ export class ProjectComponent implements OnInit {
       width: 100,
       buttons: [
         {
+          text: '编辑',
+          icon: 'edit',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.addOrEditOrView(this.tpl, 'edit');
+          },
+        },
+        {
           text: '查看',
           icon: 'eye',
           click: (item: any) => {
             this.selectedRow = item;
             this.addOrEditOrView(this.tpl, 'view');
+          },
+        },
+        {
+          text: '删除',
+          icon: 'delete',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.delete();
           },
         },
       ],
@@ -64,6 +82,7 @@ export class ProjectComponent implements OnInit {
   provinceList = ProvinceList;
   cityList = [];
   areaList = [];
+  images = ''; // 小区效果图
 
   constructor(
     private api: RestService,
@@ -118,13 +137,42 @@ export class ProjectComponent implements OnInit {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    if (type === 'edit' || type === 'view') {
+      this.api.getSocialProjectInfo({ id: this.selectedRow.id }).subscribe(res => {
+        if (res.code === '0') {
+          this.selectedRow = { ...this.selectedRow, ...res.data };
+          this.handleProvinceSelected(this.selectedRow.provinceCode);
+          this.handleCitySelected(this.selectedRow.cityCode);
+        }
+      });
+    }
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新建社区' : '编辑社区',
+      nzTitle: type === 'add' ? '新增社区' : type === 'edit' ? '编辑社区' : '查看社区',
       nzContent: tpl,
+      nzOkDisabled: type === 'view',
       nzWidth: 800,
       nzOnOk: () => {
-        this.loading = true;
-        // this.http.post('/api/package/save', this.selectedRow).subscribe(() => this.getData());
+        if (this.checkValid()) {
+          return new Promise(resolve => {
+            this.api
+              .saveSocialProject({
+                ...this.selectedRow,
+                cityName: getNameByCode(this.selectedRow.cityCode),
+                districtName: getNameByCode(this.selectedRow.districtCode),
+                provinceName: getNameByCode(this.selectedRow.provinceCode),
+              })
+              .subscribe(res => {
+                if (res.code === '0') {
+                  resolve();
+                  this.getData();
+                } else {
+                  resolve(false);
+                }
+              });
+          });
+        } else {
+          return false;
+        }
       },
     });
   }
@@ -135,5 +183,59 @@ export class ProjectComponent implements OnInit {
 
   handleCitySelected(e) {
     this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
+  }
+
+  checkValid() {
+    const { name, area, contact, contactTel, provinceCode, cityCode, districtCode } = this.selectedRow;
+    if (!name) {
+      this.msg.info('请输入社区名称');
+      return false;
+    }
+    if (!provinceCode) {
+      this.msg.info('请选择省份');
+      return false;
+    }
+    if (!cityCode) {
+      this.msg.info('请选择城市');
+      return false;
+    }
+    if (!districtCode) {
+      this.msg.info('请选择所属区/县');
+      return false;
+    }
+    if (!area) {
+      this.msg.info('请输入管理面积');
+      return false;
+    }
+    if (!contact) {
+      this.msg.info('请输入负责人');
+      return false;
+    }
+    if (!contactTel) {
+      this.msg.info('请输入负责人手机号');
+      return false;
+    }
+    if (!checkMobile(contactTel)) {
+      this.msg.info('手机号格式有误');
+      return false;
+    }
+    return true;
+  }
+
+  getImgUrl(e) {
+    this.images = e;
+  }
+
+  delete() {
+    this.modalSrv.confirm({
+      nzTitle: '是否确定删除该项？',
+      nzOkType: 'danger',
+      nzOnOk: () => {
+        this.api.deleteSocialProject([this.selectedRow.id]).subscribe(() => {
+          this.getData();
+          this.st.clearCheck();
+        });
+      },
+    });
   }
 }

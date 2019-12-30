@@ -31,29 +31,35 @@ export class RestService {
   // 角色管理-获取用户操作权限列表
   getUserRightList = () => this.http.get(`${PREFIX}ramRole/user/rights`);
 
-  // 物业集团公司管理-获取列表
-  getEnterpriseList = (params: any) => this.http.post(`${PREFIX}enterpriseGroup/list`, params);
-  // 物业集团公司管理-删除
-  deleteEnterprise = (params: any) => this.http.post(`${PREFIX}enterpriseGroup/delete`, params);
-  // 物业集团公司管理-新增或修改
-  saveEnterprise = (params: any) => this.http.post(`${PREFIX}enterpriseGroup/save`, params);
-  // 物业集团公司管理-详情
-  getEnterpriseInfo = (params: any) => this.http.get(`${PREFIX}enterpriseGroup/info`, params);
-
-  // 物业公司管理-获取列表
-  getPropertyCompanyList = (params: any) => this.http.post(`${PREFIX}propertyCompany/list`, params);
-  // 物业公司管理-删除
-  deletePropertyCompany = (params: any) => this.http.post(`${PREFIX}propertyCompany/delete`, params);
-  // 物业公司管理-新增或修改
-  savePropertyCompany = (params: any) => this.http.post(`${PREFIX}propertyCompany/save`, params);
-  // 物业公司管理-详情
-  getPropertyCompanyInfo = (params: any) => this.http.get(`${PREFIX}propertyCompany/info`, params);
-
   // 社区管理-获取列表
-  getSocialProjectList = (params: any) => this.http.post(`${PREFIX}social/simple/list`, params);
+  getSocialProjectList = (params: any) => this.http.post(`${PREFIX}social/list`, params);
+  // 社区管理-删除
+  deleteSocialProject = (params: any) => this.http.post(`${PREFIX}social/delete`, params);
+  // 社区管理-新增或修改
+  saveSocialProject = (params: any) => this.http.post(`${PREFIX}social/save`, params);
   // 社区管理-详情
   getSocialProjectInfo = (params: any) => this.http.get(`${PREFIX}social/info`, params);
 
   // 上传base64图像
   uploadBase64 = (params: any) => this.http.get(`${PREFIX}uploader/base64/upload`, params);
+
+  // 楼栋结构-获取列表
+  getBuildingList = (params: any) => this.http.post(`${PREFIX}building/list`, params);
+  // 楼栋结构-删除
+  deleteBuilding = (params: any) => this.http.post(`${PREFIX}building/delete`, params);
+  // 楼栋结构-新增或修改
+  saveBuilding = (params: any) => this.http.post(`${PREFIX}building/save`, params);
+  // 楼栋结构-详情
+  getBuildingInfo = (params: any) => this.http.get(`${PREFIX}building/info`, params);
+
+  // 住户管理-获取列表
+  getResidentList = (params: any) => this.http.post(`${PREFIX}resident/list`, params);
+  // 住户管理-删除
+  deleteResident = (params: any) => this.http.post(`${PREFIX}resident/delete`, params);
+  // 住户管理-新增或修改
+  saveResident = (params: any) => this.http.post(`${PREFIX}resident/save`, params);
+  // 住户管理-详情
+  getResidentInfo = (params: any) => this.http.get(`${PREFIX}resident/info`, params);
+  // 住户管理-审核
+  checkResident = (params: any) => this.http.get(`${PREFIX}resident/check`, params);
 }

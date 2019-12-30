@@ -1,8 +1,8 @@
-<page-header title="社区管理" autoBreadcrumb="false" [action]="action">
+<page-header title="缴费管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
     <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
-      <span>新建社区</span>
+      <span>新增住户</span>
     </button>
   </ng-template>
 </page-header>
@@ -52,19 +52,19 @@
     <se label="社区名称" col="2" required>
       <input nz-input [(ngModel)]="selectedRow.name" name="name" />
     </se>
-    <se label="所属省份" col="2" required>
+    <se label="所属省份" col="2">
       <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
         (ngModelChange)="handleProvinceSelected($event)">
         <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="所属城市" col="2" required>
+    <se label="所属城市" col="2">
       <nz-select [(ngModel)]="selectedRow.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
         (ngModelChange)="handleCitySelected($event)">
         <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="所属区/县" col="2" required>
+    <se label="所属区/县" col="2">
       <nz-select [(ngModel)]="selectedRow.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
@@ -97,8 +97,7 @@
       <input nz-input [(ngModel)]="selectedRow.policeJson" name="policeJson" />
     </se>
     <se label="小区效果图" col="1">
-      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
-        [inputUrls]="[selectedRow.images]"></app-img-upload>
+      <app-img-upload [inputUrls]="[selectedRow.images]"></app-img-upload>
     </se>
     <se label="备注" col="1">
       <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>

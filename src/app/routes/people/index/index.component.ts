@@ -31,13 +31,13 @@ export class PeopleComponent implements OnInit {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '姓名', index: 'name' },
-    { title: '性别', index: 'contact' },
-    { title: '与业主关系', index: 'contactTel' },
-    { title: '手机号', index: 'address' },
-    { title: '所在楼栋单元', index: 'area' },
-    { title: '所在房间', index: 'descr' },
-    { title: '年龄', index: 'creator' },
-    { title: '证件号码', index: 'gmtCreate' },
+    { title: '性别', index: 'gender' },
+    { title: '与业主关系', index: 'residentIdRel' },
+    { title: '手机号', index: 'tel' },
+    { title: '所在楼栋单元', index: 'building' },
+    { title: '所在房间', index: 'roomNo' },
+    { title: '年龄', index: 'age' },
+    { title: '证件号码', index: 'credentialNo' },
     {
       title: '操作',
       fixed: 'right',
@@ -111,7 +111,7 @@ export class PeopleComponent implements OnInit {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getSocialProjectList(this.query).subscribe(res => {
+    this.api.getResidentList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;

@@ -1,4 +1,4 @@
-<page-header title="费用标准管理" autoBreadcrumb="false" fixed="true" [action]="action">
+<page-header title="费用标准管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
     <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
@@ -11,13 +11,13 @@
   <form nz-form se-container labelWidth="130">
     <se label="收费规则类型" col="4">
       <nz-select [(ngModel)]="query.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-                 (ngModelChange)="handleProvinceSelected($event)">
+        (ngModelChange)="handleProvinceSelected($event)">
         <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="起始日期" col="4">
       <nz-select [(ngModel)]="query.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
-                 (ngModelChange)="handleCitySelected($event)">
+        (ngModelChange)="handleCitySelected($event)">
         <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
@@ -40,19 +40,19 @@
 
 <nz-card [nzBordered]="false">
   <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
-      [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
 </nz-card>
 
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="180">
     <se label="收费类型" col="2">
       <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-                 (ngModelChange)="handleProvinceSelected($event)">
+        (ngModelChange)="handleProvinceSelected($event)">
         <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="收费标准(元/平方米/月)" col="2">
-      <input nz-input [(ngModel)]="selectedRow.address" name="address"/>
+      <input nz-input [(ngModel)]="selectedRow.address" name="address" />
     </se>
     <se label="起始日期" col="2">
 
