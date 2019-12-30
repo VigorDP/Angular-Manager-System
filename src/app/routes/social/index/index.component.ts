@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { _HttpClient } from '@delon/theme';
+import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
 import { RestService } from '@app/service';
 import {
@@ -89,6 +89,7 @@ export class ProjectComponent implements OnInit {
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
+    private settings: SettingsService,
   ) {}
 
   ngOnInit() {
@@ -165,6 +166,11 @@ export class ProjectComponent implements OnInit {
                 if (res.code === '0') {
                   resolve();
                   this.getData();
+                  this.settings.setApp({
+                    ...this.settings.app,
+                    event: 'SOCIAL_CHANGED',
+                    targetId: this.selectedRow.id,
+                  });
                 } else {
                   resolve(false);
                 }
@@ -233,6 +239,11 @@ export class ProjectComponent implements OnInit {
       nzOnOk: () => {
         this.api.deleteSocialProject([this.selectedRow.id]).subscribe(() => {
           this.getData();
+          this.settings.setApp({
+            ...this.settings.app,
+            event: 'SOCIAL_CHANGED',
+            targetId: this.selectedRow.id,
+          });
           this.st.clearCheck();
         });
       },

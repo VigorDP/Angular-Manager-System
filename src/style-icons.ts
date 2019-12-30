@@ -11,6 +11,7 @@ import {
   FolderOutline,
   ApartmentOutline,
   MoneyCollectOutline,
+  DownSquareOutline,
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS = [
@@ -24,4 +25,5 @@ export const ICONS = [
   FolderOutline,
   ApartmentOutline,
   MoneyCollectOutline,
+  DownSquareOutline,
 ];

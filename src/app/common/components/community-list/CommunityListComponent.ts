@@ -1,32 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import * as _ from 'lodash';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd';
+import { SettingsService } from '@delon/theme';
+import { PageResult, CommunityVo } from '../../interfaces';
 
-import { PageResult } from '../../interfaces';
-
-/**
- *
- * @author : cyl
- * @date : 2018-7-17
- * @description : 小区列表
- * @since: 1.0
- */
 @Component({
   selector: 'community-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div style="position: relative;display: inline-block" *ngIf="communityPageResult">
       <div class="item" (click)="showDropdown()">
-        <span>{{ this.mainService.community.name }}</span
+        <span>{{ this.settings.app.community.socialName }}</span
         >&nbsp;
-        <i class="anticon anticon-down-circle-o" style="font-size: 15px"></i>
+        <i nz-icon nzType="down-square" nzTheme="outline"></i>
       </div>
       <nz-modal
         [nzStyle]="{ position: 'absolute', top: '50px', left: '250px', padding: '20px' }"
         [(nzVisible)]="hideDropdown"
-        nzTitle="小区列表"
+        nzTitle="社区列表"
         [nzFooter]="null"
         (nzOnCancel)="cancel()"
       >
@@ -50,13 +42,12 @@ import { PageResult } from '../../interfaces';
         >
           <ng-template #item let-item>
             <nz-list-item class="point wd-wide auto-space" (click)="handleCommunityChange(item)">
-              {{ item.name }}
+              {{ item.socialName }}
             </nz-list-item>
           </ng-template>
         </nz-list>
         <div style="display: flex;justify-content: space-around">
           <nz-pagination
-            *ngIf="communityPageResult.totalPage > 1"
             [nzPageIndex]="communityPageResult.pageNo"
             [nzPageSize]="communityPageResult.pageSize"
             [nzTotal]="communityPageResult.total"
@@ -77,123 +68,112 @@ import { PageResult } from '../../interfaces';
   ],
 })
 export class CommunityListComponent implements OnInit {
-  /**
-   * 社区列表查询结果集
-   */
-  public communityPageResult: PageResult<any> = null;
+  @Input() api;
+  communityPageResult: PageResult<CommunityVo> = null;
+  listLoading = false;
+  hideDropdown = false;
+  searchChange$ = new BehaviorSubject('');
+  searchText = '';
 
-  public listLoading = false;
+  private pageNo = 1;
+  private pageSize = 10;
 
-  /**
-   * 隐藏下拉
-   * @type {boolean}
-   */
-  public hideDropdown = false;
-
-  public searchChange$ = new BehaviorSubject('');
-  public searchText = '';
-
-  public sub = null;
-
-  constructor(public messageService: NzMessageService, private route: ActivatedRoute) {}
+  constructor(public settings: SettingsService, public msg: NzMessageService, private cdr: ChangeDetectorRef) {}
 
   public ngOnInit() {
-    const vm = this;
-
+    this.getSocialProjectList(this.pageNo, this.pageSize, '');
     this.searchChange$
       .asObservable()
       .pipe(debounceTime(500))
       .subscribe(() => {
-        this.getSimpleCommunityList(1, 10, this.searchText);
+        this.getSocialProjectList(1, 10, this.searchText);
       });
+    this.settings.notify.subscribe(res => {
+      if (res.value.event === 'SOCIAL_CHANGED') {
+        this.getSocialProjectList(this.pageNo, this.pageSize, '');
+      }
+    });
   }
 
   public showDropdown() {
     this.hideDropdown = !this.hideDropdown;
     if (this.searchText || this.searchText.length > 0) {
       this.searchText = '';
-      this.getSimpleCommunityList(1, 10, '');
+      this.getSocialProjectList(1, 10, '');
     }
   }
 
   /**
    * 获取社区列表
-   * @param {number} pageNo
-   * @param {number} pageSize
    */
-  public getSimpleCommunityList(pageNo: number, pageSize: number, searchText: string) {
-    // const vm = this;
-    // const body: any = {
-    //   pageNo,
-    //   pageSize,
-    //   name: searchText,
-    // };
-    // if (this.authService.hasSuperAdminRole()) {
-    //   // do nothing
-    // } else {
-    //   body.ids = this.mainService.getSocialIdList();
-    // }
-    // vm.listLoading = true;
-    // console.log(this.authService.user.id);
-    // // this.authService.user.id
-    // this.restService
-    //   .getSimpleCommunityList(body)
-    //   .toPromise()
-    //   .then(res => {
-    //     vm.listLoading = false;
-    //     if (res == null || res.code !== 0) {
-    //       vm.communityPageResult.pageNo = 1;
-    //       vm.communityPageResult.totalPage = 0;
-    //       vm.communityPageResult.total = 0;
-    //       vm.communityPageResult.rows = [];
-    //       console.error('获取所有企业简单信息列表失败：', res.message);
-    //       if (res.code !== 108) {
-    //         vm.messageService.error(res.message);
-    //       }
-    //       return;
-    //     }
-    //     vm.communityPageResult = res.data;
-    //     if (_.isEmpty(vm.mainService.community)) {
-    //       vm.mainService.setCurrentCommunity(vm.communityPageResult.rows[0], this.getActivatedComponent());
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.error('获取所有小区简单信息列表失败：', err);
-    //     vm.listLoading = false;
-    //   });
+  public getSocialProjectList(pageNo: number, pageSize: number, searchText: string) {
+    const vm = this;
+    const body: any = {
+      pageNo,
+      pageSize,
+      name: searchText,
+      propertyCompanyId: this.settings.user.propertyCompanyId,
+    };
+
+    vm.listLoading = true;
+    this.api
+      .getSocialProjectList(body)
+      .toPromise()
+      .then(res => {
+        vm.listLoading = false;
+        if (res == null || res.code !== '0') {
+          vm.communityPageResult.pageNo = 1;
+          vm.communityPageResult.totalPage = 0;
+          vm.communityPageResult.total = 0;
+          vm.communityPageResult.rows = [];
+          if (res.code !== 108) {
+            vm.msg.error(res.message);
+          }
+          return;
+        }
+        vm.communityPageResult = res.data;
+        // 设置默认社区
+        if (!this.settings.app.community) {
+          this.settings.setApp({
+            ...this.settings.app,
+            community: res.data.rows[0],
+            event: null,
+          });
+        } else {
+          // 更新社区
+          this.settings.setApp({
+            ...this.settings.app,
+            community: this.updateCommunity(this.settings.app.targetId),
+            event: null,
+          });
+        }
+        this.cdr.detectChanges();
+      })
+      .catch(err => {
+        console.error('获取社区列表失败：', err);
+        vm.listLoading = false;
+      });
   }
 
-  /**
-   * 改变当前小区
-   * @param {CommunityVo} item
-   */
-  public handleCommunityChange(item): void {
+  updateCommunity(id) {
+    let result = this.communityPageResult.rows.find(community => community.id === id);
+    if (!result) {
+      result = this.communityPageResult.rows[0];
+    }
+    return result;
+  }
+
+  public handleCommunityChange(item: CommunityVo): void {
+    this.settings.setApp({
+      ...this.settings.app,
+      community: item,
+    });
     this.hideDropdown = !this.hideDropdown;
   }
 
   public handlePageChange(e: any): void {
-    // this.pageNo = e;
-    this.getSimpleCommunityList(e, 10, this.searchText);
-  }
-
-  /**
-   * 获取当前路由对应的组件
-   * @returns {any}
-   */
-  private getActivatedComponent(): any {
-    let component: any = null;
-    let temp: any = this.route.children;
-    let children: any = null;
-    while (temp != null && temp.length > 0) {
-      temp = temp[0].children;
-      if (temp != null && temp.length > 0) {
-        children = temp;
-      }
-    }
-    if (children != null) {
-      component = children[0].component;
-    }
-    return component;
+    this.pageNo = e;
+    this.getSocialProjectList(e, 10, this.searchText);
   }
 
   cancel() {

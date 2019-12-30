@@ -1,5 +1,6 @@
 import { STData, STPage } from '@delon/abc';
 
+export * from './community';
 // 页面配置相关
 export const query: any = {
   pageNo: 1,
