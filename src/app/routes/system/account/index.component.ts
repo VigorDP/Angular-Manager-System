@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { _HttpClient, SettingsService } from '@delon/theme';
+import { _HttpClient } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
 import { RestService } from '@app/service';
 import {
@@ -12,7 +12,7 @@ import {
   data,
   selectedRows,
   selectedRow,
-  SexList,
+  GenderList,
   checkMobile,
 } from '@app/common';
 
@@ -25,7 +25,7 @@ export class PersonComponent implements OnInit {
   pages = pages;
   total = total;
   loading = loading;
-  sexList = SexList;
+  GenderList = GenderList;
   data = data;
   selectedRows = selectedRows;
   selectedRow = selectedRow;
@@ -70,15 +70,11 @@ export class PersonComponent implements OnInit {
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-    private settingsSrv: SettingsService,
   ) {}
 
   ngOnInit() {
     this.getData();
     this.getRoleList();
-    this.settingsSrv.notify.subscribe(res => {
-      console.log('object', res);
-    });
   }
 
   getRoleList() {

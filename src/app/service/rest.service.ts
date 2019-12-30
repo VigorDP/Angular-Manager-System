@@ -1,11 +1,11 @@
-import { _HttpClient } from '@delon/theme';
+import { _HttpClient, SettingsService } from '@delon/theme';
 import { Injectable } from '@angular/core';
 
 const PREFIX = '/hl/social/';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
-  constructor(private http: _HttpClient) {}
+  constructor(private http: _HttpClient, private settings: SettingsService) {}
   // 登录
   login = (params: any) => this.http.post(`${PREFIX}propertyAccount/login `, params);
   // 退出登录
@@ -44,22 +44,39 @@ export class RestService {
   uploadBase64 = (params: any) => this.http.get(`${PREFIX}uploader/base64/upload`, params);
 
   // 楼栋结构-获取列表
-  getBuildingList = (params: any) => this.http.post(`${PREFIX}building/list`, params);
+  getBuildingList = (params: any) =>
+    this.http.post(`${PREFIX}building/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 楼栋结构-删除
-  deleteBuilding = (params: any) => this.http.post(`${PREFIX}building/delete`, params);
+  deleteBuilding = (params: any) =>
+    this.http.post(`${PREFIX}building/delete`, paramsWithExtraParams(params, this.settings.app.community));
   // 楼栋结构-新增或修改
-  saveBuilding = (params: any) => this.http.post(`${PREFIX}building/save`, params);
+  saveBuilding = (params: any) =>
+    this.http.post(`${PREFIX}building/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 楼栋结构-详情
-  getBuildingInfo = (params: any) => this.http.get(`${PREFIX}building/info`, params);
+  getBuildingInfo = (params: any) =>
+    this.http.get(`${PREFIX}building/info`, paramsWithExtraParams(params, this.settings.app.community));
 
   // 住户管理-获取列表
-  getResidentList = (params: any) => this.http.post(`${PREFIX}resident/list`, params);
+  getResidentList = (params: any) =>
+    this.http.post(`${PREFIX}resident/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 住户管理-删除
-  deleteResident = (params: any) => this.http.post(`${PREFIX}resident/delete`, params);
+  deleteResident = (params: any) =>
+    this.http.post(`${PREFIX}resident/delete`, paramsWithExtraParams(params, this.settings.app.community));
   // 住户管理-新增或修改
-  saveResident = (params: any) => this.http.post(`${PREFIX}resident/save`, params);
+  saveResident = (params: any) =>
+    this.http.post(`${PREFIX}resident/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 住户管理-详情
-  getResidentInfo = (params: any) => this.http.get(`${PREFIX}resident/info`, params);
+  getResidentInfo = (params: any) =>
+    this.http.get(`${PREFIX}resident/info`, paramsWithExtraParams(params, this.settings.app.community));
   // 住户管理-审核
-  checkResident = (params: any) => this.http.get(`${PREFIX}resident/check`, params);
+  checkResident = (params: any) =>
+    this.http.get(`${PREFIX}resident/check`, paramsWithExtraParams(params, this.settings.app.community));
+}
+
+function paramsWithExtraParams(params, community) {
+  if (community) {
+    return { ...params, socialId: community.id };
+  } else {
+    return params;
+  }
 }

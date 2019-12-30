@@ -6,5 +6,13 @@
       "/hl/social/": "/hl/social/"
     },
     "secure": false
+  },
+  "/hl/manager/": {
+    "target": "http://120.79.243.165:6001",
+    "changeOrigin":true,
+    "pathRewrite": {
+      "/hl/manager/": "/hl/manager/"
+    },
+    "secure": false
   }
 }

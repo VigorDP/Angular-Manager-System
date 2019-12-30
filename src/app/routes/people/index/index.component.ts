@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { _HttpClient } from '@delon/theme';
+import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
 import { RestService } from '@app/service';
 import {
   ProvinceList,
   getCityOrAreaListByCode,
-  SexList,
+  GenderList,
   query,
   defaultQuery,
   pages,
@@ -15,6 +15,10 @@ import {
   data,
   selectedRows,
   selectedRow,
+  checkMobile,
+  CardList,
+  StudyList,
+  RalationList,
 } from '@app/common';
 
 @Component({
@@ -92,25 +96,36 @@ export class PeopleComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = SexList;
-  provinceList = ProvinceList;
-  cityList = [];
-  areaList = [];
+  genderList = GenderList;
+  cardList = CardList;
+  studyList = StudyList;
+  relationList = RalationList;
+
+  faceUrl;
+  idFrontUrl;
+  idBackUrl;
 
   constructor(
     private api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
+    private settings: SettingsService,
   ) {}
 
   ngOnInit() {
-    this.getData();
+    if (this.settings.app.community) {
+      this.getData();
+    }
+    this.settings.notify.subscribe(res => {
+      this.getData();
+    });
   }
 
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
+    this.query.socialId = this.settings.app.community.id;
     this.api.getResidentList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
@@ -150,23 +165,42 @@ export class PeopleComponent implements OnInit {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    if (type === 'edit' || type === 'view') {
+      this.api.getResidentInfo({ id: this.selectedRow.id }).subscribe(res => {
+        if (res.code === '0') {
+          this.selectedRow = { ...this.selectedRow, ...res.data };
+        }
+      });
+    }
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增住户' : '编辑住户',
+      nzTitle: type === 'add' ? '新增住户' : type === 'edit' ? '编辑住户' : '查看住户',
       nzContent: tpl,
+      nzOkDisabled: type === 'view',
       nzWidth: 800,
       nzOnOk: () => {
-        this.loading = true;
-        // this.http.post('/api/package/save', this.selectedRow).subscribe(() => this.getData());
+        if (this.checkValid()) {
+          return new Promise(resolve => {
+            this.api
+              .saveResident({
+                ...this.selectedRow,
+                faceUrl: this.faceUrl,
+                idFrontUrl: this.idFrontUrl,
+                idBackUrl: this.idBackUrl,
+              })
+              .subscribe(res => {
+                if (res.code === '0') {
+                  resolve();
+                  this.getData();
+                } else {
+                  resolve(false);
+                }
+              });
+          });
+        } else {
+          return false;
+        }
       },
     });
-  }
-
-  handleProvinceSelected(e) {
-    this.cityList = getCityOrAreaListByCode(e);
-  }
-
-  handleCitySelected(e) {
-    this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
   }
 
   getImage(e) {
@@ -175,5 +209,79 @@ export class PeopleComponent implements OnInit {
         this.selectedRow.faceImg = res.link;
       }
     });
+  }
+
+  checkValid() {
+    const {
+      name,
+      credentialType,
+      credentialNo,
+      area,
+      contact,
+      contactTel,
+      provinceCode,
+      cityCode,
+      districtCode,
+    } = this.selectedRow;
+    if (!name) {
+      this.msg.info('请输入姓名');
+      return false;
+    }
+    if (!credentialType) {
+      this.msg.info('请选择证件类型');
+      return false;
+    }
+    if (!credentialNo) {
+      this.msg.info('请输入证件号码');
+      return false;
+    }
+    // if (!provinceCode) {
+    //   this.msg.info('请选择省份');
+    //   return false;
+    // }
+    // if (!cityCode) {
+    //   this.msg.info('请选择城市');
+    //   return false;
+    // }
+    // if (!districtCode) {
+    //   this.msg.info('请选择所属区/县');
+    //   return false;
+    // }
+    if (!this.faceUrl) {
+      this.msg.info('请上传人脸照片');
+      return false;
+    }
+    if (!this.idFrontUrl) {
+      this.msg.info('请上传身份证国徽面');
+      return false;
+    }
+    if (!this.idBackUrl) {
+      this.msg.info('请上传身份证人像面');
+      return false;
+    }
+    return true;
+  }
+
+  delete() {
+    this.modalSrv.confirm({
+      nzTitle: '是否确定删除该项？',
+      nzOkType: 'danger',
+      nzOnOk: () => {
+        this.api.deleteResident([this.selectedRow.id]).subscribe(() => {
+          this.getData();
+          this.st.clearCheck();
+        });
+      },
+    });
+  }
+
+  getImgUrl(e, type) {
+    if (type === 'face') {
+      this.faceUrl = e[0];
+    } else if (type === 'back') {
+      this.idBackUrl = e[0];
+    } else if (type === 'front') {
+      this.idFrontUrl = e[0];
+    }
   }
 }

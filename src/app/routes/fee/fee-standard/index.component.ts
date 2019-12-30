@@ -6,7 +6,7 @@ import { RestService } from '@app/service';
 import {
   ProvinceList,
   getCityOrAreaListByCode,
-  SexList,
+  GenderList,
   query,
   defaultQuery,
   pages,
@@ -75,7 +75,7 @@ export class FeeStandardComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = SexList;
+  genderList = GenderList;
   provinceList = ProvinceList;
   cityList = [];
   areaList = [];
@@ -85,8 +85,7 @@ export class FeeStandardComponent implements OnInit {
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     // this.getData();

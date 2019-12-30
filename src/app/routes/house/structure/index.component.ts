@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { _HttpClient } from '@delon/theme';
+import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
 import { RestService } from '@app/service';
 import {
   ProvinceList,
   getCityOrAreaListByCode,
-  SexList,
+  GenderList,
   query,
   defaultQuery,
   pages,
@@ -66,7 +66,7 @@ export class StructureComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = SexList;
+  genderList = GenderList;
   provinceList = ProvinceList;
   cityList = [];
   areaList = [];
@@ -76,16 +76,21 @@ export class StructureComponent implements OnInit {
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
+    private settings: SettingsService,
   ) {}
 
   ngOnInit() {
-    this.getData();
+    if (this.settings.app.community) {
+      this.getData();
+    }
+    this.settings.notify.subscribe(res => {
+      this.getData();
+    });
   }
 
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.query.socialId = 3;
     this.api.getBuildingList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
@@ -140,20 +145,14 @@ export class StructureComponent implements OnInit {
       nzOnOk: () => {
         if (this.checkValid()) {
           return new Promise(resolve => {
-            this.api
-              .saveBuilding({
-                ...this.selectedRow,
-                socialId: 3,
-                // roleCateEnum: this.roleList.find(role => role.value === this.selectedRow.ramId).value2,
-              })
-              .subscribe(res => {
-                if (res.code === '0') {
-                  resolve();
-                  this.getData();
-                } else {
-                  resolve(false);
-                }
-              });
+            this.api.saveBuilding(this.selectedRow).subscribe(res => {
+              if (res.code === '0') {
+                resolve();
+                this.getData();
+              } else {
+                resolve(false);
+              }
+            });
           });
         } else {
           return false;

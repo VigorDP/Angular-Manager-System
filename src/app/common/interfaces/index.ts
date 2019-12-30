@@ -1,6 +1,8 @@
 import { STData, STPage } from '@delon/abc';
 
 export * from './community';
+export * from './select_option';
+
 // 页面配置相关
 export const query: any = {
   pageNo: 1,
@@ -26,29 +28,6 @@ export let data: STData[] = [];
 export let selectedRows: STData[] = [];
 
 export let selectedRow: STData = {};
-
-// 审核
-export const AllowList: any = [
-  {
-    label: true,
-    value: '通过',
-  },
-  {
-    label: false,
-    value: '不通过',
-  },
-];
-// 性别
-export const SexList: any = [
-  {
-    label: '男',
-    value: 'MALE',
-  },
-  {
-    label: '女',
-    value: 'FEMALE',
-  },
-];
 
 export interface PageResult<T> {
   total: number;

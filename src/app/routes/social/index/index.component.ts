@@ -6,7 +6,7 @@ import { RestService } from '@app/service';
 import {
   ProvinceList,
   getCityOrAreaListByCode,
-  SexList,
+  GenderList,
   query,
   defaultQuery,
   pages,
@@ -78,7 +78,7 @@ export class ProjectComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = SexList;
+  genderList = GenderList;
   provinceList = ProvinceList;
   cityList = [];
   areaList = [];

@@ -14,12 +14,12 @@
     </se>
     <se label="性别" col="4">
       <nz-select [(ngModel)]="query.gender" name="gender" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+        <nz-option *ngFor="let i of genderList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="角色" col="4">
       <nz-select [(ngModel)]="query.residentIdRel" name="residentIdRel" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+        <nz-option *ngFor="let i of relationList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="所在楼栋单元" col="4">
@@ -43,11 +43,6 @@
         <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="同步状态" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
@@ -66,62 +61,52 @@
       <input nz-input [(ngModel)]="selectedRow.name" name="name" />
     </se>
     <se label="性别" col="2">
-      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="selectedRow.gender" name="gender" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of genderList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="证件类型" col="2">
-      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+    <se label="证件类型" col="2" required>
+      <nz-select [(ngModel)]="selectedRow.credentialType" name="credentialType" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of cardList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
+    </se>
+    <se label="证件号码" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.credentialNo" name="credentialNo" />
     </se>
     <se label="出生日期" col="2">
-      <nz-date-picker class="input" [nzStyle]="{ width: '100%' }" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期"
-        [(ngModel)]="selectedRow.beginDate"></nz-date-picker>
+      <nz-date-picker class="input" [nzStyle]="{ width: '100%' }" nzFormat="yyyy-MM-dd" nzPlaceHolder="出生日期"
+        [(ngModel)]="selectedRow.birthday" name="birthday"></nz-date-picker>
     </se>
     <se label="人脸采集" col="3" required>
-      <app-img-upload (getImgUrl)="getImgUrl($event,'back')" [inputUrls]="[selectedRow.faceImg]"></app-img-upload>
-      <web-capture-img (img)="getImage($event)"></web-capture-img>
+      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event,'face')"
+        [inputUrls]="[selectedRow.faceUrl]"></app-img-upload>
+      <!-- <web-capture-img (img)="getImage($event)"></web-capture-img> -->
     </se>
     <se label="身份证国徽面" col="3" required>
-      <app-img-upload (getImgUrl)="getImgUrl($event,'front')" [inputUrls]="[selectedRow.idFrontUrl]"></app-img-upload>
+      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event,'front')"
+        [inputUrls]="[selectedRow.idFrontUrl]"></app-img-upload>
     </se>
     <se label="身份证人像面" col="3" required>
-      <app-img-upload (getImgUrl)="getImgUrl($event,'back')" [inputUrls]="[selectedRow.idBackUrl]"></app-img-upload>
+      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event,'back')"
+        [inputUrls]="[selectedRow.idBackUrl]"></app-img-upload>
     </se>
     <se label="民族" col="2">
-      <input nz-input [(ngModel)]="selectedRow.longitude" name="longitude" />
+      <input nz-input [(ngModel)]="selectedRow.nation" name="nation" />
     </se>
     <se label="文化程度" col="2">
-      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="selectedRow.educationLevel" name="educationLevel" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of studyList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="工作单位" col="2">
-      <input nz-input [(ngModel)]="selectedRow.latitude" name="latitude" />
-    </se>
-    <se label="职业类别" col="2">
-      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
+      <input nz-input [(ngModel)]="selectedRow.workUnit" name="workUnit" />
     </se>
     <se label="详细地址" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.area" name="area" />
+      <input nz-input [(ngModel)]="selectedRow.address" name="address" />
     </se>
-    <se label="座机号" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.contact" name="contact" />
-    </se>
-    <se label="房屋面积" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.contactTel" name="contactTel" />
-    </se>
-    <se label="户籍" col="2">
+    <!-- <se label="户籍" col="2">
       <input nz-input [(ngModel)]="selectedRow.socialNo" name="socialNo" />
-    </se>
-
+    </se> -->
     <se label="备注" col="1">
       <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>
     </se>

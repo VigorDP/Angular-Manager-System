@@ -49,7 +49,7 @@
     </se>
     <se label="性别" col="2" required>
       <nz-select [(ngModel)]="selectedRow.genderEnum" name="genderEnum" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
-        <nz-option *ngFor="let i of sexList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+        <nz-option *ngFor="let i of GenderList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="用户密码" col="2" required>
