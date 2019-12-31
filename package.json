@@ -32,6 +32,7 @@
     "@delon/util": "8.5.0",
     "ajv": "6.10.2",
     "core-js": "3.3.2",
+    "dayjs": "1.8.18",
     "less": "3.10.3",
     "ng-alain": "8.4.0",
     "ng-zorro-antd": "8.4.0",

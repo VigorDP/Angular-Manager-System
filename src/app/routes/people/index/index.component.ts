@@ -3,6 +3,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
 import { RestService } from '@app/service';
+import dayjs from 'dayjs/esm';
 import {
   ProvinceList,
   getCityOrAreaListByCode,
@@ -21,8 +22,25 @@ import {
   RalationList,
 } from '@app/common';
 
+const defaultRoom = {
+  firstLevel: null,
+  secondLevel: null,
+  roomNumber: null,
+  residentIdRel: null,
+  startDate: null,
+  endDate: null,
+  area: null,
+};
+
 @Component({
   templateUrl: './index.component.html',
+  styles: [
+    `
+      nz-select {
+        width: 140px;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeopleComponent implements OnInit {
@@ -100,7 +118,10 @@ export class PeopleComponent implements OnInit {
   cardList = CardList;
   studyList = StudyList;
   relationList = RalationList;
-
+  firstLevel = [];
+  secondLevel = [];
+  thirdLevel = [];
+  rooms = [{ ...defaultRoom }];
   faceUrl;
   idFrontUrl;
   idBackUrl;
@@ -116,9 +137,13 @@ export class PeopleComponent implements OnInit {
   ngOnInit() {
     if (this.settings.app.community) {
       this.getData();
+      this.getBuildingStructure(); // 查询列表用
+      this.getSocialProjectStructure(); // 新建住户用
     }
     this.settings.notify.subscribe(res => {
       this.getData();
+      this.getBuildingStructure();
+      this.getSocialProjectStructure();
     });
   }
 
@@ -137,6 +162,38 @@ export class PeopleComponent implements OnInit {
       };
       this.cdr.detectChanges();
     });
+  }
+  // 查询列表用
+  getBuildingStructure() {
+    this.api.getBuildingStructure().subscribe(res => {
+      if (res.code === '0') {
+        // console.log('res', res);
+      }
+    });
+  }
+  // 新建住户用
+  getSocialProjectStructure() {
+    this.api.getSocialProjectStructure().subscribe(res => {
+      if (res.code === '0') {
+        this.firstLevel = res.data.map(item => ({
+          label: item.building + '栋',
+          value: item.building,
+          children: item.socialUnitVos,
+        }));
+      }
+    });
+  }
+
+  selectSecondLevel(value) {
+    this.secondLevel = this.firstLevel
+      .find(item => item.value === value)
+      .children.map(item => ({ label: item.unit + '单元', value: item.unit, children: item.roomNos }));
+  }
+
+  selectThirdLevel(value) {
+    this.thirdLevel = this.secondLevel
+      .find(item => item.value === value)
+      .children.map(item => ({ label: item + '室', value: item }));
   }
 
   stChange(e: STChange) {
@@ -183,9 +240,15 @@ export class PeopleComponent implements OnInit {
             this.api
               .saveResident({
                 ...this.selectedRow,
+                birthday: this.selectedRow.birthday && dayjs(this.selectedRow.birthday).format('YYYY-MM-DD HH:mm:ss'),
                 faceUrl: this.faceUrl,
                 idFrontUrl: this.idFrontUrl,
                 idBackUrl: this.idBackUrl,
+                rooms: this.rooms.map(item => ({
+                  ...item,
+                  startDate: dayjs(item.startDate).format('YYYY-MM-DD HH:mm:ss'),
+                  endDate: dayjs(item.endDate).format('YYYY-MM-DD HH:mm:ss'),
+                })),
               })
               .subscribe(res => {
                 if (res.code === '0') {
@@ -212,17 +275,7 @@ export class PeopleComponent implements OnInit {
   }
 
   checkValid() {
-    const {
-      name,
-      credentialType,
-      credentialNo,
-      area,
-      contact,
-      contactTel,
-      provinceCode,
-      cityCode,
-      districtCode,
-    } = this.selectedRow;
+    const { name, credentialType, credentialNo } = this.selectedRow;
     if (!name) {
       this.msg.info('请输入姓名');
       return false;
@@ -235,22 +288,6 @@ export class PeopleComponent implements OnInit {
       this.msg.info('请输入证件号码');
       return false;
     }
-    // if (!provinceCode) {
-    //   this.msg.info('请选择省份');
-    //   return false;
-    // }
-    // if (!cityCode) {
-    //   this.msg.info('请选择城市');
-    //   return false;
-    // }
-    // if (!districtCode) {
-    //   this.msg.info('请选择所属区/县');
-    //   return false;
-    // }
-    if (!this.faceUrl) {
-      this.msg.info('请上传人脸照片');
-      return false;
-    }
     if (!this.idFrontUrl) {
       this.msg.info('请上传身份证国徽面');
       return false;
@@ -258,6 +295,36 @@ export class PeopleComponent implements OnInit {
     if (!this.idBackUrl) {
       this.msg.info('请上传身份证人像面');
       return false;
+    }
+    if (!this.faceUrl) {
+      this.msg.info('请上传人脸照片');
+      return false;
+    }
+    for (const room of this.rooms) {
+      if (!room.firstLevel) {
+        this.msg.info('请选择楼栋');
+        return false;
+      }
+      if (!room.secondLevel) {
+        this.msg.info('请选择单元');
+        return false;
+      }
+      if (!room.roomNumber) {
+        this.msg.info('请选择房间');
+        return false;
+      }
+      if (!room.startDate) {
+        this.msg.info('请选择开始日期');
+        return false;
+      }
+      if (!room.endDate) {
+        this.msg.info('请选择结束日期');
+        return false;
+      }
+      if (!room.residentIdRel) {
+        this.msg.info('请选择角色');
+        return false;
+      }
     }
     return true;
   }
@@ -283,5 +350,13 @@ export class PeopleComponent implements OnInit {
     } else if (type === 'front') {
       this.idFrontUrl = e[0];
     }
+  }
+
+  addRoom() {
+    this.rooms.push({ ...defaultRoom });
+  }
+
+  deleteRoom(i) {
+    this.rooms.splice(i, 1);
   }
 }

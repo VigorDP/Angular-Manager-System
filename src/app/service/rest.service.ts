@@ -39,6 +39,9 @@ export class RestService {
   saveSocialProject = (params: any) => this.http.post(`${PREFIX}social/save`, params);
   // 社区管理-详情
   getSocialProjectInfo = (params: any) => this.http.get(`${PREFIX}social/info`, params);
+  // 社区管理-房屋结构
+  getSocialProjectStructure = (params?: any) =>
+    this.http.get(`${PREFIX}social/building/list`, paramsWithExtraParams(params, this.settings.app.community));
 
   // 上传base64图像
   uploadBase64 = (params: any) => this.http.get(`${PREFIX}uploader/base64/upload`, params);
@@ -55,6 +58,9 @@ export class RestService {
   // 楼栋结构-详情
   getBuildingInfo = (params: any) =>
     this.http.get(`${PREFIX}building/info`, paramsWithExtraParams(params, this.settings.app.community));
+  // 楼栋结构-房屋结构
+  getBuildingStructure = (params?: any) =>
+    this.http.post(`${PREFIX}building/structure`, paramsWithExtraParams(params, this.settings.app.community));
 
   // 住户管理-获取列表
   getResidentList = (params: any) =>

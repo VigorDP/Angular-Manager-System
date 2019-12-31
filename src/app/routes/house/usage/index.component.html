@@ -19,8 +19,8 @@
       <input nz-input [(ngModel)]="query.name" name="name" />
     </se>
     <se col="4">
-      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
-      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+      <button nz-button [nzType]="'primary'" (click)="getData(1)">查询</button>
+      <button nz-button (click)="reset()">重置</button>
     </se>
   </form>
 </nz-card>
