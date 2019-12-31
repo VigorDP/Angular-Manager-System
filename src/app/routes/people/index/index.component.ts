@@ -1,3 +1,4 @@
+import { getNameByCode } from './../../../common/utils/city';
 import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { _HttpClient, SettingsService } from '@delon/theme';
@@ -20,6 +21,7 @@ import {
   CardList,
   StudyList,
   RalationList,
+  CheckList,
 } from '@app/common';
 
 const defaultRoom = {
@@ -70,7 +72,7 @@ export class PeopleComponent implements OnInit {
           icon: 'eye',
           click: (item: any) => {
             this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'view');
+            this.showCheck = true;
           },
         },
         {
@@ -78,7 +80,7 @@ export class PeopleComponent implements OnInit {
           icon: 'edit',
           click: (item: any) => {
             this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'view');
+            this.addOrEditOrView(this.tpl, 'edit');
           },
         },
         {
@@ -86,19 +88,11 @@ export class PeopleComponent implements OnInit {
           icon: 'delete',
           click: (item: any) => {
             this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'view');
+            this.delete();
           },
         },
         {
           text: '查看',
-          icon: 'eye',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'view');
-          },
-        },
-        {
-          text: '同步',
           icon: 'eye',
           click: (item: any) => {
             this.selectedRow = item;
@@ -113,11 +107,14 @@ export class PeopleComponent implements OnInit {
   st: STComponent;
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
+  @ViewChild('checkTpl', { static: true })
+  checkTpl: TemplateRef<any>;
 
   genderList = GenderList;
   cardList = CardList;
   studyList = StudyList;
   relationList = RalationList;
+  checkList = CheckList;
   firstLevel = [];
   secondLevel = [];
   thirdLevel = [];
@@ -125,6 +122,11 @@ export class PeopleComponent implements OnInit {
   faceUrl;
   idFrontUrl;
   idBackUrl;
+  provinceList = ProvinceList;
+  cityList = [];
+  areaList = [];
+  showCheck = false;
+  checkData = null;
 
   constructor(
     private api: RestService,
@@ -196,6 +198,17 @@ export class PeopleComponent implements OnInit {
       .children.map(item => ({ label: item + '室', value: item }));
   }
 
+  handleCheck(e) {
+    const id = this.msg.loading('审核中，请稍后...', { nzDuration: 0 }).messageId;
+    this.api.checkResident({ id: this.selectedRow.id, isPassed: e.passed, reason: e.reason || '' }).subscribe(res => {
+      if (res.code === '0') {
+        this.showCheck = false;
+        this.getData();
+      }
+      this.msg.remove(id);
+    });
+  }
+
   stChange(e: STChange) {
     switch (e.type) {
       case 'checkbox':
@@ -226,6 +239,16 @@ export class PeopleComponent implements OnInit {
       this.api.getResidentInfo({ id: this.selectedRow.id }).subscribe(res => {
         if (res.code === '0') {
           this.selectedRow = { ...this.selectedRow, ...res.data };
+          this.rooms = this.selectedRow.rooms;
+          this.faceUrl = this.selectedRow.faceUrl;
+          this.idFrontUrl = this.selectedRow.idFrontUrl;
+          this.idBackUrl = this.selectedRow.idBackUrl;
+          this.handleProvinceSelected(this.selectedRow.provinceCode);
+          this.handleCitySelected(this.selectedRow.cityCode);
+          this.rooms.forEach(room => {
+            this.selectSecondLevel(room.firstLevel);
+            this.selectThirdLevel(room.secondLevel);
+          });
         }
       });
     }
@@ -236,28 +259,30 @@ export class PeopleComponent implements OnInit {
       nzWidth: 800,
       nzOnOk: () => {
         if (this.checkValid()) {
+          const obj = {
+            ...this.selectedRow,
+            birthday: this.selectedRow.birthday && dayjs(this.selectedRow.birthday).format('YYYY-MM-DD HH:mm:ss'),
+            faceUrl: this.faceUrl,
+            idFrontUrl: this.idFrontUrl,
+            idBackUrl: this.idBackUrl,
+            provinceName: this.selectedRow.provinceCode && getNameByCode(this.selectedRow.provinceCode),
+            cityName: this.selectedRow.cityCode && getNameByCode(this.selectedRow.cityCode),
+            districtName: this.selectedRow.districtCode && getNameByCode(this.selectedRow.districtCode),
+            rooms: this.rooms.map(item => ({
+              ...item,
+              startDate: dayjs(item.startDate).format('YYYY-MM-DD HH:mm:ss'),
+              endDate: dayjs(item.endDate).format('YYYY-MM-DD HH:mm:ss'),
+            })),
+          };
           return new Promise(resolve => {
-            this.api
-              .saveResident({
-                ...this.selectedRow,
-                birthday: this.selectedRow.birthday && dayjs(this.selectedRow.birthday).format('YYYY-MM-DD HH:mm:ss'),
-                faceUrl: this.faceUrl,
-                idFrontUrl: this.idFrontUrl,
-                idBackUrl: this.idBackUrl,
-                rooms: this.rooms.map(item => ({
-                  ...item,
-                  startDate: dayjs(item.startDate).format('YYYY-MM-DD HH:mm:ss'),
-                  endDate: dayjs(item.endDate).format('YYYY-MM-DD HH:mm:ss'),
-                })),
-              })
-              .subscribe(res => {
-                if (res.code === '0') {
-                  resolve();
-                  this.getData();
-                } else {
-                  resolve(false);
-                }
-              });
+            this.api.saveResident(obj).subscribe(res => {
+              if (res.code === '0') {
+                resolve();
+                this.getData();
+              } else {
+                resolve(false);
+              }
+            });
           });
         } else {
           return false;
@@ -275,9 +300,13 @@ export class PeopleComponent implements OnInit {
   }
 
   checkValid() {
-    const { name, credentialType, credentialNo } = this.selectedRow;
+    const { name, gender, tel, credentialType, credentialNo } = this.selectedRow;
     if (!name) {
       this.msg.info('请输入姓名');
+      return false;
+    }
+    if (!gender) {
+      this.msg.info('请选择性别');
       return false;
     }
     if (!credentialType) {
@@ -286,6 +315,14 @@ export class PeopleComponent implements OnInit {
     }
     if (!credentialNo) {
       this.msg.info('请输入证件号码');
+      return false;
+    }
+    if (!tel) {
+      this.msg.info('请输入手机号码');
+      return false;
+    }
+    if (!checkMobile(tel)) {
+      this.msg.info('手机号码格式有误');
       return false;
     }
     if (!this.idFrontUrl) {
@@ -358,5 +395,13 @@ export class PeopleComponent implements OnInit {
 
   deleteRoom(i) {
     this.rooms.splice(i, 1);
+  }
+
+  handleProvinceSelected(e) {
+    this.cityList = getCityOrAreaListByCode(e);
+  }
+
+  handleCitySelected(e) {
+    this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
   }
 }

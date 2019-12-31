@@ -4,8 +4,8 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="6" nzRequired>审核结果</nz-form-label>
       <nz-form-control [nzSpan]="16">
-        <nz-radio-group [(ngModel)]="ownerData.flag">
-          <label nz-radio [nzValue]="o.name" *ngFor="let o of AllowList">{{ o.alias }}</label>
+        <nz-radio-group [(ngModel)]="ownerData.flag" (ngModelChange)="$event&&ownerData.checkReason=''">
+          <label nz-radio [nzValue]="o.value" *ngFor="let o of AllowList">{{ o.label }}</label>
         </nz-radio-group>
       </nz-form-control>
     </nz-form-item>

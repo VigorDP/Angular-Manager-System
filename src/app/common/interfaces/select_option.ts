@@ -1,12 +1,12 @@
 // 通过
 export const AllowList: any = [
   {
-    label: true,
-    value: '通过',
+    label: '通过',
+    value: true,
   },
   {
-    label: false,
-    value: '不通过',
+    label: '不通过',
+    value: false,
   },
 ];
 // 审核状态

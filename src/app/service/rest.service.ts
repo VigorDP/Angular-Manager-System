@@ -66,8 +66,7 @@ export class RestService {
   getResidentList = (params: any) =>
     this.http.post(`${PREFIX}resident/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 住户管理-删除
-  deleteResident = (params: any) =>
-    this.http.post(`${PREFIX}resident/delete`, paramsWithExtraParams(params, this.settings.app.community));
+  deleteResident = (params: any) => this.http.post(`${PREFIX}resident/delete`, params);
   // 住户管理-新增或修改
   saveResident = (params: any) =>
     this.http.post(`${PREFIX}resident/save`, paramsWithExtraParams(params, this.settings.app.community));
@@ -76,7 +75,7 @@ export class RestService {
     this.http.get(`${PREFIX}resident/info`, paramsWithExtraParams(params, this.settings.app.community));
   // 住户管理-审核
   checkResident = (params: any) =>
-    this.http.get(`${PREFIX}resident/check`, paramsWithExtraParams(params, this.settings.app.community));
+    this.http.post(`${PREFIX}resident/check`, paramsWithExtraParams(params, this.settings.app.community));
 }
 
 function paramsWithExtraParams(params, community) {

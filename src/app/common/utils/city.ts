@@ -20,7 +20,7 @@ export const getNameByCode = code => {
       if (item.code === code) {
         return item.name;
       } else {
-        return traverse(item.subProvinces);
+        return traverse(item.subProvinces || []);
       }
     }
   }
