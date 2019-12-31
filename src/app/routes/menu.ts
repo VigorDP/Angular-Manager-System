@@ -77,6 +77,11 @@ export const menus: Menu[] = [
           },
         ],
       },
+      {
+        text: '公告管理',
+        link: '/announce',
+        icon: 'anticon-user',
+      },
     ],
   },
 ];
