@@ -137,14 +137,13 @@ export class PeopleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.query = { ...defaultQuery };
     if (this.settings.app.community) {
       this.getData();
-      this.getBuildingStructure(); // 查询列表用
-      this.getSocialProjectStructure(); // 新建住户用
+      this.getSocialProjectStructure();
     }
     this.settings.notify.subscribe(res => {
       this.getData();
-      this.getBuildingStructure();
       this.getSocialProjectStructure();
     });
   }
@@ -165,15 +164,7 @@ export class PeopleComponent implements OnInit {
       this.cdr.detectChanges();
     });
   }
-  // 查询列表用
-  getBuildingStructure() {
-    this.api.getBuildingStructure().subscribe(res => {
-      if (res.code === '0') {
-        // console.log('res', res);
-      }
-    });
-  }
-  // 新建住户用
+
   getSocialProjectStructure() {
     this.api.getSocialProjectStructure().subscribe(res => {
       if (res.code === '0') {

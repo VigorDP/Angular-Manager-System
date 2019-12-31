@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { _HttpClient } from '@delon/theme';
-import { STComponent, STChange, STColumn } from '@delon/abc';
+import { _HttpClient, SettingsService } from '@delon/theme';
+import { STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
-import { ProvinceList, getCityOrAreaListByCode, query } from '@app/common';
+import { query, defaultQuery } from '@app/common';
 
 @Component({
   templateUrl: './index.component.html',
@@ -15,52 +15,78 @@ export class UsageComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
   query = query;
-  provinceList = ProvinceList;
-  cityList = [];
 
-  data = [
-    {
-      title: 'Title 1',
-    },
-    {
-      title: 'Title 2',
-    },
-    {
-      title: 'Title 3',
-    },
-    {
-      title: 'Title 4',
-    },
-    {
-      title: 'Title 1',
-    },
-    {
-      title: 'Title 2',
-    },
-    {
-      title: 'Title 3',
-    },
-    {
-      title: 'Title 4',
-    },
-  ];
+  data = [];
+  firstLevel = [];
+  secondLevel = [];
+  thirdLevel = [];
 
   constructor(
     private api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
+    private settings: SettingsService,
   ) {}
 
   ngOnInit() {
-    // this.getData();
+    this.query = { ...defaultQuery };
+    if (this.settings.app.community) {
+      this.getBuildingStructure();
+      this.getSocialProjectStructure();
+    }
+    this.settings.notify.subscribe(() => {
+      this.getBuildingStructure();
+      this.getSocialProjectStructure();
+    });
   }
 
-  handleProvinceSelected(e) {
-    this.cityList = getCityOrAreaListByCode(e);
+  // 查询列表用
+  getBuildingStructure() {
+    this.api.getBuildingStructure(this.query).subscribe(res => {
+      if (res.code === '0') {
+        this.data = res.data;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  // handleCitySelected(e) {
-  //   this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
-  // }
+  getSocialProjectStructure() {
+    this.api.getSocialProjectStructure().subscribe(res => {
+      if (res.code === '0') {
+        this.firstLevel = res.data.map(item => ({
+          label: item.building + '栋',
+          value: item.building,
+          children: item.socialUnitVos,
+        }));
+      }
+    });
+  }
+
+  selectSecondLevel(value) {
+    this.secondLevel = this.firstLevel
+      .find(item => item.value === value)
+      .children.map(item => ({ label: item.unit + '单元', value: item.unit, children: item.roomNos }));
+  }
+
+  selectThirdLevel(value) {
+    this.thirdLevel = this.secondLevel
+      .find(item => item.value === value)
+      .children.map(item => ({ label: item + '室', value: item }));
+  }
+
+  setColor(row) {
+    if (row.type === 0) {
+      return { color: 'white', background: 'blue' };
+    } else if (row.type === 1) {
+      return { color: 'white', background: 'green' };
+    } else {
+      return { color: 'black', background: 'white' };
+    }
+  }
+
+  reset() {
+    this.query = { ...defaultQuery };
+    setTimeout(() => this.getBuildingStructure());
+  }
 }
