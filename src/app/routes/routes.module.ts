@@ -54,6 +54,10 @@ const routes: Routes = [
         path: 'fee',
         loadChildren: () => import('./fee/fee.module').then(m => m.FeeModule),
       },
+      {
+        path: 'announce',
+        loadChildren: () => import('./announce/announce.module').then(m => m.AnnounceModule),
+      },
     ],
   },
   {
@@ -85,4 +89,5 @@ const routes: Routes = [
   declarations: [...COMPONENTS],
   exports: [RouterModule],
 })
-export class RoutesModule {}
+export class RoutesModule {
+}
