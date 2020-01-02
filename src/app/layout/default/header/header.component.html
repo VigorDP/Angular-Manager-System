@@ -1,12 +1,12 @@
 <div class="alain-default__header-logo" style="display: flex;align-items: center; justify-content: center">
   <a *ngIf="!settings.layout.collapsed" [routerLink]="['/']" class="alain-default__header-logo-link"
     style="display: flex;align-items: center; justify-content: space-around;min-width: 50px;">
-    <img class="alain-default__header-logo-expanded" src="../../../../assets/imgs/logo.svg" alt="{{settings.app.name}}"
+    <img class="alain-default__header-logo-expanded" src="../../../../assets/imgs/logo.png" alt="{{settings.app.name}}"
       style="max-height:40px;" />
     <h3 style="color: white;margin-bottom: 0;margin-left: 8px;">{{settings.app.name}}</h3>
   </a>
   <a *ngIf="settings.layout.collapsed" [routerLink]="['/']">
-    <img src="../../../../assets/imgs/logo.svg" alt="{{settings.app.name}}" style="max-height:40px;" />
+    <img src="../../../../assets/imgs/logo.png" alt="{{settings.app.name}}" style="max-height:40px;" />
   </a>
 
 </div>
