@@ -13,3 +13,16 @@ export const getCityOrAreaListByCode = (firstCode: string, secondCode?: string) 
       .subProvinces.map(province => ({ value: province.code, label: province.name }));
   }
 };
+
+export const getNameByCode = code => {
+  function traverse(provinces) {
+    for (const item of provinces) {
+      if (item.code === code) {
+        return item.name;
+      } else {
+        return traverse(item.subProvinces || []);
+      }
+    }
+  }
+  return traverse(provinces);
+};

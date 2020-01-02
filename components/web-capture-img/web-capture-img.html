@@ -1,0 +1,25 @@
+<div>
+  <button nz-button nzType="primary" (click)="initCamera()">打开摄像头</button>
+  <nz-modal [(nzVisible)]="show" (nzOnCancel)="handleCancel()" nzWidth="600" [nzFooter]="modalFooter">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="2">摄像头</nz-form-label>
+      <nz-form-control [nzSpan]="10">
+        <video id="video" #video width="150px" height="150px" autoplay="autoplay"></video>
+      </nz-form-control>
+      <nz-form-label [nzSpan]="2">预览区</nz-form-label>
+      <nz-form-control [nzSpan]="10">
+        <canvas id="canvas" #canvas width="300" height="300"
+          style="width:150px;height:150px;background: rgb(216, 210, 210);">预览区</canvas>
+      </nz-form-control>
+    </nz-form-item>
+    <div style="display: flex;align-items: center;justify-content: center;">
+      <button nz-button nzType="primary" (click)="takePhoto()">拍照</button>
+    </div>
+    <ng-template #modalFooter>
+      <div style="text-align: center">
+        <button nz-button nzType="primary" (click)="handleOk()">确定</button>
+        <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+      </div>
+    </ng-template>
+  </nz-modal>
+</div>

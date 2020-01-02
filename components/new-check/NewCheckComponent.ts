@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output, OnChanges } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { AllowList } from '../../interfaces';
 
@@ -8,11 +8,11 @@ import { AllowList } from '../../interfaces';
   templateUrl: './new-check.html',
   styles: [],
 })
-export class NewCheckComponent implements OnInit {
-  // 关闭事件
-  @Output() public close = new EventEmitter<any>();
+export class NewCheckComponent implements OnChanges {
+  @Input() show = false;
   // 确定事件
   @Output() public save = new EventEmitter<any>();
+  @Output() public cancel = new EventEmitter<any>();
   ownerData = {} as any;
   AllowList = AllowList;
   isVisible = true;
@@ -20,8 +20,8 @@ export class NewCheckComponent implements OnInit {
 
   constructor(private messageService: NzMessageService) {}
 
-  ngOnInit(): void {
-    this.isVisible = true;
+  ngOnChanges(e) {
+    this.isVisible = e.show.currentValue;
   }
 
   handleOk(): void {
@@ -36,8 +36,7 @@ export class NewCheckComponent implements OnInit {
   }
 
   handleCancel(): void {
-    this.isVisible = false;
-    this.close.emit();
+    this.cancel.emit();
   }
 
   private isValid(): boolean {
