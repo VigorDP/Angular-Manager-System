@@ -136,7 +136,7 @@ export class CommunityListComponent implements OnInit {
         if (!this.settings.app.community) {
           this.settings.setApp({
             ...this.settings.app,
-            community: res.data.rows[0],
+            community: res.data.rows[0] || { socialName: '暂无社区' },
             event: null,
           });
         } else {
@@ -158,7 +158,7 @@ export class CommunityListComponent implements OnInit {
   updateCommunity(id) {
     let result = this.communityPageResult.rows.find(community => community.id === id);
     if (!result) {
-      result = this.communityPageResult.rows[0];
+      result = this.communityPageResult.rows[0] || ({ socialName: '暂无社区' } as any);
     }
     return result;
   }

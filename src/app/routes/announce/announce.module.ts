@@ -7,7 +7,7 @@ const COMPONENTS = [AnnounceComponent];
 
 const routes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
-  { path: 'index', component: AnnounceComponent, data: { title: '社区公告管理' } },
+  { path: 'index', component: AnnounceComponent, data: { title: '物业版-社区公告管理' } },
 ];
 
 @NgModule({
@@ -15,5 +15,4 @@ const routes: Routes = [
   declarations: [...COMPONENTS],
   exports: [RouterModule],
 })
-export class AnnounceModule {
-}
+export class AnnounceModule {}

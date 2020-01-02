@@ -8,8 +8,8 @@ const COMPONENTS = [StructureComponent, UsageComponent];
 
 const routes: Routes = [
   { path: '', redirectTo: 'usage', pathMatch: 'full' },
-  { path: 'usage', component: UsageComponent, data: { title: '户室信息' } },
-  { path: 'structure', component: StructureComponent, data: { title: '楼栋信息' } },
+  { path: 'usage', component: UsageComponent, data: { title: '物业版-户室信息' } },
+  { path: 'structure', component: StructureComponent, data: { title: '物业版-楼栋信息' } },
 ];
 
 @NgModule({

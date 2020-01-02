@@ -34,8 +34,8 @@ const routes: Routes = [
         path: 'system',
         children: [
           { path: '', redirectTo: 'account', pathMatch: 'full' },
-          { path: 'account', component: PersonComponent, data: { title: '账号管理' } },
-          { path: 'role', component: RoleComponent, data: { title: '角色管理' } },
+          { path: 'account', component: PersonComponent, data: { title: '物业版-账号管理' } },
+          { path: 'role', component: RoleComponent, data: { title: '物业版-角色管理' } },
         ],
       },
       {
@@ -64,12 +64,12 @@ const routes: Routes = [
     path: 'passport',
     component: LayoutPassportComponent,
     children: [
-      { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
-      { path: 'register', component: UserRegisterComponent, data: { title: '注册' } },
+      { path: 'login', component: UserLoginComponent, data: { title: '物业版-登录' } },
+      { path: 'register', component: UserRegisterComponent, data: { title: '物业版-注册' } },
       {
         path: 'register-result',
         component: UserRegisterResultComponent,
-        data: { title: '注册结果' },
+        data: { title: '物业版-注册结果' },
       },
     ],
   },
@@ -89,5 +89,4 @@ const routes: Routes = [
   declarations: [...COMPONENTS],
   exports: [RouterModule],
 })
-export class RoutesModule {
-}
+export class RoutesModule {}

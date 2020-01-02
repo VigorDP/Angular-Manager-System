@@ -7,7 +7,7 @@ const COMPONENTS = [ProjectComponent];
 
 const routes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
-  { path: 'index', component: ProjectComponent, data: { title: '社区管理' } },
+  { path: 'index', component: ProjectComponent, data: { title: '物业版-社区管理' } },
 ];
 
 @NgModule({

@@ -8,8 +8,8 @@ const COMPONENTS = [FeeOfflineComponent, FeeStandardComponent];
 
 const routes: Routes = [
   { path: '', redirectTo: 'offline', pathMatch: 'full' },
-  { path: 'offline', component: FeeOfflineComponent, data: { title: '线下缴费' } },
-  { path: 'standard', component: FeeStandardComponent, data: { title: '物业费用标准设置' } },
+  { path: 'offline', component: FeeOfflineComponent, data: { title: '物业版-线下缴费' } },
+  { path: 'standard', component: FeeStandardComponent, data: { title: '物业版-物业费用标准设置' } },
 ];
 
 @NgModule({
@@ -17,5 +17,4 @@ const routes: Routes = [
   declarations: [...COMPONENTS],
   exports: [RouterModule],
 })
-export class FeeModule {
-}
+export class FeeModule {}

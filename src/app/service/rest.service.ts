@@ -79,7 +79,7 @@ export class RestService {
 }
 
 function paramsWithExtraParams(params, community) {
-  if (community) {
+  if (community && community.id) {
     return { ...params, socialId: community.id };
   } else {
     return params;
