@@ -80,7 +80,7 @@ export class PersonComponent implements OnInit {
   getRoleList() {
     this.api.getRoleList({ pageNo: 1, pageSize: 100 }).subscribe(res => {
       const { rows } = res.data || { rows: [] };
-      this.roleList = rows.map(row => ({ label: row.name, value: row.value }));
+      this.roleList = rows.map(row => ({ label: row.name, value: row.id, value2: row.value }));
     });
   }
 
@@ -114,7 +114,12 @@ export class PersonComponent implements OnInit {
       nzOnOk: () => {
         if (this.checkValid()) {
           this.loading = true;
-          this.api.savePropertyAccount(this.selectedRow).subscribe(() => this.getData());
+          this.api
+            .savePropertyAccount({
+              ...this.selectedRow,
+              roleCateEnum: this.roleList.find(role => role.value === this.selectedRow.ramId).value2,
+            })
+            .subscribe(() => this.getData());
         } else {
           return false;
         }

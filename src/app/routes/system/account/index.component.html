@@ -59,8 +59,7 @@
       <input nz-input type="password" [(ngModel)]="selectedRow.pwdRepeat" name="pwdRepeat" />
     </se>
     <se label="角色" col="2" required>
-      <nz-select [(ngModel)]="selectedRow.roleCateEnum" name="roleCateEnum" [nzPlaceHolder]="'请选择'"
-        [nzShowSearch]="true">
+      <nz-select [(ngModel)]="selectedRow.ramId" name="ramId" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
         <nz-option *ngFor="let i of roleList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>

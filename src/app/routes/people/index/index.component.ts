@@ -41,6 +41,12 @@ const defaultRoom = {
       nz-select {
         width: 140px;
       }
+      input {
+        width: 140px;
+      }
+      nz-date-picker {
+        width: 140px;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

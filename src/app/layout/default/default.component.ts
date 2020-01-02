@@ -14,7 +14,9 @@ import { SettingsService, MenuService } from '@delon/theme';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { menus } from '@app/routes/menu';
-
+import { cloneDeep } from 'lodash';
+import { RestService } from '@app/service';
+import { getFilterMenus } from '@app/common';
 @Component({
   selector: 'layout-default',
   templateUrl: './default.component.html',
@@ -30,9 +32,9 @@ export class LayoutDefaultComponent implements OnInit, OnDestroy {
     private el: ElementRef,
     private renderer: Renderer2,
     @Inject(DOCUMENT) private doc: any,
-    menuSrv: MenuService,
+    private menuSrv: MenuService,
+    private api: RestService,
   ) {
-    menuSrv.add(menus);
     // scroll to top in change page
     router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(evt => {
       if (!this.isFetching && evt instanceof RouteConfigLoadStart) {
@@ -68,10 +70,26 @@ export class LayoutDefaultComponent implements OnInit, OnDestroy {
     doc.body.classList[layout.colorWeak ? 'add' : 'remove']('color-weak');
   }
 
+  private setMenu() {
+    const backupMenus = cloneDeep(menus);
+    const { role = '', ramId = '' } = this.settings.user || {};
+    if (role === 'SUPER_ADMIN' || role === 'ADMIN') {
+      this.menuSrv.add(backupMenus);
+      return;
+    }
+    this.api.getRoleInfo({ id: ramId }).subscribe(res => {
+      const ALLOW_MENU_NAMES = res.data.modules.map(module => module.name);
+      const finalMenus = getFilterMenus(backupMenus[0].children, ALLOW_MENU_NAMES);
+      backupMenus[0].children = finalMenus;
+      this.menuSrv.add(backupMenus);
+    });
+  }
+
   ngOnInit() {
     const { settings, unsubscribe$ } = this;
     settings.notify.pipe(takeUntil(unsubscribe$)).subscribe(() => this.setClass());
     this.setClass();
+    this.setMenu();
   }
 
   ngOnDestroy() {
