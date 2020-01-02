@@ -21,6 +21,15 @@ export class ResponseInterceptor implements HttpInterceptor {
     @Inject(DA_SERVICE_TOKEN) public tokenService: ITokenService,
   ) {}
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // 拦截需要传 socialId 的请求
+    if (!req.params.get('socialId') && req.params.get('socialIdNeeded')) {
+      this.messageService.info('请选择当前社区！');
+      return;
+    }
+    if (req.body && !req.body.socialId && req.body.socialIdNeeded) {
+      this.messageService.info('请选择当前社区！');
+      return;
+    }
     return next.handle(req).pipe(
       tap(
         response => {

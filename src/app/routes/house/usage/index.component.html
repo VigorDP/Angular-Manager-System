@@ -28,7 +28,17 @@
 </nz-card>
 
 <nz-card [nzBordered]="false">
-
+  <section style="display: flex;">
+    <p style="display: flex;align-items: center; margin-right: 20px;"><span
+        style="display: inline-block;width: 60px;height:30px;background: blue;margin-right: 4px;"></span><span>自住：{{statistics.masterCount}}</span>
+    </p>
+    <p style="display: flex;align-items: center; margin-right: 20px;"><span
+        style="display: inline-block;width: 60px;height:30px;background: green;margin-right: 4px;"></span><span>出租：{{statistics.guestCount}}</span>
+    </p>
+    <p style="display: flex;align-items: center; margin-right: 20px;"><span
+        style="display: inline-block;width: 60px;height:30px;background: white;border:1px solid gray;margin-right: 4px;"></span><span>其他：{{statistics.otherCount}}</span>
+    </p>
+  </section>
   <nz-list *ngFor="let item of data" [nzDataSource]="data" [nzGrid]="{ gutter: 16, span: 6 }" [nzHeader]="item.name">
     <div style="display: flex;width: 100%;flex-wrap: wrap;align-items: space-around;">
       <span *ngFor="let row of item.rooms"

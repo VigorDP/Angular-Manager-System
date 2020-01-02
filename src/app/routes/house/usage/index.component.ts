@@ -20,6 +20,7 @@ export class UsageComponent implements OnInit {
   firstLevel = [];
   secondLevel = [];
   thirdLevel = [];
+  statistics = {};
 
   constructor(
     private api: RestService,
@@ -45,7 +46,12 @@ export class UsageComponent implements OnInit {
   getBuildingStructure() {
     this.api.getBuildingStructure(this.query).subscribe(res => {
       if (res.code === '0') {
-        this.data = res.data;
+        this.data = res.data.vos;
+        this.statistics = {
+          masterCount: res.data.masterCount,
+          guestCount: res.data.guestCount,
+          otherCount: res.data.otherCount,
+        };
         this.cdr.detectChanges();
       }
     });
