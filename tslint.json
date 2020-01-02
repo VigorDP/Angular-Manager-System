@@ -106,6 +106,7 @@
       ["Number", "Use number instead."],
       ["Boolean", "Use boolean instead."],
       ["Function", "Use specific callable interface instead."]
-    ]
+    ],
+    "no-unused-expression":false
   }
 }

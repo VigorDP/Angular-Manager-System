@@ -66,7 +66,7 @@ export class PeopleComponent implements OnInit {
     { title: '手机号', index: 'tel' },
     { title: '所在楼栋单元', index: 'building' },
     { title: '所在房间', index: 'roomNo' },
-    { title: '年龄', index: 'age' },
+    { title: '审核状态', index: 'certificationStatus' },
     { title: '证件号码', index: 'credentialNo' },
     {
       title: '操作',
@@ -184,6 +184,7 @@ export class PeopleComponent implements OnInit {
   }
 
   selectSecondLevel(value) {
+    console.log('firstLevel', this.firstLevel);
     this.secondLevel = this.firstLevel
       .find(item => item.value === value)
       .children.map(item => ({ label: item.unit + '单元', value: item.unit, children: item.roomNos }));
@@ -240,11 +241,11 @@ export class PeopleComponent implements OnInit {
           this.faceUrl = this.selectedRow.faceUrl;
           this.idFrontUrl = this.selectedRow.idFrontUrl;
           this.idBackUrl = this.selectedRow.idBackUrl;
-          this.handleProvinceSelected(this.selectedRow.provinceCode);
-          this.handleCitySelected(this.selectedRow.cityCode);
+          this.selectedRow.provinceCode && this.handleProvinceSelected(this.selectedRow.provinceCode);
+          this.selectedRow.cityCode && this.handleCitySelected(this.selectedRow.cityCode);
           this.rooms.forEach(room => {
-            this.selectSecondLevel(room.firstLevel);
-            this.selectThirdLevel(room.secondLevel);
+            room.firstLevel && this.selectSecondLevel(room.firstLevel);
+            room.secondLevel && this.selectThirdLevel(room.secondLevel);
           });
         }
       });
