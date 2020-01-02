@@ -78,6 +78,10 @@ export class PeopleComponent implements OnInit {
           icon: 'eye',
           click: (item: any) => {
             this.selectedRow = item;
+            if (this.selectedRow.certificationStatus === '已认证') {
+              this.msg.info('该住户已通过认证！');
+              return;
+            }
             this.showCheck = true;
           },
         },
@@ -184,7 +188,6 @@ export class PeopleComponent implements OnInit {
   }
 
   selectSecondLevel(value) {
-    console.log('firstLevel', this.firstLevel);
     this.secondLevel = this.firstLevel
       .find(item => item.value === value)
       .children.map(item => ({ label: item.unit + '单元', value: item.unit, children: item.roomNos }));
