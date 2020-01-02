@@ -73,6 +73,8 @@ export class RestService {
   // 住户管理-详情
   getResidentInfo = (params: any) =>
     this.http.get(`${PREFIX}resident/info`, paramsWithExtraParams(params, this.settings.app.community));
+  // 住户管理-根据证件号码查找
+  getResidentInfoByCredentialNo = (params: any) => this.http.post(`${PREFIX}resident/getInfoByCredentialNo`, params);
   // 住户管理-审核
   checkResident = (params: any) =>
     this.http.post(`${PREFIX}resident/check`, paramsWithExtraParams(params, this.settings.app.community));

@@ -66,6 +66,15 @@
   <form nz-form se-container labelWidth="130">
     <nz-tabset>
       <nz-tab nzTitle="人员基本信息">
+        <se label="证件类型" col="2" required>
+          <nz-select [(ngModel)]="selectedRow.credentialType" name="credentialType" [nzPlaceHolder]="'请选择'">
+            <nz-option *ngFor="let i of cardList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+          </nz-select>
+        </se>
+        <se label="证件号码" col="2" required>
+          <input nz-input [(ngModel)]="selectedRow.credentialNo" (ngModelChange)="handleCredentialNo($event)"
+            name="credentialNo" />
+        </se>
         <se label="姓名" col="2" required>
           <input nz-input [(ngModel)]="selectedRow.name" name="name" />
         </se>
@@ -73,14 +82,6 @@
           <nz-select [(ngModel)]="selectedRow.gender" name="gender" [nzPlaceHolder]="'请选择'">
             <nz-option *ngFor="let i of genderList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
           </nz-select>
-        </se>
-        <se label="证件类型" col="2" required>
-          <nz-select [(ngModel)]="selectedRow.credentialType" name="credentialType" [nzPlaceHolder]="'请选择'">
-            <nz-option *ngFor="let i of cardList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-          </nz-select>
-        </se>
-        <se label="证件号码" col="2" required>
-          <input nz-input [(ngModel)]="selectedRow.credentialNo" name="credentialNo" />
         </se>
         <se label="出生日期" col="2">
           <nz-date-picker class="input" [nzStyle]="{ width: '100%' }" nzFormat="yyyy-MM-dd" nzPlaceHolder="出生日期"

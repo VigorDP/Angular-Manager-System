@@ -292,6 +292,32 @@ export class PeopleComponent implements OnInit {
     });
   }
 
+  handleCredentialNo(e) {
+    if (!this.selectedRow.id) {
+      this.api
+        .getResidentInfoByCredentialNo({
+          credentialNo: e,
+          credentialType: this.selectedRow.credentialType,
+        })
+        .subscribe(res => {
+          if (res.data) {
+            this.modalSrv.confirm({
+              nzTitle: '<i>检测到该住户信息已存在，是否覆盖?</i>',
+              nzOnOk: () => {
+                this.selectedRow = { ...this.selectedRow, ...res.data };
+                this.selectedRow.rooms = [];
+                this.faceUrl = this.selectedRow.faceUrl;
+                this.idFrontUrl = this.selectedRow.idFrontUrl;
+                this.idBackUrl = this.selectedRow.idBackUrl;
+                this.selectedRow.provinceCode && this.handleProvinceSelected(this.selectedRow.provinceCode);
+                this.selectedRow.cityCode && this.handleCitySelected(this.selectedRow.cityCode);
+              },
+            });
+          }
+        });
+    }
+  }
+
   getImage(e) {
     this.api.uploadBase64({ base64: e }).subscribe(res => {
       if (res.code === 0) {
