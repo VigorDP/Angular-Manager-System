@@ -20,7 +20,7 @@ export class UsageComponent implements OnInit {
   firstLevel = [];
   secondLevel = [];
   thirdLevel = [];
-  statistics = {};
+  statistics = {} as any;
 
   constructor(
     private api: RestService,
