@@ -173,7 +173,7 @@
             </nz-input-group>
           </se>
           <se label="" col="2" required>
-            <button nz-button nzType="danger" (click)="deleteRoom(i)">删除</button>
+            <button nz-button nzType="danger" (click)="deleteRoom(i)" *ngIf="rooms.length>1">删除</button>
           </se>
         </div>
         <se label="" col="1">

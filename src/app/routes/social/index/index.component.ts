@@ -18,6 +18,9 @@ import {
   checkMobile,
   getNameByCode,
 } from '@app/common';
+import { AmapGeocoderWrapper, AmapGeocoderService } from 'ngx-amap';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   templateUrl: './index.component.html',
@@ -84,17 +87,30 @@ export class ProjectComponent implements OnInit {
   areaList = [];
   images = ''; // 小区效果图
 
+  searchPlugin: Promise<AmapGeocoderWrapper>;
+  center: any;
+  searchChange$ = new BehaviorSubject('');
+
   constructor(
     private api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {}
+    AmapGeocoder: AmapGeocoderService,
+  ) {
+    this.searchPlugin = AmapGeocoder.of();
+  }
 
   ngOnInit() {
     this.query = { ...defaultQuery };
     this.getData();
+    this.searchChange$
+      .asObservable()
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.searchLocation();
+      });
   }
 
   getData(pageIndex?: number) {
@@ -132,6 +148,22 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  searchLocation() {
+    const address = this.selectedRow.address;
+    if (!!address) {
+      // 使用AMap.Geocoder.getLocation方法获取地理编码:
+      this.searchPlugin
+        .then(geocoder => geocoder.getLocation(address))
+        .then(data => {
+          if (data.status === 'complete' && data.result.info === 'OK') {
+            this.center = data.result.geocodes[0].location;
+            this.selectedRow.longitude = this.center.lng;
+            this.selectedRow.latitude = this.center.lat;
+          }
+        });
+    }
+  }
+
   reset() {
     this.query = { ...defaultQuery };
     this.loading = true;
@@ -145,6 +177,7 @@ export class ProjectComponent implements OnInit {
           this.selectedRow = { ...this.selectedRow, ...res.data };
           this.handleProvinceSelected(this.selectedRow.provinceCode);
           this.handleCitySelected(this.selectedRow.cityCode);
+          this.searchChange$.next(this.selectedRow.address);
         }
       });
     }
@@ -155,7 +188,6 @@ export class ProjectComponent implements OnInit {
       nzWidth: 800,
       nzOnOk: () => {
         if (this.checkValid()) {
-          console.log('object', this.selectedRow, getNameByCode(this.selectedRow.provinceCode));
           return new Promise(resolve => {
             this.api
               .saveSocialProject({
@@ -192,6 +224,10 @@ export class ProjectComponent implements OnInit {
 
   handleCitySelected(e) {
     this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
+  }
+
+  searchChange() {
+    this.searchChange$.next('');
   }
 
   checkValid() {

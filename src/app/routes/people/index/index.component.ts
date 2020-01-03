@@ -288,6 +288,7 @@ export class PeopleComponent implements OnInit {
             this.api.saveResident(obj).subscribe(res => {
               if (res.code === '0') {
                 resolve();
+                this.rooms = [];
                 this.getData();
               } else {
                 resolve(false);

@@ -70,16 +70,16 @@
       </nz-select>
     </se>
     <se label="项目详细地址" col="1">
-      <input nz-input [(ngModel)]="selectedRow.address" name="address" />
+      <input nz-input [(ngModel)]="selectedRow.address" name="address" (input)="searchChange()" />
     </se>
     <se label="" col="1">
-      <ngx-amap style="height:200px"></ngx-amap>
+      <ngx-amap style="height:200px" [zoom]="16" [center]="center"></ngx-amap>
     </se>
     <se label="经度" col="2">
-      <input nz-input [(ngModel)]="selectedRow.longitude" name="longitude" />
+      <input nz-input [(ngModel)]="selectedRow.longitude" name="longitude" disabled />
     </se>
     <se label="纬度" col="2">
-      <input nz-input [(ngModel)]="selectedRow.latitude" name="latitude" />
+      <input nz-input [(ngModel)]="selectedRow.latitude" name="latitude" disabled />
     </se>
     <se label="管理面积" col="2" required>
       <input nz-input [(ngModel)]="selectedRow.area" name="area" />

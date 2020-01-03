@@ -50,8 +50,7 @@ export class RestService {
   getBuildingList = (params: any) =>
     this.http.post(`${PREFIX}building/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 楼栋结构-删除
-  deleteBuilding = (params: any) =>
-    this.http.post(`${PREFIX}building/delete`, paramsWithExtraParams(params, this.settings.app.community));
+  deleteBuilding = (params: any) => this.http.post(`${PREFIX}building/delete`, params);
   // 楼栋结构-新增或修改
   saveBuilding = (params: any) =>
     this.http.post(`${PREFIX}building/save`, paramsWithExtraParams(params, this.settings.app.community));
