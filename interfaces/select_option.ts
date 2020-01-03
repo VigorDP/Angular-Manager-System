@@ -13,11 +13,11 @@ export const AllowList: any = [
 export const CheckList = [
   {
     value: 'CERTIFIED',
-    label: '已审核',
+    label: '已认证',
   },
   {
     value: 'UNCERTIFIED',
-    label: '未审核',
+    label: '未认证',
   },
   {
     value: 'PENDING',
