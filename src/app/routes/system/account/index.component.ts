@@ -73,6 +73,7 @@ export class PersonComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.query = { ...defaultQuery };
     this.getData();
     this.getRoleList();
   }

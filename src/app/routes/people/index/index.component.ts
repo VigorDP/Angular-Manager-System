@@ -23,6 +23,8 @@ import {
   RalationList,
   CheckList,
 } from '@app/common';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 const defaultRoom = {
   firstLevel: null,
@@ -137,6 +139,7 @@ export class PeopleComponent implements OnInit {
   areaList = [];
   showCheck = false;
   checkData = null;
+  inputChange$ = new BehaviorSubject('');
 
   constructor(
     private api: RestService,
@@ -156,6 +159,12 @@ export class PeopleComponent implements OnInit {
       this.getData();
       this.getSocialProjectStructure();
     });
+    this.inputChange$
+      .asObservable()
+      .pipe(debounceTime(1000))
+      .subscribe(e => {
+        e && this.handleCredentialNo(e);
+      });
   }
 
   getData(pageIndex?: number) {
@@ -293,16 +302,17 @@ export class PeopleComponent implements OnInit {
   }
 
   handleCredentialNo(e) {
+    // 新建用户
     if (!this.selectedRow.id) {
       this.api
         .getResidentInfoByCredentialNo({
           credentialNo: e,
-          credentialType: this.selectedRow.credentialType,
+          credentialType: this.selectedRow.credentialType || 'ID_CARD',
         })
         .subscribe(res => {
           if (res.data) {
             this.modalSrv.confirm({
-              nzTitle: '<i>检测到该住户信息已存在，是否覆盖?</i>',
+              nzTitle: '检测到该住户信息已存在，是否使用该信息?',
               nzOnOk: () => {
                 this.selectedRow = { ...this.selectedRow, ...res.data };
                 this.selectedRow.rooms = [];

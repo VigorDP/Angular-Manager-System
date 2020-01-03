@@ -93,6 +93,7 @@ export class ProjectComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.query = { ...defaultQuery };
     this.getData();
   }
 

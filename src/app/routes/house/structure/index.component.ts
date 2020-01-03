@@ -80,6 +80,7 @@ export class StructureComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.query = { ...defaultQuery };
     if (this.settings.app.community) {
       this.getData();
     }

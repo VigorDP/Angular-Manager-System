@@ -88,6 +88,8 @@ export class FeeStandardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.query = { ...defaultQuery };
+
     // this.getData();
   }
 

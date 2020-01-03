@@ -72,7 +72,7 @@
           </nz-select>
         </se>
         <se label="证件号码" col="2" required>
-          <input nz-input [(ngModel)]="selectedRow.credentialNo" (ngModelChange)="handleCredentialNo($event)"
+          <input nz-input [(ngModel)]="selectedRow.credentialNo" (ngModelChange)="inputChange$.next($event)"
             name="credentialNo" />
         </se>
         <se label="姓名" col="2" required>

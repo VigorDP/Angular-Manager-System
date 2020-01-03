@@ -73,6 +73,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.query = { ...defaultQuery };
     this.getData();
     this.getUserRightList();
   }

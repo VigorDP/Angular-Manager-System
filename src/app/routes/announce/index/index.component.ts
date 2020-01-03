@@ -101,8 +101,8 @@ export class AnnounceComponent implements OnInit {
   tagObject = {
     query: cloneDeep(query),
     pages: cloneDeep(pages),
-    total: total,
-    loading: loading,
+    total,
+    loading,
     data: cloneDeep(data),
     selectedRow: cloneDeep(selectedRow),
     columns: [
@@ -141,10 +141,10 @@ export class AnnounceComponent implements OnInit {
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
+    this.query = { ...defaultQuery };
     this.getData();
   }
 
@@ -302,7 +302,6 @@ export class AnnounceComponent implements OnInit {
     });
   }
 
-
   cancelTop() {
     this.modalSrv.confirm({
       nzTitle: '是否确定取消置顶？',
@@ -321,7 +320,6 @@ export class AnnounceComponent implements OnInit {
     });
   }
 
-
   onRangeChange(e) {
     console.log('e', e);
   }
@@ -329,7 +327,6 @@ export class AnnounceComponent implements OnInit {
   htmlChange(e) {
     console.log('html', e);
   }
-
 
   tagManager(tpl: TemplateRef<{}>) {
     this.getTagData();
@@ -372,7 +369,6 @@ export class AnnounceComponent implements OnInit {
     }
   }
 
-
   addOrEditTag(tpl: TemplateRef<{}>, type: 'add' | 'edit') {
     this.modalSrv.create({
       nzTitle: type === 'add' ? '新增标签' : '编辑标签',
@@ -409,7 +405,6 @@ export class AnnounceComponent implements OnInit {
     });
   }
 
-
   checkTagValid() {
     return true;
   }
@@ -431,5 +426,4 @@ export class AnnounceComponent implements OnInit {
       },
     });
   }
-
 }
