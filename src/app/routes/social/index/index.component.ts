@@ -155,10 +155,12 @@ export class ProjectComponent implements OnInit {
       nzWidth: 800,
       nzOnOk: () => {
         if (this.checkValid()) {
+          console.log('object', this.selectedRow, getNameByCode(this.selectedRow.provinceCode));
           return new Promise(resolve => {
             this.api
               .saveSocialProject({
                 ...this.selectedRow,
+                images: this.images,
                 cityName: getNameByCode(this.selectedRow.cityCode),
                 districtName: getNameByCode(this.selectedRow.districtCode),
                 provinceName: getNameByCode(this.selectedRow.provinceCode),
@@ -230,7 +232,7 @@ export class ProjectComponent implements OnInit {
   }
 
   getImgUrl(e) {
-    this.images = e;
+    this.images = e[0];
   }
 
   delete() {
