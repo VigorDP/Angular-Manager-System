@@ -103,6 +103,13 @@ export const menus: Menu[] = [
         icon: 'anticon-user',
         children: [],
       },
+      {
+        text: '政务管理',
+        link: '/government',
+        name: 'GOVERNMENT',
+        icon: 'anticon-user',
+        children: [],
+      },
     ],
   },
 ];

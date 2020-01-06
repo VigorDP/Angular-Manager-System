@@ -19,7 +19,7 @@ import * as dayjs from 'dayjs';
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AnnounceComponent implements OnInit {
+export class GovernmentAffairComponent implements OnInit {
   query = query;
   pages = pages;
   total = total;
@@ -32,8 +32,6 @@ export class AnnounceComponent implements OnInit {
     { title: '公告标题', index: 'title' },
     { title: '发布人', index: 'creator' },
     { title: '所属标签', index: 'tag' },
-    { title: '是否置顶', index: 'isTop' },
-    { title: '公告类型', index: 'type' },
     { title: '发布时间', index: 'gmtCreate' },
     {
       title: '操作',
@@ -46,26 +44,6 @@ export class AnnounceComponent implements OnInit {
           click: (item: any) => {
             this.selectedRow = item;
             this.addOrEditOrView(this.viewTpl, 'view');
-          },
-        },
-        {
-          text: '置顶',
-          icon: 'edit',
-          iif: item => item.status === 'UNTOP',
-          iifBehavior: 'hide',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'edit');
-          },
-        },
-        {
-          text: '取消置顶',
-          icon: 'edit',
-          iif: item => item.status === 'TOP',
-          iifBehavior: 'hide',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.cancelTop();
           },
         },
         {
@@ -89,23 +67,21 @@ export class AnnounceComponent implements OnInit {
   @ViewChild('content', { static: false })
   content: ElementRef;
 
-
   noticeCateList = [
     {
-      value: 'SOCIAL',
-      label: '社区公告',
+      value: 'INNER_PARTY_PUBLICITY',
+      label: '党建要闻',
     },
     {
-      value: 'POLICE',
-      label: '警情推送',
+      value: 'PARTY_BUILDING_NEWS',
+      label: '党内公示',
     },
     {
-      value: 'CITIZEN',
-      label: '民情互动',
+      value: 'PARTY_MEMBER_ACTIVITY',
+      label: '学习党章',
     },
     {
-      value: 'INFORMATION',
-      label: '社区资讯',
+      value: '听党指挥',
     },
   ];
   image = ''; // 小区效果图
@@ -289,7 +265,7 @@ export class AnnounceComponent implements OnInit {
   }
 
   getImgUrl(e) {
-    this.image = e[0];
+    this.image = e;
   }
 
   delete() {
@@ -321,7 +297,6 @@ export class AnnounceComponent implements OnInit {
       },
     });
   }
-
 
   cancelTop() {
     this.modalSrv.confirm({
@@ -359,8 +334,9 @@ export class AnnounceComponent implements OnInit {
     });
   }
 
-  getTagData() {
+  getTagData(pageIndex?: number) {
     this.tagObject.loading = true;
+    this.tagObject.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
     this.api.getTagList({ noticeCate: this.query.noticeCate }).subscribe(res => {
       this.tagObject.loading = false;
       this.tagObject.data = res.data || [];
@@ -371,14 +347,14 @@ export class AnnounceComponent implements OnInit {
   tagStChange(e: STChange) {
     switch (e.type) {
       case 'filter':
-        this.getTagData();
+        this.getTagData(e.pi);
         break;
       case 'pi':
-        this.getTagData();
+        this.getTagData(e.pi);
         break;
       case 'ps':
         this.tagObject.query.pageSize = e.ps;
-        this.getTagData();
+        this.getTagData(e.pi);
         break;
     }
   }
@@ -428,7 +404,7 @@ export class AnnounceComponent implements OnInit {
       nzOkType: 'danger',
       nzOnOk: () => {
         this.api.deleteTag(this.tagObject.selectedRow).subscribe(() => {
-          this.getTagData();
+          this.getData();
           this.tagSt.clearCheck();
         });
       },

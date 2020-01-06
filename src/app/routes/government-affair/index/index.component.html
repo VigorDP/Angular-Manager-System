@@ -1,6 +1,6 @@
-<page-header title="公告管理" autoBreadcrumb="false" [action]="action">
+<page-header title="政务管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
-    <button nz-button (click)="selectedRow={};getTagData();addOrEditOrView(modalContent,'add')"
+    <button nz-button (click)="selectedRow={};this.getTagData(1);addOrEditOrView(modalContent,'add')"
             [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新建公告</span>
@@ -51,18 +51,11 @@
     </se>
     <se label="文章标签" col="1" required>
       <nz-select [(ngModel)]="selectedRow.tag" name="tag" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of this.tagObject.data" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
+        <nz-option *ngFor="let i of this.tagObject.data" [nzLabel]="i.name" [nzValue]="i.id"></nz-option>
       </nz-select>
     </se>
     <se label="文章概述" col="1" required>
       <input nz-input [(ngModel)]="selectedRow.descr" name="descr"/>
-    </se>
-    <se label="" col="3">
-      <label nz-checkbox [(ngModel)]="selectedRow.top" name="top">是否置顶</label>
-    </se>
-    <se label="置顶时间" col="2" *ngIf="selectedRow.top" required>
-      <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onRangeChange($event)"
-                       name="dateRange"></nz-range-picker>
     </se>
     <se label="" col="1">
       <label nz-checkbox [(ngModel)]="selectedRow.isPush" name="isPush">是否推送到移动端</label>
@@ -79,7 +72,6 @@
     </se>
   </form>
 </ng-template>
-
 
 <!--查看公告-->
 <ng-template #viewContent>
