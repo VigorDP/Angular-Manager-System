@@ -1,6 +1,7 @@
-<page-header title="社区公告" autoBreadcrumb="false" [action]="action">
+<page-header title="公告管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
-    <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
+    <button nz-button (click)="selectedRow={};this.getTagData(1);addOrEditOrView(modalContent,'add')"
+            [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新建公告</span>
     </button>
@@ -16,33 +17,16 @@
 </page-header>
 
 <nz-card [nzBordered]="false">
+
   <form nz-form se-container labelWidth="130">
+    <se label="公告类别" col="4">
+      <nz-select [(ngModel)]="query.noticeCate" name="noticeCate" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
     <se label="公告标题" col="4">
       <input nz-input [(ngModel)]="query.name" name="name"/>
     </se>
-    <!--<se label="所属省份" col="4">
-      <nz-select [(ngModel)]="query.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-                 (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="所属城市" col="4">
-      <nz-select [(ngModel)]="query.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
-                 (ngModelChange)="handleCitySelected($event)">
-        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="所属区/县" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="社区负责人" col="4">
-      <input nz-input [(ngModel)]="query.contact" name="contact "/>
-    </se>
-    <se label="联系电话" col="4">
-      <input nz-input [(ngModel)]="query.contactTel" name="contactTel"/>
-    </se>-->
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
@@ -63,10 +47,15 @@
     </se>
     <se label="标题图片" col="1">
       <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
-                      [inputUrls]="[selectedRow.images]"></app-img-upload>
+                      [inputUrls]="[selectedRow.image]"></app-img-upload>
+    </se>
+    <se label="文章标签" col="1" required>
+      <nz-select [(ngModel)]="selectedRow.tag" name="tag" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of this.tagObject.data" [nzLabel]="i.name" [nzValue]="i.id"></nz-option>
+      </nz-select>
     </se>
     <se label="文章概述" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.description" name="description"/>
+      <input nz-input [(ngModel)]="selectedRow.descr" name="descr"/>
     </se>
     <se label="" col="3">
       <label nz-checkbox [(ngModel)]="selectedRow.top" name="top">是否置顶</label>
@@ -76,17 +65,17 @@
                        name="dateRange"></nz-range-picker>
     </se>
     <se label="" col="1">
-      <label nz-checkbox [(ngModel)]="selectedRow.push" name="push">是否推送到移动端</label>
+      <label nz-checkbox [(ngModel)]="selectedRow.isPush" name="isPush">是否推送到移动端</label>
     </se>
-    <se label="公告类型" col="1">
-      <nz-radio-group [(ngModel)]="selectedRow.type" name="type">
-        <label nz-radio nzValue="1">全部</label>
-        <label nz-radio nzValue="2">用户</label>
-        <label nz-radio nzValue="3">物业</label>
-      </nz-radio-group>
-    </se>
+    <!--  <se label="公告类型" col="1">
+        <nz-radio-group [(ngModel)]="selectedRow.type" name="type">
+          <label nz-radio nzValue="1">全部</label>
+          <label nz-radio nzValue="2">用户</label>
+          <label nz-radio nzValue="3">物业</label>
+        </nz-radio-group>
+      </se>-->
     <se label="" col="1">
-      <tinymce [(ngModel)]="selectedRow.html" (ngModelChange)="htmlChange($event)" name="html"></tinymce>
+      <tinymce [(ngModel)]="selectedRow.content" (ngModelChange)="htmlChange($event)" name="content"></tinymce>
     </se>
   </form>
 </ng-template>
@@ -94,7 +83,8 @@
 <!--标签管理-->
 <ng-template #tagContent>
   <p style="margin-bottom: 50px">
-    <button style="float: left" nz-button (click)="tagObject.selectedRow={};addOrEditTag(tagModalContent,'add')"
+    <button style="float: left" nz-button
+            (click)="tagObject.selectedRow={};tagObject.copy = {};addOrEditTag(tagModalContent,'add')"
             [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新增标签</span>
@@ -109,7 +99,7 @@
 <ng-template #tagModalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标签名" col="1" required>
-      <input nz-input [(ngModel)]="tagObject.selectedRow.socialName" name="socialName"/>
+      <input nz-input [(ngModel)]="tagObject.selectedRow.name" name="name"/>
     </se>
   </form>
 </ng-template>

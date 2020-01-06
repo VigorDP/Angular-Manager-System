@@ -5,7 +5,9 @@ const PREFIX = '/hl/social/';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
-  constructor(private http: _HttpClient, private settings: SettingsService) {}
+  constructor(private http: _HttpClient, private settings: SettingsService) {
+  }
+
   // 登录
   login = (params: any) => this.http.post(`${PREFIX}propertyAccount/login `, params);
   // 退出登录
@@ -77,6 +79,31 @@ export class RestService {
   // 住户管理-审核
   checkResident = (params: any) =>
     this.http.post(`${PREFIX}resident/check`, paramsWithExtraParams(params, this.settings.app.community));
+
+
+  //公告管理-列表
+  getAnnounceList = (params: any) =>
+    this.http.post(`${PREFIX}notice/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 公告管理-删除
+  deleteAnnounce = (params: any) =>
+    this.http.post(`${PREFIX}notice/delete`, params);
+  // 公告管理-新增/修改
+  saveAnnounce = (params: any) =>
+    this.http.post(`${PREFIX}notice/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 公告管理-详情
+  getAnnounceInfo = (id: number) =>
+    this.http.get(`${PREFIX}notice/info?id=${id}`);
+
+
+  //标签管理-列表
+  getTagList = (params: any) =>
+    this.http.post(`${PREFIX}articleTag/list`, paramsWithExtraParams(params, this.settings.app.community));
+  //标签管理-删除
+  deleteTag = (params: any) =>
+    this.http.post(`${PREFIX}articleTag/delete`, params);
+  //标签管理-新增/修改
+  saveTag = (params: any) =>
+    this.http.post(`${PREFIX}articleTag/save`, paramsWithExtraParams(params, this.settings.app.community));
 }
 
 function paramsWithExtraParams(params, community) {

@@ -3,28 +3,15 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
-import {
-  checkMobile,
-  data,
-  defaultQuery,
-  GenderList,
-  getCityOrAreaListByCode,
-  getNameByCode,
-  loading,
-  pages,
-  ProvinceList,
-  query,
-  selectedRow,
-  selectedRows,
-  total,
-} from '@app/common';
+import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
 import { cloneDeep } from 'lodash';
+import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommunityInfoComponent implements OnInit {
+export class AnnounceComponent implements OnInit {
   query = query;
   pages = pages;
   total = total;
@@ -34,12 +21,12 @@ export class CommunityInfoComponent implements OnInit {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox' },
-    { title: '公告标题', index: 'socialName' },
-    { title: '发布人', index: 'contact' },
-    { title: '所属标签', index: 'contactTel' },
-    { title: '是否置顶', index: 'address' },
-    { title: '公告类型', index: 'area' },
-    { title: '发布时间', index: 'descr' },
+    { title: '公告标题', index: 'title' },
+    { title: '发布人', index: 'creator' },
+    { title: '所属标签', index: 'tag' },
+    { title: '是否置顶', index: 'isTop' },
+    { title: '公告类型', index: 'type' },
+    { title: '发布时间', index: 'gmtCreate' },
     {
       title: '操作',
       fixed: 'right',
@@ -90,11 +77,25 @@ export class CommunityInfoComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = GenderList;
-  provinceList = ProvinceList;
-  cityList = [];
-  areaList = [];
-  images = ''; // 小区效果图
+  noticeCateList = [
+    {
+      value: 'SOCIAL',
+      label: '社区公告',
+    },
+    {
+      value: 'POLICE',
+      label: '警情推送',
+    },
+    {
+      value: 'CITIZEN',
+      label: '民情互动',
+    },
+    {
+      value: 'INFORMATION',
+      label: '社区资讯',
+    },
+  ];
+  image = ''; // 小区效果图
   dateRange = null;
 
   /*标签管理*/
@@ -105,8 +106,9 @@ export class CommunityInfoComponent implements OnInit {
     loading,
     data: cloneDeep(data),
     selectedRow: cloneDeep(selectedRow),
+    copy: cloneDeep(selectedRow),
     columns: [
-      { title: '标签', index: 'socialName' },
+      { title: '标签', index: 'name' },
       {
         title: '操作',
         buttons: [
@@ -115,6 +117,7 @@ export class CommunityInfoComponent implements OnInit {
             icon: 'edit',
             click: (item: any) => {
               this.tagObject.selectedRow = item;
+              this.tagObject.copy = cloneDeep(item);
               this.addOrEditTag(this.tagTpl, 'edit');
             },
           },
@@ -141,17 +144,23 @@ export class CommunityInfoComponent implements OnInit {
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
-    this.query = { ...defaultQuery };
-    this.getData();
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
+    if (this.settings.app.community) {
+      this.getData();
+    }
+    this.settings.notify.subscribe(res => {
+      this.getData();
+    });
   }
 
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getSocialProjectList(this.query).subscribe(res => {
+    this.api.getAnnounceList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -191,11 +200,9 @@ export class CommunityInfoComponent implements OnInit {
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     if (type === 'edit' || type === 'view') {
-      this.api.getSocialProjectInfo({ id: this.selectedRow.id }).subscribe(res => {
+      this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
         if (res.code === '0') {
           this.selectedRow = { ...this.selectedRow, ...res.data };
-          this.handleProvinceSelected(this.selectedRow.provinceCode);
-          this.handleCitySelected(this.selectedRow.cityCode);
         }
       });
     }
@@ -208,21 +215,15 @@ export class CommunityInfoComponent implements OnInit {
         if (this.checkValid()) {
           return new Promise(resolve => {
             this.api
-              .saveSocialProject({
+              .saveAnnounce({
                 ...this.selectedRow,
-                cityName: getNameByCode(this.selectedRow.cityCode),
-                districtName: getNameByCode(this.selectedRow.districtCode),
-                provinceName: getNameByCode(this.selectedRow.provinceCode),
+
+                image: this.image,
               })
               .subscribe(res => {
                 if (res.code === '0') {
                   resolve();
                   this.getData();
-                  this.settings.setApp({
-                    ...this.settings.app,
-                    event: 'SOCIAL_CHANGED',
-                    targetId: this.selectedRow.id,
-                  });
                 } else {
                   resolve(false);
                 }
@@ -235,53 +236,42 @@ export class CommunityInfoComponent implements OnInit {
     });
   }
 
-  handleProvinceSelected(e) {
-    this.cityList = getCityOrAreaListByCode(e);
-  }
-
-  handleCitySelected(e) {
-    this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
-  }
 
   checkValid() {
-    const { name, area, contact, contactTel, provinceCode, cityCode, districtCode } = this.selectedRow;
-    if (!name) {
-      this.msg.info('请输入社区名称');
+    const { title, descr, content, image, isPush, tag, type, top } = this.selectedRow;
+    if (!title) {
+      this.msg.info('请输入公告标题');
       return false;
     }
-    if (!provinceCode) {
-      this.msg.info('请选择省份');
+    if (!tag) {
+      this.msg.info('请选择标签');
       return false;
     }
-    if (!cityCode) {
-      this.msg.info('请选择城市');
+    if (!descr) {
+      this.msg.info('情输入文章概述');
       return false;
     }
-    if (!districtCode) {
-      this.msg.info('请选择所属区/县');
-      return false;
+    if (top) {
+      if (!this.dateRange) {
+        this.msg.info('请选择置顶开始、置顶结束时间');
+        return false;
+      }
+      this.selectedRow.pinStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
+      this.selectedRow.pinEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
     }
-    if (!area) {
-      this.msg.info('请输入管理面积');
+    /*if (!type) {
+      this.msg.info('请选择公告类型');
       return false;
-    }
-    if (!contact) {
-      this.msg.info('请输入负责人');
-      return false;
-    }
-    if (!contactTel) {
-      this.msg.info('请输入负责人手机号');
-      return false;
-    }
-    if (!checkMobile(contactTel)) {
-      this.msg.info('手机号格式有误');
+    }*/
+    if (!content) {
+      this.msg.info('请输入文章内容');
       return false;
     }
     return true;
   }
 
   getImgUrl(e) {
-    this.images = e;
+    this.image = e;
   }
 
   delete() {
@@ -341,15 +331,9 @@ export class CommunityInfoComponent implements OnInit {
   getTagData(pageIndex?: number) {
     this.tagObject.loading = true;
     this.tagObject.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getSocialProjectList(this.query).subscribe(res => {
+    this.api.getTagList({ noticeCate: this.query.noticeCate }).subscribe(res => {
       this.tagObject.loading = false;
-      const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
-      this.tagObject.data = rows;
-      this.tagObject.total = totalItem;
-      this.tagObject.pages = {
-        ...this.tagObject.pages,
-        total: `共 ${totalItem} 条记录`,
-      };
+      this.tagObject.data = res.data || [];
       this.cdr.detectChanges();
     });
   }
@@ -378,21 +362,15 @@ export class CommunityInfoComponent implements OnInit {
         if (this.checkTagValid()) {
           return new Promise(resolve => {
             this.api
-              .saveSocialProject({
-                ...this.selectedRow,
-                cityName: getNameByCode(this.selectedRow.cityCode),
-                districtName: getNameByCode(this.selectedRow.districtCode),
-                provinceName: getNameByCode(this.selectedRow.provinceCode),
+              .saveTag({
+                ...this.tagObject.selectedRow,
+                agoName: this.tagObject.copy.name,
+                noticeCate: this.query.noticeCate,
               })
               .subscribe(res => {
                 if (res.code === '0') {
                   resolve();
-                  this.getData();
-                  this.settings.setApp({
-                    ...this.settings.app,
-                    event: 'SOCIAL_CHANGED',
-                    targetId: this.selectedRow.id,
-                  });
+                  this.getTagData();
                 } else {
                   resolve(false);
                 }
@@ -406,6 +384,11 @@ export class CommunityInfoComponent implements OnInit {
   }
 
   checkTagValid() {
+    const { name } = this.tagObject.selectedRow;
+    if (!name) {
+      this.msg.info('请输入标签名称');
+      return false;
+    }
     return true;
   }
 
@@ -414,13 +397,8 @@ export class CommunityInfoComponent implements OnInit {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteSocialProject([this.selectedRow.id]).subscribe(() => {
+        this.api.deleteTag(this.tagObject.selectedRow).subscribe(() => {
           this.getData();
-          this.settings.setApp({
-            ...this.settings.app,
-            event: 'SOCIAL_CHANGED',
-            targetId: this.selectedRow.id,
-          });
           this.tagSt.clearCheck();
         });
       },
