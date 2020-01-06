@@ -107,6 +107,7 @@
   <p style="margin-bottom: 50px">
     <button style="float: left" nz-button
             (click)="tagObject.selectedRow={};tagObject.copy = {};addOrEditTag(tagModalContent,'add')"
+            [disabled]="tagObject.data?.length === 10"
             [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新增标签</span>
