@@ -24,7 +24,7 @@ import { cloneDeep } from 'lodash';
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AnnounceComponent implements OnInit {
+export class CommunityInfoComponent implements OnInit {
   query = query;
   pages = pages;
   total = total;
