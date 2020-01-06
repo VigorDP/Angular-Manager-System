@@ -14,6 +14,7 @@ import {
   selectedRow,
   GenderList,
   checkMobile,
+  checkPassword,
 } from '@app/common';
 
 @Component({
@@ -152,6 +153,10 @@ export class PersonComponent implements OnInit {
     }
     if (!pwd || !pwdRepeat) {
       this.msg.info('请输入密码或确认密码');
+      return false;
+    }
+    if (!checkPassword(pwd)) {
+      this.msg.info('密码必须由8-16位数字和字母组成');
       return false;
     }
     if (pwd !== pwdRepeat) {
