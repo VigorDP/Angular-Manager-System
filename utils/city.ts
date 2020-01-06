@@ -15,14 +15,23 @@ export const getCityOrAreaListByCode = (firstCode: string, secondCode?: string) 
 };
 
 export const getNameByCode = code => {
-  function traverse(provinces) {
-    for (const item of provinces) {
-      if (item.code === code) {
-        return item.name;
-      } else {
-        return traverse(item.subProvinces || []);
+  function traverse(province) {
+    if (province.code === code) {
+      return province.name;
+    } else {
+      province.subProvinces = province.subProvinces || [];
+      for (const item of province.subProvinces) {
+        const name = traverse(item);
+        if (name) {
+          return name;
+        }
       }
     }
   }
-  return traverse(provinces);
+  for (const item of provinces) {
+    const result = traverse(item);
+    if (result) {
+      return result;
+    }
+  }
 };
