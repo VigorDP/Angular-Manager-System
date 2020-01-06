@@ -183,7 +183,7 @@ export class GovernmentAffairComponent implements OnInit {
   }
 
   reset() {
-    this.query = { ...defaultQuery };
+    this.query = { ...defaultQuery, noticeCate: 'INNER_PARTY_PUBLICITY' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
@@ -194,7 +194,7 @@ export class GovernmentAffairComponent implements OnInit {
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     const modal = this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增公告' : type === 'edit' ? '编辑公告' : '查看公告',
+      nzTitle: type === 'add' ? '新建文章' : type === 'edit' ? '编辑文章' : '查看文章',
       nzContent: tpl,
       nzOkDisabled: type === 'view',
       nzWidth: 800,
@@ -239,7 +239,7 @@ export class GovernmentAffairComponent implements OnInit {
   checkValid() {
     const { title, descr, content, image, isPush, tag, type, top } = this.selectedRow;
     if (!title) {
-      this.msg.info('请输入公告标题');
+      this.msg.info('请输入文章标题');
       return false;
     }
     if (!tag) {

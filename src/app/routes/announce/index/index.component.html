@@ -1,6 +1,6 @@
 <page-header title="公告管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
-    <button nz-button (click)="selectedRow={};getTagData();addOrEditOrView(modalContent,'add')"
+    <button nz-button (click)="selectedRow={};dateRange=null;getTagData();addOrEditOrView(modalContent,'add')"
             [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新建公告</span>
@@ -26,7 +26,7 @@
       </nz-select>
     </se>
     <se label="公告标题" col="4">
-      <input nz-input [(ngModel)]="query.name" name="name"/>
+      <input nz-input [(ngModel)]="query.title" name="title"/>
     </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -39,6 +39,17 @@
   <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
       [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
 </nz-card>
+
+
+<!--置顶-->
+<ng-template #topContent>
+  <form nz-form se-container labelWidth="130">
+    <se label="选择置顶时间" col="1" required>
+      <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onRangeChange($event)"
+                       name="dateRange"></nz-range-picker>
+    </se>
+  </form>
+</ng-template>
 
 <!--新增公告-->
 <ng-template #modalContent>
@@ -59,9 +70,9 @@
       <input nz-input [(ngModel)]="selectedRow.descr" name="descr"/>
     </se>
     <se label="" col="3">
-      <label nz-checkbox [(ngModel)]="selectedRow.top" name="top">是否置顶</label>
+      <label nz-checkbox [(ngModel)]="selectedRow.isTop" name="top">是否置顶</label>
     </se>
-    <se label="置顶时间" col="2" *ngIf="selectedRow.top" required>
+    <se label="置顶时间" col="2" *ngIf="selectedRow.isTop" required>
       <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onRangeChange($event)"
                        name="dateRange"></nz-range-picker>
     </se>

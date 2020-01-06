@@ -32,7 +32,12 @@ export class AnnounceComponent implements OnInit {
     { title: '公告标题', index: 'title' },
     { title: '发布人', index: 'creator' },
     { title: '所属标签', index: 'tag' },
-    { title: '是否置顶', index: 'isTop' },
+    {
+      title: '是否置顶', index: 'isTop',
+      format: (value, col, index) => {
+        return value.isTop ? '是' : '否';
+      }
+    },
     { title: '公告类型', index: 'type' },
     { title: '发布时间', index: 'gmtCreate' },
     {
@@ -49,19 +54,20 @@ export class AnnounceComponent implements OnInit {
           },
         },
         {
-          text: '置顶',
-          icon: 'edit',
-          iif: item => item.status === 'UNTOP',
+          text: '设为置顶',
+          icon: 'upload',
+          iif: item => !item.isTop,
           iifBehavior: 'hide',
           click: (item: any) => {
             this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'edit');
+            this.dateRange = null;
+            this.gotoTop();
           },
         },
         {
           text: '取消置顶',
-          icon: 'edit',
-          iif: item => item.status === 'TOP',
+          icon: 'download',
+          iif: item => item.isTop,
           iifBehavior: 'hide',
           click: (item: any) => {
             this.selectedRow = item;
@@ -82,6 +88,8 @@ export class AnnounceComponent implements OnInit {
 
   @ViewChild('st', { static: true })
   st: STComponent;
+  @ViewChild('topContent', { static: true })
+  top: TemplateRef<any>;
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
   @ViewChild('viewContent', { static: true })
@@ -206,7 +214,7 @@ export class AnnounceComponent implements OnInit {
   }
 
   reset() {
-    this.query = { ...defaultQuery };
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
@@ -217,7 +225,7 @@ export class AnnounceComponent implements OnInit {
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     const modal = this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增公告' : type === 'edit' ? '编辑公告' : '查看公告',
+      nzTitle: type === 'add' ? '新建公告' : type === 'edit' ? '编辑公告' : '查看公告',
       nzContent: tpl,
       nzOkDisabled: type === 'view',
       nzWidth: 800,
@@ -260,7 +268,7 @@ export class AnnounceComponent implements OnInit {
 
 
   checkValid() {
-    const { title, descr, content, image, isPush, tag, type, top } = this.selectedRow;
+    const { title, descr, content, image, isPush, tag, type, isTop } = this.selectedRow;
     if (!title) {
       this.msg.info('请输入公告标题');
       return false;
@@ -273,7 +281,7 @@ export class AnnounceComponent implements OnInit {
       this.msg.info('情输入文章概述');
       return false;
     }
-    if (top) {
+    if (isTop) {
       if (!this.dateRange) {
         this.msg.info('请选择置顶开始、置顶结束时间');
         return false;
@@ -327,21 +335,67 @@ export class AnnounceComponent implements OnInit {
   }
 
 
-  cancelTop() {
-    this.modalSrv.confirm({
-      nzTitle: '是否确定取消置顶？',
-      nzOkType: 'danger',
+  gotoTop() {
+    const modal = this.modalSrv.create({
+      nzTitle: '选择置顶时间',
+      nzContent: this.top,
+      nzWidth: 800,
       nzOnOk: () => {
-        /*this.api.deleteSocialProject([this.selectedRow.id]).subscribe(() => {
-          this.getData();
-          this.settings.setApp({
-            ...this.settings.app,
-            event: 'SOCIAL_CHANGED',
-            targetId: this.selectedRow.id,
-          });
-          this.st.clearCheck();
-        });*/
+        if (!this.dateRange) {
+          this.msg.info('请选择置顶时间');
+          return false;
+        }
+        this.selectedRow.pinStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
+        this.selectedRow.pinEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
+        return new Promise(resolve => {
+          this.api
+            .saveAnnounce({
+              ...this.selectedRow,
+              isTop: true,
+              noticeCate: this.query.noticeCate,
+            })
+            .subscribe(res => {
+              if (res.code === '0') {
+                resolve();
+                this.getData();
+              } else {
+                resolve(false);
+              }
+            });
+        });
+
       },
+    });
+    modal.afterOpen.subscribe(res => {
+      this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
+        if (res.code === '0') {
+          this.selectedRow = { ...this.selectedRow, ...res.data };
+        }
+      });
+    });
+  }
+
+  cancelTop() {
+    this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
+      if (res.code === '0') {
+        this.selectedRow = {
+          ...this.selectedRow,
+          ...res.data,
+          isTop: false,
+          pinStart: null,
+          pinEnd: null,
+          noticeCate: this.query.noticeCate,
+        };
+        this.modalSrv.confirm({
+          nzTitle: '是否确定取消置顶？',
+          nzOkType: 'danger',
+          nzOnOk: () => {
+            this.api.saveAnnounce(this.selectedRow).subscribe(() => {
+              this.getData();
+            });
+          },
+        });
+      }
     });
   }
 
