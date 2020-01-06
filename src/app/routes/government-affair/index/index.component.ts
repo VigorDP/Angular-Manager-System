@@ -81,7 +81,8 @@ export class GovernmentAffairComponent implements OnInit {
       label: '学习党章',
     },
     {
-      value: '听党指挥',
+      value: 'TELL_THE_PARTY',
+      label: '听党指挥',
     },
   ];
   image = ''; // 小区效果图
@@ -137,7 +138,7 @@ export class GovernmentAffairComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
+    this.query = { ...defaultQuery, noticeCate: 'INNER_PARTY_PUBLICITY' };
     if (this.settings.app.community) {
       this.getData();
     }
