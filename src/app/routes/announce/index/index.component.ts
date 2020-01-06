@@ -211,6 +211,10 @@ export class AnnounceComponent implements OnInit {
     setTimeout(() => this.getData(1));
   }
 
+  selectCate() {
+    this.getData(1);
+  }
+
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     const modal = this.modalSrv.create({
       nzTitle: type === 'add' ? '新增公告' : type === 'edit' ? '编辑公告' : '查看公告',
@@ -344,6 +348,7 @@ export class AnnounceComponent implements OnInit {
   onRangeChange(e) {
     console.log('e', e);
   }
+
 
   htmlChange(e) {
     console.log('html', e);
