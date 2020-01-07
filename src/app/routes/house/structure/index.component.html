@@ -32,6 +32,11 @@
     <se label="楼栋单元数量" col="1" required>
       <input nz-input [(ngModel)]="selectedRow.buildingUnit" name="buildingUnit" />
     </se>
+    <se label="楼栋类型" col="1" required>
+      <nz-select [(ngModel)]="selectedRow.cate" name="cate" [nzPlaceHolder]="'请选择楼栋类别'">
+        <nz-option *ngFor="let i of buildingTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
     <se label="备注" col="1">
       <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>
     </se>

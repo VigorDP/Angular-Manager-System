@@ -17,6 +17,7 @@ import {
   selectedRow,
 } from '@app/common';
 
+const BuildingTypeList = [{ label: '高层', value: 'HIGH' }, { label: '别墅', value: 'VILLA' }];
 @Component({
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,7 @@ export class StructureComponent implements OnInit {
     { title: '地上层数', index: 'upstairFloors' },
     { title: '地下层数', index: 'downstairFloors' },
     { title: '每层户数', index: 'households' },
+    { title: '楼栋类型', index: 'cate' },
     { title: '备注', index: 'descr' },
     {
       title: '操作',
@@ -68,6 +70,7 @@ export class StructureComponent implements OnInit {
 
   genderList = GenderList;
   provinceList = ProvinceList;
+  buildingTypeList = BuildingTypeList;
   cityList = [];
   areaList = [];
 
@@ -175,7 +178,7 @@ export class StructureComponent implements OnInit {
   }
 
   checkValid() {
-    const { buildingName, buildingNo, upstairFloors, households, buildingUnit } = this.selectedRow;
+    const { buildingName, buildingNo, upstairFloors, households, buildingUnit, cate } = this.selectedRow;
     if (!buildingNo) {
       this.msg.info('请输入楼栋编号');
       return false;
@@ -194,6 +197,10 @@ export class StructureComponent implements OnInit {
     }
     if (!buildingUnit) {
       this.msg.info('请输入楼栋单元数量');
+      return false;
+    }
+    if (!cate) {
+      this.msg.info('请输入楼栋类别');
       return false;
     }
     return true;
