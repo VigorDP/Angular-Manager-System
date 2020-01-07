@@ -50,7 +50,7 @@ const DIRECTIVES = [];
           'bold italic underline | alignleft aligncenter alignright alignjustify | fullscreen | bullist numlist | outdent indent blockquote | link image media | insertdatetime preview | forecolor backcolor | formatselect fontselect fontsizeselect',
         image_title: false,
         images_upload_credentials: true,
-        images_upload_url: '/hl/social/uploader/img/upload',
+        images_upload_url: '',
         images_upload_handler(blobInfo, success, failure) {
           let xhr: XMLHttpRequest;
           let formData: FormData;
