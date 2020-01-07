@@ -6,7 +6,7 @@
       <span>新建文章</span>
     </button>
     <button nz-button (click)="tagManager(tagContent)" [nzType]="'primary'">
-      <i nz-icon nzType="plus"></i>
+      <i nz-icon nzType="copy" nzTheme="outline"></i>
       <span>标签管理</span>
     </button>
     <button nz-button [nzType]="'primary'" (click)="batchDelete()">
@@ -20,7 +20,7 @@
 
   <form nz-form se-container labelWidth="130">
     <se label="公告类别" col="4">
-      <nz-select [(ngModel)]="query.noticeCate" name="noticeCate" [nzPlaceHolder]="'请选择'"
+      <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'"
                  (ngModelChange)="selectCate()">
         <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
@@ -59,16 +59,6 @@
       <input nz-input [(ngModel)]="selectedRow.descr" name="descr"/>
     </se>
     <se label="" col="1">
-      <label nz-checkbox [(ngModel)]="selectedRow.isPush" name="isPush">是否推送到移动端</label>
-    </se>
-    <!--  <se label="公告类型" col="1">
-        <nz-radio-group [(ngModel)]="selectedRow.type" name="type">
-          <label nz-radio nzValue="1">全部</label>
-          <label nz-radio nzValue="2">用户</label>
-          <label nz-radio nzValue="3">物业</label>
-        </nz-radio-group>
-      </se>-->
-    <se label="" col="1">
       <tinymce [(ngModel)]="selectedRow.content" (ngModelChange)="htmlChange($event)" name="content"></tinymce>
     </se>
   </form>
@@ -78,7 +68,13 @@
 <ng-template #viewContent>
   <div>
     <h1 style="text-align: center">{{selectedRow.title}}</h1>
-    <p>所属标签：{{selectedRow.tag}}</p>
+    <p class="detail">
+      <span><strong>标签：</strong>{{selectedRow.tag}}</span>
+      <span><strong>查看人数：</strong>{{selectedRow.clicks}}</span>
+      <span><strong>发布时间：</strong>{{selectedRow.gmtCreate}}</span>
+    </p>
+    <p><strong>文章概述：</strong>{{selectedRow.descr}}</p>
+    <p><strong>标题图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image"></p>
     <div #content></div>
   </div>
 </ng-template>

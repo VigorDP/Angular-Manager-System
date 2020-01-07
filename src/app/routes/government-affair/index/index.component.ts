@@ -17,6 +17,7 @@ import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls:[`./index.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GovernmentAffairComponent implements OnInit {
@@ -69,19 +70,19 @@ export class GovernmentAffairComponent implements OnInit {
 
   noticeCateList = [
     {
-      value: 'INNER_PARTY_PUBLICITY',
+      value: 'PARTY_NEWS',
       label: '党建要闻',
     },
     {
-      value: 'PARTY_BUILDING_NEWS',
+      value: 'PARTY_PUBLICITY',
       label: '党内公示',
     },
     {
-      value: 'PARTY_MEMBER_ACTIVITY',
+      value: 'STUDY_PARTY',
       label: '学习党章',
     },
     {
-      value: 'TELL_THE_PARTY',
+      value: 'PARTY_HEARING',
       label: '听党指挥',
     },
   ];
@@ -138,7 +139,7 @@ export class GovernmentAffairComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.query = { ...defaultQuery, noticeCate: 'INNER_PARTY_PUBLICITY' };
+    this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
     if (this.settings.app.community) {
       this.getData();
     }
@@ -150,7 +151,7 @@ export class GovernmentAffairComponent implements OnInit {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getAnnounceList(this.query).subscribe(res => {
+    this.api.getPoliticsNewsList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -183,7 +184,7 @@ export class GovernmentAffairComponent implements OnInit {
   }
 
   reset() {
-    this.query = { ...defaultQuery, noticeCate: 'INNER_PARTY_PUBLICITY' };
+    this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
@@ -202,9 +203,9 @@ export class GovernmentAffairComponent implements OnInit {
         if (this.checkValid()) {
           return new Promise(resolve => {
             this.api
-              .saveAnnounce({
+              .savePoliticsNews({
                 ...this.selectedRow,
-                noticeCate: this.query.noticeCate,
+                cate: this.query.cate,
                 image: this.image,
               })
               .subscribe(res => {
@@ -223,7 +224,7 @@ export class GovernmentAffairComponent implements OnInit {
     });
     modal.afterOpen.subscribe(res => {
       if (type === 'edit' || type === 'view') {
-        this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
+        this.api.getPoliticsNewsInfo(this.selectedRow.id).subscribe(res => {
           if (res.code === '0') {
             this.selectedRow = { ...this.selectedRow, ...res.data };
             if (type === 'view') {
@@ -250,18 +251,6 @@ export class GovernmentAffairComponent implements OnInit {
       this.msg.info('情输入文章概述');
       return false;
     }
-    if (top) {
-      if (!this.dateRange) {
-        this.msg.info('请选择置顶开始、置顶结束时间');
-        return false;
-      }
-      this.selectedRow.pinStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
-      this.selectedRow.pinEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
-    }
-    /*if (!type) {
-      this.msg.info('请选择公告类型');
-      return false;
-    }*/
     if (!content) {
       this.msg.info('请输入文章内容');
       return false;
@@ -270,7 +259,7 @@ export class GovernmentAffairComponent implements OnInit {
   }
 
   getImgUrl(e) {
-    this.image = e;
+    this.image = e[0];
   }
 
   delete() {
@@ -278,7 +267,7 @@ export class GovernmentAffairComponent implements OnInit {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteAnnounce([this.selectedRow.id]).subscribe(() => {
+        this.api.deletePoliticsNews([this.selectedRow.id]).subscribe(() => {
           this.getData();
         });
       },
@@ -295,7 +284,7 @@ export class GovernmentAffairComponent implements OnInit {
       nzTitle: '是否确定删除选中项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteAnnounce(ids).subscribe(() => {
+        this.api.deletePoliticsNews(ids).subscribe(() => {
           this.getData();
           this.st.clearCheck();
         });
@@ -303,27 +292,6 @@ export class GovernmentAffairComponent implements OnInit {
     });
   }
 
-  cancelTop() {
-    this.modalSrv.confirm({
-      nzTitle: '是否确定取消置顶？',
-      nzOkType: 'danger',
-      nzOnOk: () => {
-        /*this.api.deleteSocialProject([this.selectedRow.id]).subscribe(() => {
-          this.getData();
-          this.settings.setApp({
-            ...this.settings.app,
-            event: 'SOCIAL_CHANGED',
-            targetId: this.selectedRow.id,
-          });
-          this.st.clearCheck();
-        });*/
-      },
-    });
-  }
-
-  onRangeChange(e) {
-    console.log('e', e);
-  }
 
   htmlChange(e) {
     console.log('html', e);
@@ -342,7 +310,7 @@ export class GovernmentAffairComponent implements OnInit {
   getTagData(pageIndex?: number) {
     this.tagObject.loading = true;
     this.tagObject.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getTagList({ noticeCate: this.query.noticeCate }).subscribe(res => {
+    this.api.getTagList({ noticeCate: this.query.cate }).subscribe(res => {
       this.tagObject.loading = false;
       this.tagObject.data = res.data || [];
       this.cdr.detectChanges();
@@ -376,7 +344,7 @@ export class GovernmentAffairComponent implements OnInit {
               .saveTag({
                 ...this.tagObject.selectedRow,
                 agoName: this.tagObject.copy.name,
-                noticeCate: this.query.noticeCate,
+                noticeCate: this.query.cate,
               })
               .subscribe(res => {
                 if (res.code === '0') {

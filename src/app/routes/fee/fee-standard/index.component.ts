@@ -1,20 +1,20 @@
-import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { _HttpClient } from '@delon/theme';
-import { STComponent, STChange, STColumn } from '@delon/abc';
+import { SettingsService } from '@delon/theme';
+import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import {
-  ProvinceList,
-  getCityOrAreaListByCode,
-  GenderList,
-  query,
-  defaultQuery,
-  pages,
-  total,
-  loading,
   data,
-  selectedRows,
+  defaultQuery,
+  GenderList,
+  getCityOrAreaListByCode,
+  loading,
+  pages,
+  ProvinceList,
+  query,
   selectedRow,
+  selectedRows,
+  total,
 } from '@app/common';
 
 @Component({
@@ -31,12 +31,12 @@ export class FeeStandardComponent implements OnInit {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox' },
-    { title: '收费标准（元/平方米/月）', index: 'name' },
-    { title: '起始时间', index: 'contact' },
-    { title: '结束时间', index: 'contactTel' },
+    { title: '收费标准（元/平方米/月）', index: 'price' },
+    { title: '起始时间', index: 'startDate' },
+    { title: '结束时间', index: 'endDate' },
     { title: '启用状态', index: 'address' },
-    { title: '创建人', index: 'area' },
-    { title: '创建时间', index: 'descr' },
+    { title: '创建人', index: 'creator' },
+    { title: '创建时间', index: 'createTime' },
     {
       title: '操作',
       fixed: 'right',
@@ -75,28 +75,45 @@ export class FeeStandardComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = GenderList;
-  provinceList = ProvinceList;
-  cityList = [];
-  areaList = [];
+  feeTypeList = [
+    {
+      value: 'PROPERTY',
+      label: '物业费',
+    },
+    {
+      value: 'WATER',
+      label: '水费',
+    },
+    {
+      value: 'ELECTRONIC',
+      label: '电费',
+    },
+  ];
+  dateRange = null;
 
   constructor(
     private api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    private settings: SettingsService,
+  ) {
+  }
 
   ngOnInit() {
-    this.query = { ...defaultQuery };
-
-    // this.getData();
+    this.query = { ...defaultQuery, cate: 'PROPERTY' };
+    if (this.settings.app.community) {
+      this.getData();
+    }
+    this.settings.notify.subscribe(res => {
+      this.getData();
+    });
   }
 
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getSocialProjectList(this.query).subscribe(res => {
+    this.api.getFeeList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -130,14 +147,14 @@ export class FeeStandardComponent implements OnInit {
   }
 
   reset() {
-    this.query = { ...defaultQuery };
+    this.query = { ...defaultQuery, cate: 'PROPERTY' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增住户' : '编辑住户',
+      nzTitle: type === 'add' ? '新增费用标准' : '编辑费用标准',
       nzContent: tpl,
       nzWidth: 800,
       nzOnOk: () => {
@@ -147,11 +164,8 @@ export class FeeStandardComponent implements OnInit {
     });
   }
 
-  handleProvinceSelected(e) {
-    this.cityList = getCityOrAreaListByCode(e);
-  }
 
-  handleCitySelected(e) {
-    this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
+  handleFeeTypeSelected(e) {
+    this.getData(1);
   }
 }

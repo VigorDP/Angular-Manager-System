@@ -1,0 +1,16 @@
+.detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    display: inline-block;
+  }
+}
+
+.title-img {
+  width: auto;
+  min-width: 30%;
+  max-width: 100%;
+  height: auto;
+}
