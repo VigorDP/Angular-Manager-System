@@ -17,6 +17,7 @@ import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls: [`./index.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnnounceComponent implements OnInit {
@@ -36,7 +37,7 @@ export class AnnounceComponent implements OnInit {
       title: '是否置顶', index: 'isTop',
       format: (value, col, index) => {
         return value.isTop ? '是' : '否';
-      }
+      },
     },
     { title: '发布时间', index: 'gmtCreate' },
     {

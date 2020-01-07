@@ -87,7 +87,11 @@
 <ng-template #viewContent>
   <div>
     <h1 style="text-align: center">{{selectedRow.title}}</h1>
-    <p>所属标签：{{selectedRow.tag}}</p>
+    <p class="detail">
+      <span><strong>标签：</strong>{{selectedRow.tag}}</span>
+      <span><strong>查看人数：</strong>{{selectedRow.clicks}}</span>
+      <span><strong>发布时间：</strong>{{selectedRow.gmtCreate}}</span>
+    </p>
     <div #content></div>
   </div>
 </ng-template>

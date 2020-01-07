@@ -17,6 +17,7 @@ import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls:[`./index.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GovernmentAffairComponent implements OnInit {
