@@ -28,21 +28,20 @@
 </nz-card>
 
 <ng-template #modalContent>
-  <form nz-form se-container labelWidth="180">
+  <form nz-form se-container labelWidth="90">
     <se label="收费类型" col="2">
-      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'"
-                 (ngModelChange)="handleFeeTypeSelected($event)">
+      <nz-select [(ngModel)]="selectedRow.cate" name="cate" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of feeTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="收费标准(元/平方米/月)" col="2">
+    <se label="价格" col="2">
       <input nz-input [(ngModel)]="selectedRow.price" name="price"/>
     </se>
-    <se label="起止日期" col="1">
-      <nz-range-picker [(ngModel)]="dateRange" name="dateRange"></nz-range-picker>
+    <se label="单位" col="2">
+      <input nz-input [(ngModel)]="selectedRow.unit" name="unit"/>
     </se>
-    <se label="是否立即启用" col="2">
-      <label nz-checkbox [(ngModel)]="selectedRow.checked" name="checked"></label>
+    <se label="起止日期" col="2">
+      <nz-range-picker [(ngModel)]="dateRange" name="dateRange"></nz-range-picker>
     </se>
   </form>
 </ng-template>
