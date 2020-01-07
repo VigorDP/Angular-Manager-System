@@ -51,7 +51,7 @@ const DIRECTIVES = [];
         image_title: false,
         images_upload_credentials: true,
         // images_upload_url: '/hl/social/uploader/img/upload',
-        images_upload_handler: (blobInfo, success, failure) => {
+        images_upload_handler(blobInfo, success, failure) {
           let xhr: XMLHttpRequest;
           let formData: FormData;
           xhr = new XMLHttpRequest();
