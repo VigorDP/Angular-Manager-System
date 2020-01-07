@@ -3,19 +3,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
-import {
-  data,
-  defaultQuery,
-  GenderList,
-  getCityOrAreaListByCode,
-  loading,
-  pages,
-  ProvinceList,
-  query,
-  selectedRow,
-  selectedRows,
-  total,
-} from '@app/common';
+import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
 import * as dayjs from 'dayjs';
 
 const DAY_FORMAT = 'yyyy-MM-dd';
@@ -35,7 +23,10 @@ export class FeeStandardComponent implements OnInit {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox' },
-    { title: '收费规则类型', index: 'type' },
+    {
+      title: '收费规则类型', index: 'cate',
+      format: (item) => this.feeTypeList.filter(i => i.value === item.cate)[0].label,
+    },
     {
       title: '收费标准', index: 'price',
       format: (item) => `${item.price} (${item.unit})`,
@@ -89,8 +80,8 @@ export class FeeStandardComponent implements OnInit {
       label: '物业费',
     },
     {
-      value: 'GAS',
-      label: '燃气费',
+      value: 'HEATING',
+      label: '暖气费',
     },
   ];
   buildingTypeList = [
@@ -132,7 +123,7 @@ export class FeeStandardComponent implements OnInit {
     this.api.getFeeList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
-      this.data = rows;
+      this.data = rows || [];
       this.total = totalItem;
       this.pages = {
         ...this.pages,
@@ -163,12 +154,22 @@ export class FeeStandardComponent implements OnInit {
   }
 
   reset() {
-    this.query = { ...defaultQuery, cate: 'PROPERTY' };
+    this.query = { ...defaultQuery };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    if (type === 'edit') {
+      this.dateRange = [this.selectedRow.starDate, this.selectedRow.endDate];
+    } else {
+      this.dateRange = null;
+    }
+    if (this.selectedRow.cate === 'HEATING') {
+      this.dateFormat = DAY_FORMAT;
+    } else {
+      this.dateFormat = MONTH_FORMAT;
+    }
     this.modalSrv.create({
       nzTitle: type === 'add' ? '新增费用标准' : '编辑费用标准',
       nzContent: tpl,
@@ -198,7 +199,7 @@ export class FeeStandardComponent implements OnInit {
   }
 
   checkValid() {
-    const { cate, price, unit, type } = this.selectedRow;
+    const { cate, price, unit, buildingCate } = this.selectedRow;
     if (!cate) {
       this.msg.info('请选择收费类型');
       return false;
@@ -211,7 +212,7 @@ export class FeeStandardComponent implements OnInit {
       this.msg.info('请输入单位');
       return false;
     }
-    if (!type) {
+    if (!buildingCate) {
       this.msg.info('请选择楼栋类型');
       return false;
     }
@@ -219,7 +220,7 @@ export class FeeStandardComponent implements OnInit {
       this.msg.info('请选择起始日期');
       return false;
     }
-    if (cate === 'GAS') {
+    if (cate === 'HEATING') {
       this.selectedRow.starDate = dayjs(this.dateRange[0]).format('YYYY-MM-DD');
       this.selectedRow.endDate = dayjs(this.dateRange[1]).format('YYYY-MM-DD');
     } else {
@@ -248,6 +249,6 @@ export class FeeStandardComponent implements OnInit {
 
 
   cateChange() {
-    this.selectedRow.cate === 'GAS' ? this.dateFormat = DAY_FORMAT : this.dateFormat = MONTH_FORMAT;
+    this.selectedRow.cate === 'HEATING' ? this.dateFormat = DAY_FORMAT : this.dateFormat = MONTH_FORMAT;
   }
 }

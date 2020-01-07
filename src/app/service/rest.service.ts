@@ -122,10 +122,10 @@ export class RestService {
 
   //费用标准-列表
   getFeeList = (params: any) =>
-    this.http.post(`${PREFIX}fees/standard/list`, paramsWithExtraParams(params, this.settings.app.community));
+    this.http.post(`${PREFIX}life/fees/standard/list`, paramsWithExtraParams(params, this.settings.app.community));
   //费用标准-新增/修改
   saveFee = (params: any) =>
-    this.http.post(`${PREFIX}fees/standard/save`, paramsWithExtraParams(params, this.settings.app.community));
+    this.http.post(`${PREFIX}life/fees/standard/save`, paramsWithExtraParams(params, this.settings.app.community));
 }
 
 function paramsWithExtraParams(params, community) {

@@ -10,7 +10,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="收费规则类型" col="4">
-      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'"
+      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'" nzAllowClear
                  (ngModelChange)="handleFeeTypeSelected($event)">
         <nz-option *ngFor="let i of feeTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
@@ -41,7 +41,7 @@
       <input nz-input [(ngModel)]="selectedRow.unit" name="unit"/>
     </se>
     <se label="楼栋类型" col="2" required>
-      <nz-select [(ngModel)]="selectedRow.type" name="type" [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="selectedRow.buildingCate" name="type" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of buildingTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
