@@ -10,25 +10,9 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="收费规则类型" col="4">
-      <nz-select [(ngModel)]="query.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="起始日期" col="4">
-      <nz-select [(ngModel)]="query.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleCitySelected($event)">
-        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="结束日期" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="启用状态" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'"
+                 (ngModelChange)="handleFeeTypeSelected($event)">
+        <nz-option *ngFor="let i of feeTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se>
@@ -40,25 +24,22 @@
 
 <nz-card [nzBordered]="false">
   <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
-    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+      [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
 </nz-card>
 
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="180">
     <se label="收费类型" col="2">
-      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'"
+                 (ngModelChange)="handleFeeTypeSelected($event)">
+        <nz-option *ngFor="let i of feeTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="收费标准(元/平方米/月)" col="2">
-      <input nz-input [(ngModel)]="selectedRow.address" name="address" />
+      <input nz-input [(ngModel)]="selectedRow.price" name="price"/>
     </se>
-    <se label="起始日期" col="2">
-
-    </se>
-    <se label="结束日期" col="2">
-
+    <se label="起止日期" col="1">
+      <nz-range-picker [(ngModel)]="dateRange" name="dateRange"></nz-range-picker>
     </se>
     <se label="是否立即启用" col="2">
       <label nz-checkbox [(ngModel)]="selectedRow.checked" name="checked"></label>

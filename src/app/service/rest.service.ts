@@ -95,6 +95,20 @@ export class RestService {
     this.http.get(`${PREFIX}notice/info?id=${id}`);
 
 
+  //政务管理-列表
+  getPoliticsNewsList = (params: any) =>
+    this.http.post(`${PREFIX}politicsNews/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 政务管理-删除
+  deletePoliticsNews = (params: any) =>
+    this.http.post(`${PREFIX}politicsNews/delete`, params);
+  // 政务管理-新增/修改
+  savePoliticsNews = (params: any) =>
+    this.http.post(`${PREFIX}politicsNews/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 政务管理-详情
+  getPoliticsNewsInfo = (id: number) =>
+    this.http.get(`${PREFIX}politicsNews/info?id=${id}`);
+
+
   //标签管理-列表
   getTagList = (params: any) =>
     this.http.post(`${PREFIX}articleTag/list`, paramsWithExtraParams(params, this.settings.app.community));
@@ -104,6 +118,14 @@ export class RestService {
   //标签管理-新增/修改
   saveTag = (params: any) =>
     this.http.post(`${PREFIX}articleTag/save`, paramsWithExtraParams(params, this.settings.app.community));
+
+
+  //费用标准-列表
+  getFeeList = (params: any) =>
+    this.http.post(`${PREFIX}fees/standard/list`, paramsWithExtraParams(params, this.settings.app.community));
+  //费用标准-新增/修改
+  saveFee = (params: any) =>
+    this.http.post(`${PREFIX}fees/standard/save`, paramsWithExtraParams(params, this.settings.app.community));
 }
 
 function paramsWithExtraParams(params, community) {

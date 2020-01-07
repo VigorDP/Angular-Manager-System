@@ -38,7 +38,6 @@ export class AnnounceComponent implements OnInit {
         return value.isTop ? '是' : '否';
       }
     },
-    { title: '公告类型', index: 'type' },
     { title: '发布时间', index: 'gmtCreate' },
     {
       title: '操作',
