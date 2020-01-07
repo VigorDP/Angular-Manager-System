@@ -3,7 +3,7 @@
     <button nz-button (click)="selectedRow={};this.getTagData(1);addOrEditOrView(modalContent,'add')"
             [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
-      <span>新建公告</span>
+      <span>新建文章</span>
     </button>
     <button nz-button (click)="tagManager(tagContent)" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
@@ -26,7 +26,7 @@
       </nz-select>
     </se>
     <se label="公告标题" col="4">
-      <input nz-input [(ngModel)]="query.name" name="name"/>
+      <input nz-input [(ngModel)]="query.title" name="title"/>
     </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -52,7 +52,7 @@
     </se>
     <se label="文章标签" col="1" required>
       <nz-select [(ngModel)]="selectedRow.tag" name="tag" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of this.tagObject.data" [nzLabel]="i.name" [nzValue]="i.id"></nz-option>
+        <nz-option *ngFor="let i of this.tagObject.data" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
       </nz-select>
     </se>
     <se label="文章概述" col="1" required>
@@ -88,6 +88,7 @@
   <p style="margin-bottom: 50px">
     <button style="float: left" nz-button
             (click)="tagObject.selectedRow={};tagObject.copy = {};addOrEditTag(tagModalContent,'add')"
+            [disabled]="tagObject.data?.length === 10"
             [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新增标签</span>
