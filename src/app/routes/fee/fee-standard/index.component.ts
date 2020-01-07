@@ -18,6 +18,9 @@ import {
 } from '@app/common';
 import * as dayjs from 'dayjs';
 
+const DAY_FORMAT = 'yyyy-MM-dd';
+const MONTH_FORMAT = 'yyyy-MM';
+
 @Component({
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,7 +92,19 @@ export class FeeStandardComponent implements OnInit {
       label: '燃气费',
     },
   ];
+  buildingTypeList = [
+    {
+      value: 'HIGH',
+      label: '高层',
+    },
+    {
+      value: 'VILLA',
+      label: '别墅',
+    },
+  ];
+
   dateRange = null;
+  dateFormat = MONTH_FORMAT;
 
   constructor(
     private api: RestService,
@@ -215,5 +230,10 @@ export class FeeStandardComponent implements OnInit {
           });*/
       },
     });
+  }
+
+
+  cateChange() {
+    this.selectedRow.cate === 'GAS' ? this.dateFormat = DAY_FORMAT : this.dateFormat = MONTH_FORMAT;
   }
 }
