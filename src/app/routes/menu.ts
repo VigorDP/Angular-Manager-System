@@ -75,7 +75,7 @@ export const menus: Menu[] = [
         children: [],
       },
       {
-        text: '缴费管理',
+        text: '生活缴费',
         link: '/fee',
         name: 'PAY',
         icon: 'anticon-money-collect',

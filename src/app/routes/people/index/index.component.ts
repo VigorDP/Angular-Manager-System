@@ -30,9 +30,11 @@ const defaultRoom = {
   firstLevel: null,
   secondLevel: null,
   roomNumber: null,
-  residentIdRel: null,
-  startDate: null,
-  endDate: null,
+  residentIdRel: 'MASTER',
+  startDate: Date.now(),
+  endDate: dayjs(Date.now())
+    .add(70, 'year')
+    .format(),
   area: null,
 };
 
@@ -217,6 +219,27 @@ export class PeopleComponent implements OnInit {
       }
       this.msg.remove(id);
     });
+  }
+
+  handleResidentChange(e, item) {
+    if (e === 'VISITOR' || e === 'MANAGER' || e === 'OTHER') {
+      item.startDate = Date.now();
+      item.endDate = dayjs(item.startDate)
+        .add(1, 'day')
+        .valueOf();
+      return;
+    }
+    if (e === 'GUEST') {
+      item.startDate = Date.now();
+      item.endDate = dayjs(item.startDate)
+        .add(1, 'year')
+        .valueOf();
+      return;
+    }
+    item.startDate = Date.now();
+    item.endDate = dayjs(item.startDate)
+      .add(70, 'year')
+      .valueOf();
   }
 
   stChange(e: STChange) {
