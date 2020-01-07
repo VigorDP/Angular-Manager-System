@@ -35,11 +35,12 @@ export class FeeStandardComponent implements OnInit {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox' },
+    { title: '收费规则类型', index: 'type' },
     {
       title: '收费标准', index: 'price',
-      format: (item) => `${item.price}${item.unit}`,
+      format: (item) => `${item.price} (${item.unit})`,
     },
-    { title: '起始时间', index: 'startDate' },
+    { title: '起始时间', index: 'starDate' },
     { title: '结束时间', index: 'endDate' },
     /* { title: '启用状态', index: 'address' },*/
     { title: '创建人', index: 'creator' },
@@ -116,7 +117,7 @@ export class FeeStandardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.query = { ...defaultQuery, cate: 'PROPERTY' };
+    this.query = { ...defaultQuery };
     if (this.settings.app.community) {
       this.getData();
     }
@@ -197,7 +198,7 @@ export class FeeStandardComponent implements OnInit {
   }
 
   checkValid() {
-    const { cate, price } = this.selectedRow;
+    const { cate, price, unit, type } = this.selectedRow;
     if (!cate) {
       this.msg.info('请选择收费类型');
       return false;
@@ -206,12 +207,25 @@ export class FeeStandardComponent implements OnInit {
       this.msg.info('请输入正确的价格');
       return false;
     }
+    if (!unit) {
+      this.msg.info('请输入单位');
+      return false;
+    }
+    if (!type) {
+      this.msg.info('请选择楼栋类型');
+      return false;
+    }
     if (!this.dateRange) {
       this.msg.info('请选择起始日期');
       return false;
     }
-    this.selectedRow.starDate = dayjs(this.dateRange[0]).format('YYYY-MM-DD');
-    this.selectedRow.endDate = dayjs(this.dateRange[1]).format('YYYY-MM-DD');
+    if (cate === 'GAS') {
+      this.selectedRow.starDate = dayjs(this.dateRange[0]).format('YYYY-MM-DD');
+      this.selectedRow.endDate = dayjs(this.dateRange[1]).format('YYYY-MM-DD');
+    } else {
+      this.selectedRow.starDate = dayjs(this.dateRange[0]).format('YYYY-MM');
+      this.selectedRow.endDate = dayjs(this.dateRange[1]).format('YYYY-MM');
+    }
     return true;
   }
 

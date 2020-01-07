@@ -29,23 +29,23 @@
 
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="90">
-    <se label="收费类型" col="2">
+    <se label="收费类型" col="2" required>
       <nz-select [(ngModel)]="selectedRow.cate" name="cate" [nzPlaceHolder]="'请选择'" (ngModelChange)="cateChange()">
         <nz-option *ngFor="let i of feeTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="价格" col="2">
+    <se label="价格" col="2" required>
       <input nz-input [(ngModel)]="selectedRow.price" name="price"/>
     </se>
-    <se label="单位" col="2">
+    <se label="单位" col="2" required>
       <input nz-input [(ngModel)]="selectedRow.unit" name="unit"/>
     </se>
-    <se label="楼栋类型" col="2">
+    <se label="楼栋类型" col="2" required>
       <nz-select [(ngModel)]="selectedRow.type" name="type" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of buildingTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="起止日期" col="2">
+    <se label="起止日期" col="2" required>
       <nz-range-picker [(ngModel)]="dateRange" name="dateRange" [nzFormat]="dateFormat"></nz-range-picker>
     </se>
   </form>
