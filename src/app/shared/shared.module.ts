@@ -20,7 +20,13 @@ import { NgxAmapModule } from 'ngx-amap';
 const THIRDMODULES = [NgZorroAntdModule, CountdownModule];
 
 // your componets & directives
-import { ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, CommunityListComponent } from '@app/common';
+import {
+  ImgUploadComponent,
+  NewCheckComponent,
+  WebCaptureImgComponent,
+  CommunityListComponent,
+  customUpload,
+} from '@app/common';
 const COMPONENTS = [ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, CommunityListComponent];
 const DIRECTIVES = [];
 
@@ -50,30 +56,7 @@ const DIRECTIVES = [];
           'bold italic underline | alignleft aligncenter alignright alignjustify | fullscreen | bullist numlist | outdent indent blockquote | link image media | insertdatetime preview | forecolor backcolor | formatselect fontselect fontsizeselect',
         image_title: false,
         images_upload_credentials: true,
-        images_upload_url: '',
-        images_upload_handler(blobInfo, success, failure) {
-          let xhr: XMLHttpRequest;
-          let formData: FormData;
-          xhr = new XMLHttpRequest();
-          xhr.withCredentials = false;
-          xhr.open('POST', '/hl/social/uploader/img/upload');
-          xhr.onload = () => {
-            let json;
-            if (xhr.status !== 200) {
-              failure('HTTP Error: ' + xhr.status);
-              return;
-            }
-            json = JSON.parse(xhr.responseText);
-            if (!json || typeof json.data !== 'string') {
-              failure('Invalid JSON: ' + xhr.responseText);
-              return;
-            }
-            success(json.data);
-          };
-          formData = new FormData();
-          formData.append('file', blobInfo.blob(), blobInfo.filename());
-          xhr.send(formData);
-        },
+        images_upload_handler: customUpload('/hl/social/uploader/img/upload'),
       },
     }),
     NgxAmapModule.forRoot({
