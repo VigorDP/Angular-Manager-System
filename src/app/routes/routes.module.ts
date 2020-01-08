@@ -60,7 +60,7 @@ const routes: Routes = [
       },
       {
         path: 'government',
-        loadChildren: () => import('./government-affair/government.module').then(m => m.GovernmentModule),
+        loadChildren: () => import('./government/government.module').then(m => m.GovernmentModule),
       },
     ],
   },
@@ -93,5 +93,4 @@ const routes: Routes = [
   declarations: [...COMPONENTS],
   exports: [RouterModule],
 })
-export class RoutesModule {
-}
+export class RoutesModule {}
