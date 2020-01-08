@@ -80,11 +80,11 @@ export class GovernmentAffairComponent implements OnInit {
       label: '党内公示',
     },
     {
-      value: 'STUDY_PARTY',
+      value: 'PARTY_CONSTITUTION',
       label: '学习党章',
     },
     {
-      value: 'PARTY_HEARING',
+      value: 'PARTY_COMMAND',
       label: '听党指挥',
     },
   ];
