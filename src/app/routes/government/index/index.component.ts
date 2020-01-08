@@ -92,7 +92,7 @@ export class GovernmentAffairComponent implements OnInit {
   dateRange = null;
 
   constructor(
-    private api: RestService,
+    public api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
