@@ -24,12 +24,14 @@ export class FeeStandardComponent implements OnInit {
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox' },
     {
-      title: '收费规则类型', index: 'cate',
-      format: (item) => this.feeTypeList.filter(i => i.value === item.cate)[0].label,
+      title: '收费规则类型',
+      index: 'cate',
+      format: item => this.feeTypeList.filter(i => i.value === item.cate)[0].label,
     },
     {
-      title: '收费标准', index: 'price',
-      format: (item) => `${item.price} (${item.unit})`,
+      title: '收费标准',
+      index: 'price',
+      format: item => `${item.price} (${item.unit})`,
     },
     { title: '起始时间', index: 'starDate' },
     { title: '结束时间', index: 'endDate' },
@@ -83,6 +85,14 @@ export class FeeStandardComponent implements OnInit {
       value: 'HEATING',
       label: '暖气费',
     },
+    {
+      value: 'WATER',
+      label: '水费',
+    },
+    {
+      value: 'ELECTRONIC',
+      label: '电费',
+    },
   ];
   buildingTypeList = [
     {
@@ -104,8 +114,7 @@ export class FeeStandardComponent implements OnInit {
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.query = { ...defaultQuery };
@@ -230,11 +239,6 @@ export class FeeStandardComponent implements OnInit {
     return true;
   }
 
-  handleFeeTypeSelected(e) {
-    this.getData(1);
-  }
-
-
   delete() {
     this.modalSrv.confirm({
       nzTitle: '是否确定删除该项？',
@@ -247,8 +251,7 @@ export class FeeStandardComponent implements OnInit {
     });
   }
 
-
   cateChange() {
-    this.selectedRow.cate === 'HEATING' ? this.dateFormat = DAY_FORMAT : this.dateFormat = MONTH_FORMAT;
+    this.selectedRow.cate === 'HEATING' ? (this.dateFormat = DAY_FORMAT) : (this.dateFormat = MONTH_FORMAT);
   }
 }

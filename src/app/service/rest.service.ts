@@ -5,8 +5,7 @@ const PREFIX = '/hl/social/';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
-  constructor(private http: _HttpClient, private settings: SettingsService) {
-  }
+  constructor(private http: _HttpClient, private settings: SettingsService) {}
 
   // 登录
   login = (params: any) => this.http.post(`${PREFIX}propertyAccount/login `, params);
@@ -80,50 +79,41 @@ export class RestService {
   checkResident = (params: any) =>
     this.http.post(`${PREFIX}resident/check`, paramsWithExtraParams(params, this.settings.app.community));
 
-
-  //公告管理-列表
+  // 公告管理-列表
   getAnnounceList = (params: any) =>
     this.http.post(`${PREFIX}notice/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 公告管理-删除
-  deleteAnnounce = (params: any) =>
-    this.http.post(`${PREFIX}notice/delete`, params);
+  deleteAnnounce = (params: any) => this.http.post(`${PREFIX}notice/delete`, params);
   // 公告管理-新增/修改
   saveAnnounce = (params: any) =>
     this.http.post(`${PREFIX}notice/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 公告管理-详情
-  getAnnounceInfo = (id: number) =>
-    this.http.get(`${PREFIX}notice/info?id=${id}`);
+  getAnnounceInfo = (id: number) => this.http.get(`${PREFIX}notice/info?id=${id}`);
 
-
-  //政务管理-列表
+  // 政务管理-列表
   getPoliticsNewsList = (params: any) =>
     this.http.post(`${PREFIX}politicsNews/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 政务管理-删除
-  deletePoliticsNews = (params: any) =>
-    this.http.post(`${PREFIX}politicsNews/delete`, params);
+  deletePoliticsNews = (params: any) => this.http.post(`${PREFIX}politicsNews/delete`, params);
   // 政务管理-新增/修改
   savePoliticsNews = (params: any) =>
     this.http.post(`${PREFIX}politicsNews/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 政务管理-详情
-  getPoliticsNewsInfo = (id: number) =>
-    this.http.get(`${PREFIX}politicsNews/info?id=${id}`);
+  getPoliticsNewsInfo = (id: number) => this.http.get(`${PREFIX}politicsNews/info?id=${id}`);
 
-
-  //标签管理-列表
+  // 标签管理-列表
   getTagList = (params: any) =>
     this.http.post(`${PREFIX}articleTag/list`, paramsWithExtraParams(params, this.settings.app.community));
-  //标签管理-删除
-  deleteTag = (params: any) =>
-    this.http.post(`${PREFIX}articleTag/delete`, params);
-  //标签管理-新增/修改
+  // 标签管理-删除
+  deleteTag = (params: any) => this.http.post(`${PREFIX}articleTag/delete`, params);
+  // 标签管理-新增/修改
   saveTag = (params: any) =>
     this.http.post(`${PREFIX}articleTag/save`, paramsWithExtraParams(params, this.settings.app.community));
 
-
-  //费用标准-列表
+  // 费用标准-列表
   getFeeList = (params: any) =>
     this.http.post(`${PREFIX}life/fees/standard/list`, paramsWithExtraParams(params, this.settings.app.community));
-  //费用标准-新增/修改
+  // 费用标准-新增/修改
   saveFee = (params: any) =>
     this.http.post(`${PREFIX}life/fees/standard/save`, paramsWithExtraParams(params, this.settings.app.community));
 }
