@@ -17,7 +17,7 @@ import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
-  styleUrls:[`./index.scss`],
+  styleUrls: [`./index.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GovernmentAffairComponent implements OnInit {
@@ -58,6 +58,8 @@ export class GovernmentAffairComponent implements OnInit {
       ],
     },
   ];
+  showTagManager = false;
+  tagList = [];
 
   @ViewChild('st', { static: true })
   st: STComponent;
@@ -89,54 +91,13 @@ export class GovernmentAffairComponent implements OnInit {
   image = ''; // 小区效果图
   dateRange = null;
 
-  /*标签管理*/
-  tagObject = {
-    query: cloneDeep(query),
-    pages: cloneDeep(pages),
-    total,
-    loading,
-    data: cloneDeep(data),
-    selectedRow: cloneDeep(selectedRow),
-    copy: cloneDeep(selectedRow),
-    columns: [
-      { title: '标签', index: 'name' },
-      {
-        title: '操作',
-        buttons: [
-          {
-            text: '编辑',
-            icon: 'edit',
-            click: (item: any) => {
-              this.tagObject.selectedRow = item;
-              this.tagObject.copy = cloneDeep(item);
-              this.addOrEditTag(this.tagTpl, 'edit');
-            },
-          },
-          {
-            text: '删除',
-            icon: 'delete',
-            click: (item: any) => {
-              this.tagObject.selectedRow = item;
-              this.deleteTag();
-            },
-          },
-        ],
-      },
-    ],
-  };
-  @ViewChild('tagSt', { static: true })
-  tagSt: STComponent;
-  @ViewChild('tagModalContent', { static: true })
-  tagTpl: TemplateRef<any>;
-
   constructor(
     private api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
@@ -236,7 +197,6 @@ export class GovernmentAffairComponent implements OnInit {
     });
   }
 
-
   checkValid() {
     const { title, descr, content, image, isPush, tag, type, top } = this.selectedRow;
     if (!title) {
@@ -292,95 +252,10 @@ export class GovernmentAffairComponent implements OnInit {
     });
   }
 
-
-  htmlChange(e) {
-    console.log('html', e);
-  }
-
-  tagManager(tpl: TemplateRef<{}>) {
-    this.getTagData();
-    this.modalSrv.create({
-      nzTitle: '标签管理',
-      nzContent: tpl,
-      nzWidth: 800,
-      nzFooter: null,
-    });
-  }
-
-  getTagData(pageIndex?: number) {
-    this.tagObject.loading = true;
-    this.tagObject.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
+  getTagData() {
     this.api.getTagList({ noticeCate: this.query.cate }).subscribe(res => {
-      this.tagObject.loading = false;
-      this.tagObject.data = res.data || [];
+      this.tagList = res.data || [];
       this.cdr.detectChanges();
-    });
-  }
-
-  tagStChange(e: STChange) {
-    switch (e.type) {
-      case 'filter':
-        this.getTagData(e.pi);
-        break;
-      case 'pi':
-        this.getTagData(e.pi);
-        break;
-      case 'ps':
-        this.tagObject.query.pageSize = e.ps;
-        this.getTagData(e.pi);
-        break;
-    }
-  }
-
-  addOrEditTag(tpl: TemplateRef<{}>, type: 'add' | 'edit') {
-    this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增标签' : '编辑标签',
-      nzContent: tpl,
-      nzWidth: 400,
-      nzOnOk: () => {
-        if (this.checkTagValid()) {
-          return new Promise(resolve => {
-            this.api
-              .saveTag({
-                ...this.tagObject.selectedRow,
-                agoName: this.tagObject.copy.name,
-                noticeCate: this.query.cate,
-              })
-              .subscribe(res => {
-                if (res.code === '0') {
-                  resolve();
-                  this.getTagData();
-                } else {
-                  resolve(false);
-                }
-              });
-          });
-        } else {
-          return false;
-        }
-      },
-    });
-  }
-
-  checkTagValid() {
-    const { name } = this.tagObject.selectedRow;
-    if (!name) {
-      this.msg.info('请输入标签名称');
-      return false;
-    }
-    return true;
-  }
-
-  deleteTag() {
-    this.modalSrv.confirm({
-      nzTitle: '是否确定删除该项？',
-      nzOkType: 'danger',
-      nzOnOk: () => {
-        this.api.deleteTag(this.tagObject.selectedRow).subscribe(() => {
-          this.getData();
-          this.tagSt.clearCheck();
-        });
-      },
     });
   }
 }

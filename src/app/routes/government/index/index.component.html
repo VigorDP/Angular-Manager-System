@@ -1,11 +1,11 @@
 <page-header title="政务管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
     <button nz-button (click)="selectedRow={};this.getTagData(1);addOrEditOrView(modalContent,'add')"
-            [nzType]="'primary'">
+      [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新建文章</span>
     </button>
-    <button nz-button (click)="tagManager(tagContent)" [nzType]="'primary'">
+    <button nz-button (click)="showTagManager=true" [nzType]="'primary'">
       <i nz-icon nzType="copy" nzTheme="outline"></i>
       <span>标签管理</span>
     </button>
@@ -17,16 +17,14 @@
 </page-header>
 
 <nz-card [nzBordered]="false">
-
   <form nz-form se-container labelWidth="130">
     <se label="公告类别" col="4">
-      <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'"
-                 (ngModelChange)="selectCate()">
+      <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
         <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="公告标题" col="4">
-      <input nz-input [(ngModel)]="query.title" name="title"/>
+      <input nz-input [(ngModel)]="query.title" name="title" />
     </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -37,29 +35,29 @@
 
 <nz-card [nzBordered]="false">
   <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
-      [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
 </nz-card>
 
 <!--新增公告-->
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标题" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.title" name="name"/>
+      <input nz-input [(ngModel)]="selectedRow.title" name="name" />
     </se>
     <se label="标题图片" col="1">
       <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
-                      [inputUrls]="[selectedRow.image]"></app-img-upload>
+        [inputUrls]="[selectedRow.image]"></app-img-upload>
     </se>
     <se label="文章标签" col="1" required>
       <nz-select [(ngModel)]="selectedRow.tag" name="tag" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of this.tagObject.data" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
+        <nz-option *ngFor="let i of tagList" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
       </nz-select>
     </se>
     <se label="文章概述" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.descr" name="descr"/>
+      <input nz-input [(ngModel)]="selectedRow.descr" name="descr" />
     </se>
     <se label="" col="1">
-      <tinymce [(ngModel)]="selectedRow.content" (ngModelChange)="htmlChange($event)" name="content"></tinymce>
+      <tinymce [(ngModel)]="selectedRow.content" name="content"></tinymce>
     </se>
   </form>
 </ng-template>
@@ -79,27 +77,5 @@
   </div>
 </ng-template>
 
-<!--标签管理-->
-<ng-template #tagContent>
-  <p style="margin-bottom: 50px">
-    <button style="float: left" nz-button
-            (click)="tagObject.selectedRow={};tagObject.copy = {};addOrEditTag(tagModalContent,'add')"
-            [disabled]="tagObject.data?.length === 10"
-            [nzType]="'primary'">
-      <i nz-icon nzType="plus"></i>
-      <span>新增标签</span>
-    </button>
-  </p>
-  <st #tagSt [data]="tagObject.data" [total]="tagObject.total" [ps]="tagObject.query.pageSize"
-      [pi]="tagObject.query.pageNo" [columns]="tagObject.columns" [page]="tagObject.pages"
-      [loading]="tagObject.loading" (change)="tagStChange($event)" [scroll]="{x: '500px'}"></st>
-</ng-template>
-
-<!--新增编辑标签-->
-<ng-template #tagModalContent>
-  <form nz-form se-container labelWidth="130">
-    <se label="标签名" col="1" required>
-      <input nz-input [(ngModel)]="tagObject.selectedRow.name" name="name"/>
-    </se>
-  </form>
-</ng-template>
+<app-tag-manager [show]="showTagManager" [noticeCate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
+  [deleteApi]="api.deleteTag" (close)="showTagManager=false"></app-tag-manager>
