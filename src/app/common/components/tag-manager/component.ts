@@ -69,7 +69,7 @@ export class TagManagerComponent implements OnChanges {
   constructor(private msg: NzMessageService, public modalSrv: NzModalService, private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(e) {
-    this.isVisible = e.show.currentValue;
+    this.isVisible = e && e.show && e.show.currentValue;
     this.isVisible && this.getTagData();
   }
 
