@@ -34,7 +34,8 @@ export class AnnounceComponent implements OnInit {
     { title: '发布人', index: 'creator' },
     { title: '所属标签', index: 'tag' },
     {
-      title: '是否置顶', index: 'isTop',
+      title: '是否置顶',
+      index: 'isTop',
       format: (value, col, index) => {
         return value.isTop ? '是' : '否';
       },
@@ -85,7 +86,8 @@ export class AnnounceComponent implements OnInit {
       ],
     },
   ];
-
+  showTagManager = false;
+  tagList = [];
   @ViewChild('st', { static: true })
   st: STComponent;
   @ViewChild('topContent', { static: true })
@@ -96,7 +98,6 @@ export class AnnounceComponent implements OnInit {
   viewTpl: TemplateRef<any>;
   @ViewChild('content', { static: false })
   content: ElementRef;
-
 
   noticeCateList = [
     {
@@ -118,55 +119,13 @@ export class AnnounceComponent implements OnInit {
   ];
   image = ''; // 小区效果图
   dateRange = null;
-
-  /*标签管理*/
-  tagObject = {
-    query: cloneDeep(query),
-    pages: cloneDeep(pages),
-    total,
-    loading,
-    data: cloneDeep(data),
-    selectedRow: cloneDeep(selectedRow),
-    copy: cloneDeep(selectedRow),
-    columns: [
-      { title: '标签', index: 'name' },
-      {
-        title: '操作',
-        buttons: [
-          {
-            text: '编辑',
-            icon: 'edit',
-            click: (item: any) => {
-              this.tagObject.selectedRow = item;
-              this.tagObject.copy = cloneDeep(item);
-              this.addOrEditTag(this.tagTpl, 'edit');
-            },
-          },
-          {
-            text: '删除',
-            icon: 'delete',
-            click: (item: any) => {
-              this.tagObject.selectedRow = item;
-              this.deleteTag();
-            },
-          },
-        ],
-      },
-    ],
-  };
-  @ViewChild('tagSt', { static: true })
-  tagSt: STComponent;
-  @ViewChild('tagModalContent', { static: true })
-  tagTpl: TemplateRef<any>;
-
   constructor(
-    private api: RestService,
+    public api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
@@ -266,7 +225,6 @@ export class AnnounceComponent implements OnInit {
     });
   }
 
-
   checkValid() {
     const { title, descr, content, image, isPush, tag, type, isTop } = this.selectedRow;
     if (!title) {
@@ -334,7 +292,6 @@ export class AnnounceComponent implements OnInit {
     });
   }
 
-
   gotoTop() {
     const modal = this.modalSrv.create({
       nzTitle: '选择置顶时间',
@@ -363,7 +320,6 @@ export class AnnounceComponent implements OnInit {
               }
             });
         });
-
       },
     });
     modal.afterOpen.subscribe(res => {
@@ -399,98 +355,10 @@ export class AnnounceComponent implements OnInit {
     });
   }
 
-  onRangeChange(e) {
-    console.log('e', e);
-  }
-
-
-  htmlChange(e) {
-    console.log('html', e);
-  }
-
-  tagManager(tpl: TemplateRef<{}>) {
-    this.getTagData();
-    this.modalSrv.create({
-      nzTitle: '标签管理',
-      nzContent: tpl,
-      nzWidth: 800,
-      nzFooter: null,
-    });
-  }
-
   getTagData() {
-    this.tagObject.loading = true;
     this.api.getTagList({ noticeCate: this.query.noticeCate }).subscribe(res => {
-      this.tagObject.loading = false;
-      this.tagObject.data = res.data || [];
+      this.tagList = res.data || [];
       this.cdr.detectChanges();
-    });
-  }
-
-  tagStChange(e: STChange) {
-    switch (e.type) {
-      case 'filter':
-        this.getTagData();
-        break;
-      case 'pi':
-        this.getTagData();
-        break;
-      case 'ps':
-        this.tagObject.query.pageSize = e.ps;
-        this.getTagData();
-        break;
-    }
-  }
-
-  addOrEditTag(tpl: TemplateRef<{}>, type: 'add' | 'edit') {
-    this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增标签' : '编辑标签',
-      nzContent: tpl,
-      nzWidth: 400,
-      nzOnOk: () => {
-        if (this.checkTagValid()) {
-          return new Promise(resolve => {
-            this.api
-              .saveTag({
-                ...this.tagObject.selectedRow,
-                agoName: this.tagObject.copy.name,
-                noticeCate: this.query.noticeCate,
-              })
-              .subscribe(res => {
-                if (res.code === '0') {
-                  resolve();
-                  this.getTagData();
-                } else {
-                  resolve(false);
-                }
-              });
-          });
-        } else {
-          return false;
-        }
-      },
-    });
-  }
-
-  checkTagValid() {
-    const { name } = this.tagObject.selectedRow;
-    if (!name) {
-      this.msg.info('请输入标签名称');
-      return false;
-    }
-    return true;
-  }
-
-  deleteTag() {
-    this.modalSrv.confirm({
-      nzTitle: '是否确定删除该项？',
-      nzOkType: 'danger',
-      nzOnOk: () => {
-        this.api.deleteTag(this.tagObject.selectedRow).subscribe(() => {
-          this.getTagData();
-          this.tagSt.clearCheck();
-        });
-      },
     });
   }
 }

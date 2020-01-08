@@ -20,8 +20,20 @@ import { NgxAmapModule } from 'ngx-amap';
 const THIRDMODULES = [NgZorroAntdModule, CountdownModule];
 
 // your componets & directives
-import { ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, CommunityListComponent } from '@app/common';
-const COMPONENTS = [ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, CommunityListComponent];
+import {
+  ImgUploadComponent,
+  NewCheckComponent,
+  WebCaptureImgComponent,
+  CommunityListComponent,
+  TagManagerComponent,
+} from '@app/common';
+const COMPONENTS = [
+  ImgUploadComponent,
+  NewCheckComponent,
+  WebCaptureImgComponent,
+  CommunityListComponent,
+  TagManagerComponent,
+];
 const DIRECTIVES = [];
 
 export function customUpload(blobInfo, success, failure) {
