@@ -1,0 +1,36 @@
+<page-header title="论坛管理" autoBreadcrumb="false" [action]="action">
+  <ng-template #action>
+  </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="130">
+    <se label="发布人" col="4">
+      <input nz-input [(ngModel)]="query.title" name="title" />
+    </se>
+    <se>
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+</nz-card>
+
+<!--查看-->
+<ng-template #viewContent>
+  <div>
+    <h1 style="text-align: center">{{selectedRow.title}}</h1>
+    <p class="detail">
+      <span><strong>标签：</strong>{{selectedRow.tag}}</span>
+      <span><strong>查看人数：</strong>{{selectedRow.clicks}}</span>
+      <span><strong>发布时间：</strong>{{selectedRow.gmtCreate}}</span>
+    </p>
+    <p><strong>文章概述：</strong>{{selectedRow.descr}}</p>
+    <p><strong>标题图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image"></p>
+    <div #content></div>
+  </div>
+</ng-template>

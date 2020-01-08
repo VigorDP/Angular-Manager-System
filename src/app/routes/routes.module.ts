@@ -62,6 +62,10 @@ const routes: Routes = [
         path: 'government',
         loadChildren: () => import('./government/government.module').then(m => m.GovernmentModule),
       },
+      {
+        path: 'other',
+        loadChildren: () => import('./other/other.module').then(m => m.OtherModule),
+      },
     ],
   },
   {

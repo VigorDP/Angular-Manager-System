@@ -1,0 +1,98 @@
+<page-header title="社区活动" autoBreadcrumb="false" [action]="action">
+  <ng-template #action>
+    <button nz-button (click)="selectedRow={};this.getTagData(1);addOrEditOrView(modalContent,'add')"
+      [nzType]="'primary'">
+      <i nz-icon nzType="plus"></i>
+      <span>新建活动</span>
+    </button>
+    <button nz-button (click)="showTagManager=true" [nzType]="'primary'">
+      <i nz-icon nzType="copy" nzTheme="outline"></i>
+      <span>标签管理</span>
+    </button>
+  </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="130">
+    <se label="发布人" col="4">
+      <input nz-input [(ngModel)]="query.name" name="name" />
+    </se>
+    <se label="标签" col="4">
+      <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
+        <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="状态" col="4">
+      <nz-select [(ngModel)]="query.status" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
+        <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="日期范围" col="4">
+      <range-picker [(ngModel)]="query.start" [(ngModelEnd)]="query.end"></range-picker>
+    </se>
+
+    <se>
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+</nz-card>
+
+<!--新增活动-->
+<ng-template #modalContent>
+  <form nz-form se-container labelWidth="130">
+    <se label="标题" col="1" required>
+      <input nz-input [(ngModel)]="selectedRow.title" name="name" />
+    </se>
+    <se label="标题图片" col="1">
+      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
+        [inputUrls]="[selectedRow.image]"></app-img-upload>
+    </se>
+    <se label="文章概述" col="1" required>
+      <input nz-input [(ngModel)]="selectedRow.descr" name="descr" />
+    </se>
+    <se label="活动标签" col="1" required>
+      <nz-select [(ngModel)]="selectedRow.tag" name="tag" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of tagList" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
+      </nz-select>
+    </se>
+    <se label="活动时间范围" col="2" required>
+      <range-picker [(ngModel)]="selectedRow.start" [(ngModelEnd)]="selectedRow.end" name="date"></range-picker>
+    </se>
+    <se label="联系电话" col="2" required>
+      <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
+    </se>
+    <se label="活动地址" col="1" required>
+      <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
+    </se>
+    <se label="" col="1">
+      <label nz-checkbox [(ngModel)]="selectedRow.isPush" name="push">是否推送到移动端</label>
+    </se>
+    <se label="" col="1">
+      <tinymce [(ngModel)]="selectedRow.content" name="content"></tinymce>
+    </se>
+  </form>
+</ng-template>
+
+<!--查看活动-->
+<ng-template #viewContent>
+  <div>
+    <h1 style="text-align: center">{{selectedRow.title}}</h1>
+    <p class="detail">
+      <span><strong>标签：</strong>{{selectedRow.tag}}</span>
+      <span><strong>查看人数：</strong>{{selectedRow.clicks}}</span>
+      <span><strong>发布时间：</strong>{{selectedRow.gmtCreate}}</span>
+    </p>
+    <p><strong>文章概述：</strong>{{selectedRow.descr}}</p>
+    <p><strong>标题图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image"></p>
+    <div #content></div>
+  </div>
+</ng-template>
+
+<app-tag-manager [show]="showTagManager" [noticeCate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
+  [deleteApi]="api.deleteTag" (close)="showTagManager=false"></app-tag-manager>
