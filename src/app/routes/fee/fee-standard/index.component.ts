@@ -242,7 +242,7 @@ export class FeeStandardComponent implements OnInit {
 
   delete() {
     this.modalSrv.confirm({
-      nzTitle: '删除该收费标准后，对应业主的费用清单也将被清空吗，请谨慎操作！是否确认删除？',
+      nzTitle: '删除该收费标准后，对应业主的费用清单也将被清空，请谨慎操作！是否确认删除？',
       nzOkType: 'danger',
       nzOnOk: () => {
         this.api.deleteFeeStandard([this.selectedRow.id]).subscribe(() => {
@@ -259,7 +259,7 @@ export class FeeStandardComponent implements OnInit {
     }
     const ids = this.selectedRows.map(item => item.id);
     this.modalSrv.confirm({
-      nzTitle: '删除该收费标准后，对应业主的费用清单也将被清空吗，请谨慎操作！是否确认删除？',
+      nzTitle: '删除该收费标准后，对应业主的费用清单也将被清空，请谨慎操作！是否确认删除？',
       nzOkType: 'danger',
       nzOnOk: () => {
         this.api.deleteFeeStandard(ids).subscribe(() => {
