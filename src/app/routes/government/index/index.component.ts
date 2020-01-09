@@ -48,6 +48,14 @@ export class GovernmentAffairComponent implements OnInit {
           },
         },
         {
+          text: '编辑',
+          icon: 'edit',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.addOrEditOrView(this.tpl, 'edit');
+          },
+        },
+        {
           text: '删除',
           icon: 'delete',
           click: (item: any) => {
@@ -103,9 +111,11 @@ export class GovernmentAffairComponent implements OnInit {
     this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
     if (this.settings.app.community) {
       this.getData();
+      this.getTagData();
     }
     this.settings.notify.subscribe(res => {
       this.getData();
+      this.getTagData();
     });
   }
 

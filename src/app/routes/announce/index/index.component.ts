@@ -55,6 +55,14 @@ export class AnnounceComponent implements OnInit {
           },
         },
         {
+          text: '编辑',
+          icon: 'edit',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.addOrEditOrView(this.tpl, 'edit');
+          },
+        },
+        {
           text: '设为置顶',
           icon: 'upload',
           iif: item => !item.isTop,
@@ -131,9 +139,11 @@ export class AnnounceComponent implements OnInit {
     this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
     if (this.settings.app.community) {
       this.getData();
+      this.getTagData();
     }
     this.settings.notify.subscribe(res => {
       this.getData();
+      this.getTagData();
     });
   }
 
@@ -236,7 +246,7 @@ export class AnnounceComponent implements OnInit {
       return false;
     }
     if (!descr) {
-      this.msg.info('情输入文章概述');
+      this.msg.info('请输入文章概述');
       return false;
     }
     if (isTop) {
@@ -247,10 +257,6 @@ export class AnnounceComponent implements OnInit {
       this.selectedRow.pinStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
       this.selectedRow.pinEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
     }
-    /*if (!type) {
-      this.msg.info('请选择公告类型');
-      return false;
-    }*/
     if (!content) {
       this.msg.info('请输入文章内容');
       return false;
