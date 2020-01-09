@@ -139,11 +139,12 @@ export class AnnounceComponent implements OnInit {
     this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
     if (this.settings.app.community) {
       this.getData();
+      this.getTagData();
     }
     this.settings.notify.subscribe(res => {
       this.getData();
+      this.getTagData();
     });
-    this.getTagData();
   }
 
   getData(pageIndex?: number) {

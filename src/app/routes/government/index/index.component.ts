@@ -111,11 +111,12 @@ export class GovernmentAffairComponent implements OnInit {
     this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
     if (this.settings.app.community) {
       this.getData();
+      this.getTagData();
     }
     this.settings.notify.subscribe(res => {
       this.getData();
+      this.getTagData();
     });
-    this.getTagData();
   }
 
   getData(pageIndex?: number) {
