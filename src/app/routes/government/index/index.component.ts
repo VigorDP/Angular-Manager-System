@@ -105,7 +105,8 @@ export class GovernmentAffairComponent implements OnInit {
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
@@ -165,6 +166,7 @@ export class GovernmentAffairComponent implements OnInit {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    this.getTagData();
     const modal = this.modalSrv.create({
       nzTitle: type === 'add' ? '新建文章' : type === 'edit' ? '编辑文章' : '查看文章',
       nzContent: tpl,
