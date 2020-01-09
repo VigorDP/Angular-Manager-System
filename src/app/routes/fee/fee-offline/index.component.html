@@ -1,36 +1,44 @@
 <page-header title="线下缴费" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
-    <button nz-button [nzType]="'primary'">
+  <!--  <button nz-button [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>批量缴纳</span>
-    </button>
+    </button>-->
   </ng-template>
 </page-header>
 
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="业主姓名" col="4">
-      <input nz-input [(ngModel)]="query.name" name="name" />
+      <input nz-input [(ngModel)]="query.name" name="name"/>
     </se>
     <se label="所在楼栋" col="4">
-      <nz-select [(ngModel)]="query.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.firstLevel" (ngModelChange)="selectSecondLevel($event)" name="firstLevel"
+                 [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of firstLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所在单元" col="4">
+      <nz-select [(ngModel)]="query.secondLevel" (ngModelChange)="selectThirdLevel($event)" name="secondLevel"
+                 [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of secondLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="所在房间" col="4">
-      <nz-select [(ngModel)]="query.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleCitySelected($event)">
-        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.room " name="room " [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of thirdLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="联系电话" col="4">
-      <input nz-input [(ngModel)]="query.contactTel" name="contactTel" />
+    <se label="手机号码" col="4">
+      <input nz-input [(ngModel)]="query.tel" name="tel"/>
     </se>
     <se label="缴纳状态" col="4">
-      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.paidStatus " name="paidStatus " [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of paidStatusList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
+    </se>
+    <se label="缴费时间" col="4">
+      <nz-range-picker [(ngModel)]="dateRange" name="dateRange" (ngModelChange)="selectDate()"></nz-range-picker>
     </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -41,63 +49,34 @@
 
 <nz-card [nzBordered]="false">
   <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
-    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+      [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
 </nz-card>
 
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
-    <se label="社区名称" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.name" name="name" />
+    <se [label]="selectedRow.room" col="1">
+      <p style="text-align: right">{{selectedRow.name}}</p>
     </se>
-    <se label="所属省份" col="2">
-      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleProvinceSelected($event)">
-        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
+    <se [label]="selectedRow.type + '收费标准'" col="1">
+      <p style="text-align: right">{{selectedRow.standard}}</p>
     </se>
-    <se label="所属城市" col="2">
-      <nz-select [(ngModel)]="selectedRow.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="handleCitySelected($event)">
-        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
+    <se [label]="selectedRow.type + '缴费状态'" col="1">
+      <p style="text-align: right">{{selectedRow.status ? '已缴费' : '未缴费'}}</p>
     </se>
-    <se label="所属区/县" col="2">
-      <nz-select [(ngModel)]="selectedRow.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
+    <se label="缴纳月份" col="1">
+      <p style="text-align: right">{{selectedRow.date}}</p>
     </se>
-    <se label="项目详细地址" col="1">
-      <input nz-input [(ngModel)]="selectedRow.address" name="address" />
+    <se label="费用计算方式" col="1">
+      <p style="text-align: right">{{selectedRow.way}}</p>
     </se>
-    <se label="" col="1">
-      <ngx-amap style="height:200px"></ngx-amap>
+    <se label="金额共计" col="1">
+      <p style="text-align: right">{{selectedRow.total}}</p>
     </se>
-    <se label="经度" col="2">
-      <input nz-input [(ngModel)]="selectedRow.longitude" name="longitude" />
+    <se label="缴纳方式" col="1">
+      <p style="text-align: right">{{selectedRow.channel}}</p>
     </se>
-    <se label="纬度" col="2">
-      <input nz-input [(ngModel)]="selectedRow.latitude" name="latitude" />
-    </se>
-    <se label="管理面积" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.area" name="area" />
-    </se>
-    <se label="负责人" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.contact" name="contact" />
-    </se>
-    <se label="负责人手机号" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.contactTel" name="contactTel" />
-    </se>
-    <se label="小区ID" col="2">
-      <input nz-input [(ngModel)]="selectedRow.socialNo" name="socialNo" />
-    </se>
-    <se label="公安服务信息" col="2">
-      <input nz-input [(ngModel)]="selectedRow.policeJson" name="policeJson" />
-    </se>
-    <se label="小区效果图" col="1">
-      <app-img-upload [inputUrls]="[selectedRow.images]"></app-img-upload>
-    </se>
-    <se label="备注" col="1">
-      <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>
+    <se label="订单编号" col="1">
+      <p style="text-align: right">{{selectedRow.orderNo}}</p>
     </se>
   </form>
 </ng-template>

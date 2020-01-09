@@ -114,7 +114,8 @@ export class FeeStandardComponent implements OnInit {
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.query = { ...defaultQuery };
@@ -129,7 +130,7 @@ export class FeeStandardComponent implements OnInit {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getFeeList(this.query).subscribe(res => {
+    this.api.getFeeStandardList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows || [];
@@ -187,7 +188,7 @@ export class FeeStandardComponent implements OnInit {
         if (this.checkValid()) {
           return new Promise(resolve => {
             this.api
-              .saveFee({
+              .saveFeeStandard({
                 ...this.selectedRow,
                 creator: this.settings.user.name,
               })
@@ -241,12 +242,30 @@ export class FeeStandardComponent implements OnInit {
 
   delete() {
     this.modalSrv.confirm({
-      nzTitle: '是否确定删除该项？',
+      nzTitle: '删除该收费标准后，对应业主的费用清单也将被清空吗，请谨慎操作！是否确认删除？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        /*  this.api.deletePoliticsNews([this.selectedRow.id]).subscribe(() => {
-            this.getData();
-          });*/
+        this.api.deleteFeeStandard([this.selectedRow.id]).subscribe(() => {
+          this.getData();
+        });
+      },
+    });
+  }
+
+  batchDelete() {
+    if (!this.selectedRows.length) {
+      this.msg.info('请选择删除项');
+      return false;
+    }
+    const ids = this.selectedRows.map(item => item.id);
+    this.modalSrv.confirm({
+      nzTitle: '删除该收费标准后，对应业主的费用清单也将被清空吗，请谨慎操作！是否确认删除？',
+      nzOkType: 'danger',
+      nzOnOk: () => {
+        this.api.deleteFeeStandard(ids).subscribe(() => {
+          this.getData();
+          this.st.clearCheck();
+        });
       },
     });
   }

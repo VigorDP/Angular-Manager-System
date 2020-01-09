@@ -1,21 +1,32 @@
-import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { _HttpClient } from '@delon/theme';
-import { STComponent, STChange, STColumn } from '@delon/abc';
+import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import {
-  ProvinceList,
-  getCityOrAreaListByCode,
-  GenderList,
-  query,
-  defaultQuery,
-  pages,
-  total,
-  loading,
   data,
-  selectedRows,
+  defaultQuery,
+  getCityOrAreaListByCode,
+  loading,
+  pages,
+  query,
   selectedRow,
+  selectedRows,
+  total,
 } from '@app/common';
+import * as dayjs from 'dayjs';
+import { SettingsService } from '@delon/theme';
+
+const defaultRoom = {
+  firstLevel: null,
+  secondLevel: null,
+  roomNumber: null,
+  residentIdRel: 'MASTER',
+  startDate: Date.now(),
+  endDate: dayjs(Date.now())
+    .add(70, 'year')
+    .format(),
+  area: null,
+};
 
 @Component({
   templateUrl: './index.component.html',
@@ -32,29 +43,35 @@ export class FeeOfflineComponent implements OnInit {
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox' },
     { title: '业主姓名', index: 'name' },
-    { title: '所在楼栋单元', index: 'contact' },
-    { title: '所在房间', index: 'contactTel' },
-    { title: '收费项目', index: 'address' },
-    { title: '收费标准', index: 'area' },
-    { title: '应缴纳月份', index: 'descr' },
-    { title: '应缴纳费用', index: 'creator' },
-    { title: '缴纳状态', index: 'gmtCreate' },
-    { title: '缴费方式', index: 'gmtCreate' },
-    { title: '是否催缴', index: 'gmtCreate' },
-    { title: '缴费时间', index: 'gmtCreate' },
+    { title: '所在楼栋单元', index: 'building' },
+    { title: '所在房间', index: 'roomNo' },
+    { title: '收费项目', index: 'type' },
+    { title: '收费标准', index: 'standard' },
+    { title: '应缴纳月份', index: 'startDate' },
+    { title: '应缴纳费用', index: 'total' },
+    {
+      title: '缴纳状态', index: 'status',
+      format: (item) => item.status ? '已缴纳' : '未缴纳',
+    },
+    { title: '缴费方式', index: 'channel' },
+    {
+      title: '是否催缴', index: 'urged',
+      format: (item) => item.urged ? '已催缴' : '未催缴',
+    },
+    { title: '缴费时间', index: 'startDate' },
     {
       title: '操作',
       fixed: 'right',
       width: 100,
       buttons: [
-        {
+        /*{
           text: '线下缴费',
           icon: 'edit',
           click: (item: any) => {
             this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'view');
+            //this.addOrEditOrView(this.tpl, 'view');
           },
-        },
+        },*/
         {
           text: '查看',
           icon: 'eye',
@@ -72,26 +89,49 @@ export class FeeOfflineComponent implements OnInit {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = GenderList;
-  provinceList = ProvinceList;
-  cityList = [];
-  areaList = [];
+  paidStatusList = [
+    {
+      label: '已缴纳',
+      value: true,
+    },
+    {
+      label: '未缴纳',
+      value: false,
+    },
+  ];
+
+  dateRange = null;
+
+  firstLevel = [];
+  secondLevel = [];
+  thirdLevel = [];
+  rooms = [{ ...defaultRoom }];
 
   constructor(
     private api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    private settings: SettingsService,
+  ) {
+  }
 
   ngOnInit() {
-    // this.getData();
+    this.query = { ...defaultQuery };
+    if (this.settings.app.community) {
+      this.getData();
+      this.getSocialProjectStructure();
+    }
+    this.settings.notify.subscribe(res => {
+      this.getData();
+      this.getSocialProjectStructure();
+    });
   }
 
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getSocialProjectList(this.query).subscribe(res => {
+    this.api.getFeeList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -125,27 +165,61 @@ export class FeeOfflineComponent implements OnInit {
 
   reset() {
     this.query = { ...defaultQuery };
+    this.dateRange = null;
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    this.api.getFeeInfo(this.selectedRow.id).subscribe(res => {
+      if (res.code === '0') {
+        this.selectedRow = { ...this.selectedRow, ...res.data };
+      }
+    });
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增住户' : '编辑住户',
+      nzTitle: type === 'view' ? '查看详情' : '线下缴费',
       nzContent: tpl,
-      nzWidth: 800,
+      nzWidth: 500,
       nzOnOk: () => {
-        this.loading = true;
         // this.http.post('/api/package/save', this.selectedRow).subscribe(() => this.getData());
       },
     });
   }
 
-  handleProvinceSelected(e) {
-    this.cityList = getCityOrAreaListByCode(e);
+
+  getSocialProjectStructure() {
+    this.api.getSocialProjectStructure().subscribe(res => {
+      if (res.code === '0') {
+        this.firstLevel = res.data.map(item => ({
+          label: item.building + '栋',
+          value: item.building,
+          children: item.socialUnitVos,
+        }));
+      }
+    });
   }
 
-  handleCitySelected(e) {
-    this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
+  selectSecondLevel(value) {
+    this.secondLevel = this.firstLevel
+      .find(item => item.value === value)
+      .children.map(item => ({ label: item.unit + '单元', value: item.unit, children: item.roomNos }));
   }
+
+  selectThirdLevel(value) {
+    this.thirdLevel = this.secondLevel
+      .find(item => item.value === value)
+      .children.map(item => ({ label: item + '室', value: item }));
+  }
+
+
+  selectDate() {
+    if (!this.dateRange) {
+      this.query.feesEnd = null;
+      this.query.feesStart = null;
+      return;
+    }
+    this.query.feesStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
+    this.query.feesEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
+  }
+
 }

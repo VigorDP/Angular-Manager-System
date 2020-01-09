@@ -5,7 +5,8 @@ const PREFIX = '/hl/social/';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
-  constructor(private http: _HttpClient, private settings: SettingsService) {}
+  constructor(private http: _HttpClient, private settings: SettingsService) {
+  }
 
   // 登录
   login = (params: any) => this.http.post(`${PREFIX}propertyAccount/login `, params);
@@ -111,11 +112,20 @@ export class RestService {
     this.http.post(`${PREFIX}articleTag/save`, paramsWithExtraParams(params, this.settings.app.community));
 
   // 费用标准-列表
-  getFeeList = (params: any) =>
+  getFeeStandardList = (params: any) =>
     this.http.post(`${PREFIX}life/fees/standard/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 费用标准-新增/修改
-  saveFee = (params: any) =>
+  saveFeeStandard = (params: any) =>
     this.http.post(`${PREFIX}life/fees/standard/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 费用标准-删除
+  deleteFeeStandard = (params: any) => this.http.post(`${PREFIX}life/fees/standard/delete`, params);
+
+
+  //线下缴费 - 列表
+  getFeeList = (params: any) =>
+    this.http.post(`${PREFIX}life/fees/list`, paramsWithExtraParams(params, this.settings.app.community));
+// 线下缴费 - 详情
+  getFeeInfo = (id: number) => this.http.get(`${PREFIX}life/fees/info?id=${id}`);
 }
 
 function paramsWithExtraParams(params, community) {
