@@ -20,13 +20,26 @@
     "directive-selector": [
       true,
       "attribute",
-      ["app", "passport", "exception", "layout", "header"],
+      [
+        "app",
+        "passport",
+        "exception",
+        "layout",
+        "header"
+      ],
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      ["app", "passport", "exception", "layout", "header","web"],
+      [
+        "app",
+        "passport",
+        "exception",
+        "layout",
+        "header",
+        "web"
+      ],
       "kebab-case"
     ],
     "import-blacklist": [
@@ -101,12 +114,27 @@
     "no-this-assignment": false,
     "ban-types": [
       true,
-      ["Object", "Use {} instead."],
-      ["String", "Use string instead."],
-      ["Number", "Use number instead."],
-      ["Boolean", "Use boolean instead."],
-      ["Function", "Use specific callable interface instead."]
+      [
+        "Object",
+        "Use {} instead."
+      ],
+      [
+        "String",
+        "Use string instead."
+      ],
+      [
+        "Number",
+        "Use number instead."
+      ],
+      [
+        "Boolean",
+        "Use boolean instead."
+      ],
+      [
+        "Function",
+        "Use specific callable interface instead."
+      ]
     ],
-    "no-unused-expression":false
+    "no-unused-expression": false
   }
 }

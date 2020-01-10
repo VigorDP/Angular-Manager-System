@@ -12,6 +12,9 @@ import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
+import { cloneDeep } from 'lodash';
+
+const OPTION: any = { name: '' };
 
 @Component({
   templateUrl: './index.component.html',
@@ -155,6 +158,10 @@ export class VoteComponent implements OnInit {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    if (type === 'add') {
+      this.selectedRow.options = [cloneDeep(OPTION), cloneDeep(OPTION)];
+      console.log(this.selectedRow.options);
+    }
     const modal = this.modalSrv.create({
       nzTitle: type === 'add' ? '新建投票' : type === 'edit' ? '编辑投票' : '查看投票',
       nzContent: tpl,
@@ -232,5 +239,17 @@ export class VoteComponent implements OnInit {
         });
       },
     });
+  }
+
+  addOptions() {
+    if (this.selectedRow.options && this.selectedRow.options.length === 10) {
+      return;
+    }
+    this.selectedRow.options.push(cloneDeep(OPTION));
+    console.log(this.selectedRow.options);
+  }
+
+  removeOptions(idx) {
+    this.selectedRow.options.splice(idx, 1);
   }
 }
