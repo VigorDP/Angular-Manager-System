@@ -203,7 +203,7 @@ export class ProjectComponent implements OnInit {
                   this.getData();
                   this.settings.setApp({
                     ...this.settings.app,
-                    event: 'SOCIAL_CHANGED',
+                    event: 'LIST-CHANGED',
                     targetId: this.selectedRow.id,
                   });
                 } else {

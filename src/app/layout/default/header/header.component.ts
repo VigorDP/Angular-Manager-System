@@ -9,6 +9,12 @@ import { RestService } from '@app/service';
 })
 export class HeaderComponent {
   searchToggleStatus: boolean;
+  config = {
+    title: '社区列表',
+    placeholder: '请输入社区名称',
+    api: this.api.getSocialProjectList,
+    propertyCompanyId: this.settings.user.propertyCompanyId,
+  };
   constructor(public settings: SettingsService, public api: RestService) {}
 
   toggleCollapsedSidebar() {

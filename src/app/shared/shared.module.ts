@@ -24,15 +24,15 @@ import {
   ImgUploadComponent,
   NewCheckComponent,
   WebCaptureImgComponent,
-  CommunityListComponent,
   TagManagerComponent,
+  DropdownTableComponent,
 } from '@app/common';
 const COMPONENTS = [
   ImgUploadComponent,
   NewCheckComponent,
   WebCaptureImgComponent,
-  CommunityListComponent,
   TagManagerComponent,
+  DropdownTableComponent,
 ];
 const DIRECTIVES = [];
 
