@@ -1,6 +1,6 @@
 <div style="position: relative;display: inline-block" *ngIf="data">
   <div class="item" (click)="showDropdown()">
-    <span>{{ this.settings.app.community && this.settings.app.community.socialName }}</span>&nbsp;
+    <span>{{ config.renderTitle(this.settings.app.community) }}</span>&nbsp;
     <i nz-icon nzType="down-square" nzTheme="outline"></i>
   </div>
   <nz-modal [nzStyle]="{ position: 'absolute', top: '50px', left: '250px', padding: '20px' }"
@@ -15,7 +15,7 @@
     <nz-list [nzLoading]="listLoading" [nzDataSource]="data.rows" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
       <ng-template #item let-item>
         <nz-list-item class="point wd-wide auto-space" (click)="handleCommunityChange(item)">
-          {{ item.socialName }}
+          {{ config.renderItem(item) }}
         </nz-list-item>
       </ng-template>
     </nz-list>
