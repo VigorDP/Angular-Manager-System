@@ -13,7 +13,7 @@
         [(ngModel)]="query.beginDate" name="beginDate">
       </nz-date-picker>
     </se>
-    <se label="筛选条件" col="3">
+    <se label="筛选条件" col="3" labelWidth="74">
       <nz-input-group nzCompact>
         <nz-select [ngModel]="query.type" name="titl2e" [ngStyle]="{width:'100px'}">
           <nz-option nzLabel="评论数" nzValue="1"></nz-option>
@@ -28,7 +28,7 @@
         <nz-input-number [(ngModel)]="query.number" [nzMin]="0" [nzStep]="1" name="title4"></nz-input-number>
       </nz-input-group>
     </se>
-    <se col="3">
+    <se col="4" labelWidth="0">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>
