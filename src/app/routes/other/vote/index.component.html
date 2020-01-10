@@ -82,8 +82,16 @@
       <se [label]="'选项' + (idx + 1)" col="2" required>
         <input nz-input [(ngModel)]="option.name" [name]="'name' + idx" />
       </se>
-      <se label="" col="6">
-        <i nz-icon nzType="delete" nzTheme="outline" (click)="removeOptions()" *ngIf="idx > 1"></i>
+      <se label="" col="2">
+        <button
+          nz-button
+          style="border: none;"
+          nzType="danger"
+          (click)="removeOptions()"
+          [disabled]="this.selectedRow.options.length === 2"
+        >
+          <i nz-icon nzType="delete" nzTheme="outline" (click)="removeOptions()"></i>删除
+        </button>
       </se>
     </ng-container>
 
