@@ -109,7 +109,7 @@ export class AnnounceComponent implements OnInit {
 
   noticeCateList = [
     {
-      value: 'SOCIAL',
+      value: 'SOCIAL_NOTICE',
       label: '社区公告',
     },
     {
@@ -136,7 +136,7 @@ export class AnnounceComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
     if (this.settings.app.community) {
       this.getData();
       this.getTagData();
@@ -183,7 +183,7 @@ export class AnnounceComponent implements OnInit {
   }
 
   reset() {
-    this.query = { ...defaultQuery, noticeCate: 'SOCIAL' };
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }

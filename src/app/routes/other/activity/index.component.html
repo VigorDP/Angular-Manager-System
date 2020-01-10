@@ -30,7 +30,6 @@
     <se label="日期范围" col="4">
       <range-picker [(ngModel)]="query.start" [(ngModelEnd)]="query.end"></range-picker>
     </se>
-
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
