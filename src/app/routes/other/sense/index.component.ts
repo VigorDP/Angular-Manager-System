@@ -19,8 +19,8 @@ export class SenseComponent implements OnInit {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '标题', index: 'title' },
-    { title: '标题图片', index: 'creator' },
-    { title: '文章跳转链接', index: 'tag' },
+    { title: '标题图片', index: 'image' },
+    { title: '文章跳转链接', index: 'url' },
     { title: '发布时间', index: 'gmtCreate' },
     {
       title: '操作',
@@ -43,7 +43,7 @@ export class SenseComponent implements OnInit {
   st: STComponent;
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
-  image = ''; // 小区效果图
+  image = '';
 
   constructor(
     public api: RestService,
@@ -55,12 +55,7 @@ export class SenseComponent implements OnInit {
 
   ngOnInit() {
     this.query = { ...defaultQuery };
-    if (this.settings.app.community) {
-      this.getData();
-    }
-    this.settings.notify.subscribe(() => {
-      this.getData();
-    });
+    this.getData();
   }
 
   getData(pageIndex?: number) {

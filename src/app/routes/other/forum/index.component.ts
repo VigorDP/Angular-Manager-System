@@ -15,6 +15,16 @@ import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, t
 
 @Component({
   templateUrl: './index.component.html',
+  styles: [
+    `
+      input {
+        width: 120px;
+      }
+      nz-select {
+        width: 100px;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForumComponent implements OnInit {
@@ -71,24 +81,6 @@ export class ForumComponent implements OnInit {
   @ViewChild('content', { static: false })
   content: ElementRef;
 
-  noticeCateList = [
-    {
-      value: 'PARTY_NEWS',
-      label: '党建要闻',
-    },
-    {
-      value: 'PARTY_PUBLICITY',
-      label: '党内公示',
-    },
-    {
-      value: 'PARTY_CONSTITUTION',
-      label: '学习党章',
-    },
-    {
-      value: 'PARTY_COMMAND',
-      label: '听党指挥',
-    },
-  ];
   image = ''; // 小区效果图
   dateRange = null;
 
@@ -101,7 +93,7 @@ export class ForumComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
+    this.query = { ...defaultQuery, type: '1', operator: '1', number: 0 };
     if (this.settings.app.community) {
       this.getData();
     }

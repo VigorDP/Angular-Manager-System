@@ -5,10 +5,30 @@
 
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
-    <se label="发布人" col="4">
+    <se label="发布人" col="5">
       <input nz-input [(ngModel)]="query.title" name="title" />
     </se>
-    <se>
+    <se label="发布时间" col="5">
+      <nz-date-picker [ngStyle]="{width:'100px'}" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期"
+        [(ngModel)]="query.beginDate" name="beginDate">
+      </nz-date-picker>
+    </se>
+    <se label="筛选条件" col="3">
+      <nz-input-group nzCompact>
+        <nz-select [ngModel]="query.type" name="titl2e" [ngStyle]="{width:'100px'}">
+          <nz-option nzLabel="评论数" nzValue="1"></nz-option>
+          <nz-option nzLabel="点赞数" nzValue="2"></nz-option>
+          <nz-option nzLabel="收藏数" nzValue="3"></nz-option>
+        </nz-select>
+        <nz-select [ngModel]="query.operator" name="title3" [ngStyle]="{width:'100px'}">
+          <nz-option nzLabel="大于" nzValue="1"></nz-option>
+          <nz-option nzLabel="等于" nzValue="2"></nz-option>
+          <nz-option nzLabel="小于" nzValue="3"></nz-option>
+        </nz-select>
+        <nz-input-number [(ngModel)]="query.number" [nzMin]="0" [nzStep]="1" name="title4"></nz-input-number>
+      </nz-input-group>
+    </se>
+    <se col="3">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>
@@ -25,12 +45,11 @@
   <div>
     <h1 style="text-align: center">{{selectedRow.title}}</h1>
     <p class="detail">
-      <span><strong>标签：</strong>{{selectedRow.tag}}</span>
-      <span><strong>查看人数：</strong>{{selectedRow.clicks}}</span>
-      <span><strong>发布时间：</strong>{{selectedRow.gmtCreate}}</span>
+      <span><strong>发布时间：</strong>{{selectedRow.tag}}</span>
+      <span><strong>发布人</strong>{{selectedRow.clicks}}</span>
     </p>
-    <p><strong>文章概述：</strong>{{selectedRow.descr}}</p>
-    <p><strong>标题图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image"></p>
+    <p><strong>帖子图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image"></p>
+    <p><strong>帖子内容：</strong></p>
     <div #content></div>
   </div>
 </ng-template>

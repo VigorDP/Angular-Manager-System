@@ -5,8 +5,7 @@ const PREFIX = '/hl/social/';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
-  constructor(private http: _HttpClient, private settings: SettingsService) {
-  }
+  constructor(private http: _HttpClient, private settings: SettingsService) {}
 
   // 登录
   login = (params: any) => this.http.post(`${PREFIX}propertyAccount/login `, params);
@@ -120,12 +119,29 @@ export class RestService {
   // 费用标准-删除
   deleteFeeStandard = (params: any) => this.http.post(`${PREFIX}life/fees/standard/delete`, params);
 
-
-  //线下缴费 - 列表
+  // 线下缴费-列表
   getFeeList = (params: any) =>
     this.http.post(`${PREFIX}life/fees/list`, paramsWithExtraParams(params, this.settings.app.community));
-// 线下缴费 - 详情
+  // 线下缴费-详情
   getFeeInfo = (id: number) => this.http.get(`${PREFIX}life/fees/info?id=${id}`);
+
+  // 论坛管理-列表
+  getForumList = (params: any) =>
+    this.http.post(`${PREFIX}forum/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 论坛管理-删除
+  deleteForum = (params: any) => this.http.post(`${PREFIX}forum/delete`, params);
+  // 论坛管理-新增/修改
+  saveForum = (params: any) =>
+    this.http.post(`${PREFIX}forum/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 论坛管理-详情
+  getForumInfo = (id: number) => this.http.get(`${PREFIX}forum/info?id=${id}`);
+
+  // 生活小常识-列表
+  getSenseList = (params: any) => this.http.post(`${PREFIX}sense/list`, params);
+  // 生活小常识-新增/修改
+  saveSense = (params: any) => this.http.post(`${PREFIX}sense/standard/save`, params);
+  // 生活小常识-删除
+  deleteSense = (params: any) => this.http.post(`${PREFIX}sense/standard/delete`, params);
 }
 
 function paramsWithExtraParams(params, community) {
