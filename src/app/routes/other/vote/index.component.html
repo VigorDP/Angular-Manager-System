@@ -10,7 +10,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="发布人" col="4">
-      <input nz-input [(ngModel)]="query.title" name="title" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
     <se label="状态" col="4">
       <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
@@ -56,7 +56,7 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标题" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.title" name="title" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.title" name="title" />
     </se>
     <se label="图片" col="1">
       <app-img-upload
@@ -80,7 +80,7 @@
     </se>
     <ng-container *ngFor="let option of this.selectedRow.options; let idx = index">
       <se [label]="'选项' + (idx + 1)" col="2" required>
-        <input nz-input [(ngModel)]="option.name" [name]="'name' + idx" />
+        <input nz-input placeholder="请输入" [(ngModel)]="option.name" [name]="'name' + idx" />
       </se>
       <se label="" col="2">
         <button

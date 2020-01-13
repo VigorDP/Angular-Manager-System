@@ -10,7 +10,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="业主姓名" col="4">
-      <input nz-input [(ngModel)]="query.name" name="name" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
     <se label="性别" col="4">
       <nz-select [(ngModel)]="query.gender" name="gender" [nzPlaceHolder]="'请选择'">
@@ -40,10 +40,10 @@
       </nz-select>
     </se>
     <se label="手机号码" col="4">
-      <input nz-input [(ngModel)]="query.tel" name="tel" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.tel" name="tel" />
     </se>
     <se label="证件号码" col="4">
-      <input nz-input [(ngModel)]="query.credentialNo" name="credentialNo" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.credentialNo" name="credentialNo" />
     </se>
     <se label="审核状态" col="4">
       <nz-select [(ngModel)]="query.certificationStatus" name="certificationStatus" [nzPlaceHolder]="'请选择'">
@@ -72,11 +72,11 @@
           </nz-select>
         </se>
         <se label="证件号码" col="2" required>
-          <input nz-input [(ngModel)]="selectedRow.credentialNo" (ngModelChange)="inputChange$.next($event)"
+          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.credentialNo" (ngModelChange)="inputChange$.next($event)"
             name="credentialNo" />
         </se>
         <se label="姓名" col="2" required>
-          <input nz-input [(ngModel)]="selectedRow.name" name="name" />
+          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.name" name="name" />
         </se>
         <se label="性别" col="2" required>
           <nz-select [(ngModel)]="selectedRow.gender" name="gender" [nzPlaceHolder]="'请选择'">
@@ -88,13 +88,13 @@
             [(ngModel)]="selectedRow.birthday" name="birthday"></nz-date-picker>
         </se>
         <se label="手机号码" col="2" required>
-          <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
+          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.tel" name="tel" />
         </se>
         <se label="民族" col="2">
-          <input nz-input [(ngModel)]="selectedRow.nation" name="nation" />
+          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.nation" name="nation" />
         </se>
         <se label="详细地址" col="2">
-          <input nz-input [(ngModel)]="selectedRow.address" name="address" />
+          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.address" name="address" />
         </se>
         <se label="文化程度" col="2">
           <nz-select [(ngModel)]="selectedRow.educationLevel" name="educationLevel" [nzPlaceHolder]="'请选择'">
@@ -102,7 +102,7 @@
           </nz-select>
         </se>
         <se label="工作单位" col="2">
-          <input nz-input [(ngModel)]="selectedRow.workUnit" name="workUnit" />
+          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.workUnit" name="workUnit" />
         </se>
         <se label="户籍" col="1">
           <div style="display: flex;justify-content: space-between;margin-top: 4px;">
@@ -170,7 +170,7 @@
           </se>
           <se label="房屋面积" col="2">
             <nz-input-group nzSuffix="平方米">
-              <input nz-input [(ngModel)]="item.area" [name]="'area'+i" />
+              <input nz-input placeholder="请输入" [(ngModel)]="item.area" [name]="'area'+i" />
             </nz-input-group>
           </se>
           <se label="" col="2" required>

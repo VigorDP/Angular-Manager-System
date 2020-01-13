@@ -10,7 +10,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="100">
     <se label="角色名称" col="4" style="margin-bottom: 0">
-      <input nz-input [(ngModel)]="query.name" name="name" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
     <se col="4">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -28,7 +28,7 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="90">
     <se label="角色名称" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.name" name="name" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.name" name="name" />
     </se>
     <se label="分配权限" col="1" required>
       <nz-tree [nzData]="userRightTree" [nzCheckedKeys]="moduleIds" [nzSelectedKeys]="moduleIds" nzMultiple nzCheckable

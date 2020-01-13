@@ -10,7 +10,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="业主姓名" col="4">
-      <input nz-input [(ngModel)]="query.name" name="name" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
     <se label="所在楼栋" col="4">
       <nz-select
@@ -38,7 +38,7 @@
       </nz-select>
     </se>
     <se label="手机号码" col="4">
-      <input nz-input [(ngModel)]="query.tel" name="tel" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.tel" name="tel" />
     </se>
     <se label="缴纳状态" col="4">
       <nz-select [(ngModel)]="query.paidStatus" name="paidStatus " [nzPlaceHolder]="'请选择'">

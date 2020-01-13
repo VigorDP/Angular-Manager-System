@@ -15,7 +15,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="发布人" col="4">
-      <input nz-input [(ngModel)]="query.name" name="name" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
     <se label="标签" col="4">
       <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
@@ -46,14 +46,14 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标题" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.title" name="name" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.title" name="name" />
     </se>
     <se label="标题图片" col="1">
       <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
         [inputUrls]="[selectedRow.image]"></app-img-upload>
     </se>
     <se label="文章概述" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.descr" name="descr" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.descr" name="descr" />
     </se>
     <se label="活动标签" col="1" required>
       <nz-select [(ngModel)]="selectedRow.tag" name="tag" [nzPlaceHolder]="'请选择'">
@@ -64,10 +64,10 @@
       <range-picker [(ngModel)]="selectedRow.start" [(ngModelEnd)]="selectedRow.end" name="date"></range-picker>
     </se>
     <se label="联系电话" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.tel" name="tel" />
     </se>
     <se label="活动地址" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.tel" name="tel" />
     </se>
     <se label="" col="1">
       <label nz-checkbox [(ngModel)]="selectedRow.isPush" name="push">是否推送到移动端</label>

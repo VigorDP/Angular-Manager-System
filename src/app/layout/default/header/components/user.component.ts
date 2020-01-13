@@ -28,7 +28,7 @@ import { RestService } from '@app/service';
     <ng-template #modalContent>
       <form nz-form se-container labelWidth="90">
         <se label="新密码" col="2">
-          <input nz-input [(ngModel)]="newPassword" name="startId" />
+          <input nz-input placeholder="请输入" [(ngModel)]="newPassword" name="startId" />
         </se>
       </form>
     </ng-template>
