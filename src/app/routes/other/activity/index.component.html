@@ -63,11 +63,7 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标题" col="1" required>
-      <<<<<<< HEAD
-      <input nz-input [(ngModel)]="selectedRow.title" name="title" />
-      =======
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.title" name="name" />
-      >>>>>>> cd80b9889f9a339fa6b494b6cc3e8a307e8c4b1d
+      <input nz-input [(ngModel)]="selectedRow.title" name="title" placeholder="请输入" />
     </se>
     <se label="标题图片" col="1">
       <app-img-upload
