@@ -153,6 +153,17 @@ export class RestService {
     this.http.post(`${PREFIX}activity/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 社区活动-详情
   getActivityInfo = (id: number) => this.http.get(`${PREFIX}activity/info?id=${id}`);
+
+  // 投票管理 - 列表
+  getVoteList = (params: any) =>
+    this.http.post(`${PREFIX}vote/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 投票管理-删除
+  deleteVote = (params: any) => this.http.post(`${PREFIX}vote/delete`, params);
+  // 投票管理-新增/修改
+  saveVote = (params: any) =>
+    this.http.post(`${PREFIX}vote/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 投票管理-详情
+  getVoteInfo = (id: number) => this.http.get(`${PREFIX}vote/info?id=${id}`);
 }
 
 function paramsWithExtraParams(params, community) {

@@ -13,11 +13,11 @@
       <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
     <se label="状态" col="4">
-      <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
-        <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.status" name="status" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of statusList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="发布日期" col="4">
+    <!-- <se label="发布日期" col="4">
       <nz-date-picker
         class="input"
         [nzStyle]="{ width: '100%' }"
@@ -26,9 +26,9 @@
         [(ngModel)]="query.beginDate"
         name="beginDate"
       ></nz-date-picker>
-    </se>
-    <se label="投票时间范围" col="4">
-      <range-picker [(ngModel)]="query.start" [(ngModelEnd)]="query.end" name="date"></range-picker>
+    </se> -->
+    <se label="投票起始日期" col="4">
+      <range-picker [(ngModel)]="query.startDate" [(ngModelEnd)]="query.endDate" name="date"></range-picker>
     </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -66,37 +66,42 @@
       ></app-img-upload>
     </se>
     <se label="投票时间范围" col="1" required>
-      <range-picker [(ngModel)]="dateRange" [(ngModelEnd)]="selectedRow.end" name="dateRange"></range-picker>
+      <nz-range-picker
+        [nzShowTime]="{ nzFormat: 'HH:mm:ss' }"
+        nzFormat="yyyy-MM-dd HH:mm:ss"
+        [(ngModel)]="dateRange"
+        name="dateRange"
+      ></nz-range-picker>
     </se>
     <se label="内容描述" col="1" required>
       <textarea
         rows="4"
         nz-input
-        [(ngModel)]="selectedRow.desc"
+        [(ngModel)]="selectedRow.descr"
         maxlength="50"
-        name="desc"
+        name="descr"
         placeholder="不超过50个字"
       ></textarea>
     </se>
-    <ng-container *ngFor="let option of this.selectedRow.options; let idx = index">
+    <ng-container *ngFor="let option of this.selectedRow.dtos; let idx = index">
       <se [label]="'选项' + (idx + 1)" col="2" required>
-        <input nz-input placeholder="请输入" [(ngModel)]="option.name" [name]="'name' + idx" />
+        <input nz-input placeholder="请输入" [(ngModel)]="option.descr" [name]="'descr' + idx" />
       </se>
       <se label="" col="2">
         <button
           nz-button
           style="border: none;"
           nzType="danger"
-          (click)="removeOptions()"
-          [disabled]="this.selectedRow.options.length === 2"
+          (click)="removeOptions(idx)"
+          [disabled]="this.selectedRow.dtos.length === 2"
         >
-          <i nz-icon nzType="delete" nzTheme="outline" (click)="removeOptions()"></i>删除
+          <i nz-icon nzType="delete" nzTheme="outline"></i>删除
         </button>
       </se>
     </ng-container>
 
     <se label="" col="2" required>
-      <button nz-button nzType="primary" (click)="addOptions()" [disabled]="this.selectedRow.options.length === 10">
+      <button nz-button nzType="primary" (click)="addOptions()" [disabled]="this.selectedRow.dtos.length === 10">
         <i nz-icon nzType="plus" nzTheme="outline"></i>添加选项
       </button>
     </se>
@@ -105,15 +110,39 @@
 
 <!--查看投票-->
 <ng-template #viewContent>
-  <div>
-    <h1 style="text-align: center">{{ selectedRow.title }}</h1>
-    <p class="detail">
-      <span><strong>标签：</strong>{{ selectedRow.tag }}</span>
-      <span><strong>查看人数：</strong>{{ selectedRow.clicks }}</span>
-      <span><strong>发布时间：</strong>{{ selectedRow.gmtCreate }}</span>
-    </p>
-    <p><strong>文章概述：</strong>{{ selectedRow.descr }}</p>
-    <p><strong>标题图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image" /></p>
-    <div #content></div>
-  </div>
+  <st #viewSt [data]="viewData" [columns]="viewColumns" [page]="{ show: false }"></st>
+  <nz-divider></nz-divider>
+  <p><strong>内容描述：</strong>{{ selectedRow.descr }}</p>
+  <p><strong>图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image" /></p>
+  <nz-divider></nz-divider>
+  <nz-form-item *ngFor="let option of selectedRow.dtos">
+    <nz-form-control [nzSpan]="3">
+      <p
+        [title]="option.descr"
+        style="margin:0 5%;text-align:right;overflow:hidden;white-space: nowrap;overflow: hidden;text-overflow: ellipsis"
+      >
+        {{ option.descr }}
+      </p>
+    </nz-form-control>
+    <nz-form-control [nzSpan]="14">
+      <nz-progress
+        [nzPercent]="((option.count * 100) / this.voteTotal).toFixed(0)"
+        nzSize="small"
+        [nzShowInfo]="false"
+        [nzStrokeWidth]="15"
+      >
+      </nz-progress>
+    </nz-form-control>
+    <nz-form-control [nzSpan]="3">
+      <span style="display:inline-block;width: 50px"
+        >{{ this.voteTotal ? ((option.count * 100) / this.voteTotal).toFixed(0) : 0 }}%</span
+      ><span>{{ option.count }}票</span>
+    </nz-form-control>
+    <!-- <nz-form-control [nzSpan]="2" *ngIf="selectedRow.status == '已结束'">
+      <span
+        style="display: inline-block;background: rgb(102,162,252);color:#ffffff;width: 40px;height: 40px;line-height: 40px;text-align: center"
+        >{{ option.sortNum }}</span
+      >
+    </nz-form-control> -->
+  </nz-form-item>
 </ng-template>
