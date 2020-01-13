@@ -9,8 +9,8 @@
     "icon": "ng g ng-alain:plugin icon",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\" --fix",
     "lint:style": "stylelint \"src/**/*.less\" --syntax less --fix",
-    "precommit": "lint-staged",
-    "tslint-check": "tslint-config-prettier-check ./tslint.json"
+    "tslint-check": "tslint-config-prettier-check ./tslint.json",
+    "change-log":"conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "private": true,
   "dependencies": {
@@ -54,7 +54,7 @@
     "@types/node": "12.11.1",
     "antd-theme-generator": "1.1.7",
     "codelyzer": "5.1.2",
-    "husky": "3.0.9",
+    "husky": "4.0.7",
     "jasmine-core": "3.5.0",
     "jasmine-spec-reporter": "4.2.1",
     "karma": "4.4.0",
@@ -79,7 +79,8 @@
     "tslint": "5.20.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-language-service": "0.9.9",
-    "typescript": "3.5.3"
+    "typescript": "3.5.3",
+    "validate-commit-msg": "2.14.0"
   },
   "lint-staged": {
     "src/**/*.ts": [
@@ -90,5 +91,11 @@
       "npm run lint:style",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "validate-commit-msg"
+    }
   }
 }

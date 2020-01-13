@@ -114,8 +114,7 @@ export class FeeStandardComponent implements OnInit {
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.query = { ...defaultQuery };
@@ -170,16 +169,8 @@ export class FeeStandardComponent implements OnInit {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
-    if (type === 'edit') {
-      this.dateRange = [this.selectedRow.starDate, this.selectedRow.endDate];
-    } else {
-      this.dateRange = null;
-    }
-    if (this.selectedRow.cate === 'HEATING') {
-      this.dateFormat = DAY_FORMAT;
-    } else {
-      this.dateFormat = MONTH_FORMAT;
-    }
+    this.dateRange = type === 'edit' ? [this.selectedRow.starDate, this.selectedRow.endDate] : null;
+    this.dateFormat = this.selectedRow.cate === 'HEATING' ? DAY_FORMAT : MONTH_FORMAT;
     this.modalSrv.create({
       nzTitle: type === 'add' ? '新增费用标准' : '编辑费用标准',
       nzContent: tpl,

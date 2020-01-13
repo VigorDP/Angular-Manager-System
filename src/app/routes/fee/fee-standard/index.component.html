@@ -38,10 +38,10 @@
       </nz-select>
     </se>
     <se label="价格" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.price" name="price" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.price" name="price" />
     </se>
     <se label="单位" col="2" required>
-      <input nz-input [(ngModel)]="selectedRow.unit" name="unit" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.unit" name="unit" />
     </se>
     <se label="楼栋类型" col="2" required>
       <nz-select [(ngModel)]="selectedRow.buildingCate" name="type" [nzPlaceHolder]="'请选择'">

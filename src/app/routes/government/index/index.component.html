@@ -24,7 +24,7 @@
       </nz-select>
     </se>
     <se label="公告标题" col="4">
-      <input nz-input [(ngModel)]="query.title" name="title" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -42,7 +42,7 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标题" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.title" name="name" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.title" name="name" />
     </se>
     <se label="标题图片" col="1">
       <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
@@ -54,7 +54,7 @@
       </nz-select>
     </se>
     <se label="文章概述" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.descr" name="descr" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.descr" name="descr" />
     </se>
     <se label="" col="1">
       <tinymce [(ngModel)]="selectedRow.content" name="content"></tinymce>
@@ -78,4 +78,4 @@
 </ng-template>
 
 <app-tag-manager [show]="showTagManager" [noticeCate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
-  [deleteApi]="api.deleteTag" (close)="showTagManager=false"></app-tag-manager>
+  [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></app-tag-manager>

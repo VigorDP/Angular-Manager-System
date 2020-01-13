@@ -6,7 +6,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="发布人" col="5">
-      <input nz-input [(ngModel)]="query.title" name="title" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
     <se label="发布时间" col="5">
       <nz-date-picker [ngStyle]="{width:'100px'}" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期"

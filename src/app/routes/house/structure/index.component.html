@@ -15,22 +15,22 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="楼栋编号" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.buildingNo" name="buildingNo" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingNo" name="buildingNo" />
     </se>
     <se label="楼栋名称" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.buildingName" name="buildingName" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingName" name="buildingName" />
     </se>
     <se label="地上楼层数" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.upstairFloors" name="upstairFloors" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.upstairFloors" name="upstairFloors" />
     </se>
     <se label="地下楼层数" col="1">
-      <input nz-input [(ngModel)]="selectedRow.downstairFloors" name="downstairFloors" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.downstairFloors" name="downstairFloors" />
     </se>
     <se label="每层户数" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.households" name="households" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.households" name="households" />
     </se>
     <se label="楼栋单元数量" col="1" required>
-      <input nz-input [(ngModel)]="selectedRow.buildingUnit" name="buildingUnit" />
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingUnit" name="buildingUnit" />
     </se>
     <se label="楼栋类型" col="1" required>
       <nz-select [(ngModel)]="selectedRow.cate" name="cate" [nzPlaceHolder]="'请选择楼栋类别'">

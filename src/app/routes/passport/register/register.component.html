@@ -10,7 +10,7 @@
   <nz-form-item>
     <nz-form-control [nzErrorTip]="mailErrorTip">
       <nz-input-group nzSize="large" nzAddonBeforeIcon="user">
-        <input nz-input formControlName="mail" placeholder="Email" />
+        <input nz-input placeholder="请输入" formControlName="mail" placeholder="Email" />
       </nz-input-group>
       <ng-template #mailErrorTip let-i>
         <ng-container *ngIf="i.errors?.required">请输入邮箱地址！</ng-container>
@@ -23,7 +23,7 @@
       <nz-input-group nzSize="large" nzAddonBeforeIcon="lock" nz-popover nzPopoverPlacement="right"
         nzPopoverTrigger="focus" [(nzVisible)]="visible" nzOverlayClassName="register-password-cdk"
         [nzOverlayStyle]="{ 'width.px': 240 }" [nzPopoverContent]="pwdCdkTpl">
-        <input nz-input type="password" formControlName="password" placeholder="Password" />
+        <input nz-input placeholder="请输入" type="password" formControlName="password" placeholder="Password" />
       </nz-input-group>
       <ng-template #pwdCdkTpl>
         <div style="padding: 4px 0;">
@@ -44,7 +44,7 @@
   <nz-form-item>
     <nz-form-control [nzErrorTip]="confirmErrorTip">
       <nz-input-group nzSize="large" nzAddonBeforeIcon="lock">
-        <input nz-input type="password" formControlName="confirm" placeholder="Confirm Password" />
+        <input nz-input placeholder="请输入" type="password" formControlName="confirm" placeholder="Confirm Password" />
       </nz-input-group>
       <ng-template #confirmErrorTip let-i>
         <ng-container *ngIf="i.errors?.required">请确认密码！</ng-container>
@@ -74,7 +74,7 @@
       <nz-row [nzGutter]="8">
         <nz-col [nzSpan]="16">
           <nz-input-group nzSize="large" nzAddonBeforeIcon="mail">
-            <input nz-input formControlName="captcha" placeholder="Captcha" />
+            <input nz-input placeholder="请输入" formControlName="captcha" placeholder="Captcha" />
           </nz-input-group>
         </nz-col>
         <nz-col [nzSpan]="8">

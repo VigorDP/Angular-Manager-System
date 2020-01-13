@@ -25,7 +25,7 @@ export class TagManagerComponent implements OnChanges {
   @Input() listApi;
   @Input() saveApi;
   @Input() deleteApi;
-  @Output() public close = new EventEmitter<any>();
+  @Output() public closeEvent = new EventEmitter<any>();
 
   isVisible = false;
   agoName = undefined;
@@ -153,6 +153,6 @@ export class TagManagerComponent implements OnChanges {
 
   handleClose(): void {
     this.isVisible = false;
-    this.close.emit();
+    this.closeEvent.emit();
   }
 }
