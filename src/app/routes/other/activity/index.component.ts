@@ -12,6 +12,9 @@ import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
+import * as dayjs from 'dayjs';
+import { IfStmt } from '@angular/compiler';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   templateUrl: './index.component.html',
@@ -30,9 +33,9 @@ export class ActivityComponent implements OnInit {
     { title: '标题', index: 'title' },
     { title: '发布人', index: 'creator' },
     { title: '所属标签', index: 'tag' },
-    { title: '状态', index: 'status' },
-    { title: '参与人数', index: 'status' },
-    { title: '发布时间', index: 'status' },
+    { title: '状态', index: 'status', format: item => this.statusList.filter(i => i.value === item.status)[0].label },
+    { title: '参与人数', index: 'count' },
+    { title: '发布时间', index: 'gmtCreate' },
     {
       title: '操作',
       fixed: 'right',
@@ -59,6 +62,7 @@ export class ActivityComponent implements OnInit {
   ];
   showTagManager = false;
   tagList = [];
+  statusList = [{ value: 0, label: '未开始' }, { value: 1, label: '进行中' }, { value: 2, label: '已结束' }];
 
   @ViewChild('st', { static: true })
   st: STComponent;
@@ -69,26 +73,9 @@ export class ActivityComponent implements OnInit {
   @ViewChild('content', { static: false })
   content: ElementRef;
 
-  noticeCateList = [
-    {
-      value: 'PARTY_NEWS',
-      label: '党建要闻',
-    },
-    {
-      value: 'PARTY_PUBLICITY',
-      label: '党内公示',
-    },
-    {
-      value: 'PARTY_CONSTITUTION',
-      label: '学习党章',
-    },
-    {
-      value: 'PARTY_COMMAND',
-      label: '听党指挥',
-    },
-  ];
   image = ''; // 小区效果图
   dateRange = null;
+  dateRange1 = null;
 
   constructor(
     public api: RestService,
@@ -99,19 +86,35 @@ export class ActivityComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
+    this.query = { ...defaultQuery, cate: 'SOCIAL_ACTIVITY' };
     if (this.settings.app.community) {
       this.getData();
+      this.getTagData();
     }
     this.settings.notify.subscribe(() => {
       this.getData();
+      this.getTagData();
     });
+  }
+
+  dateRangeChange(e) {
+    let startDate = null;
+    let endDate = null;
+    if (this.dateRange) {
+      startDate = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
+      endDate = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
+    }
+    this.query = {
+      ...this.query,
+      startDate,
+      endDate,
+    };
   }
 
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getPoliticsNewsList(this.query).subscribe(res => {
+    this.api.getActivityList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -144,13 +147,9 @@ export class ActivityComponent implements OnInit {
   }
 
   reset() {
-    this.query = { ...defaultQuery, cate: 'PARTY_NEWS' };
+    this.query = { ...defaultQuery, cate: 'SOCIAL_ACTIVITY' };
     this.loading = true;
     setTimeout(() => this.getData(1));
-  }
-
-  selectCate() {
-    this.getData(1);
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
@@ -163,10 +162,8 @@ export class ActivityComponent implements OnInit {
         if (this.checkValid()) {
           return new Promise(resolve => {
             this.api
-              .savePoliticsNews({
+              .saveActivity({
                 ...this.selectedRow,
-                cate: this.query.cate,
-                image: this.image,
               })
               .subscribe(res => {
                 if (res.code === '0') {
@@ -184,7 +181,7 @@ export class ActivityComponent implements OnInit {
     });
     modal.afterOpen.subscribe(() => {
       if (type === 'edit' || type === 'view') {
-        this.api.getPoliticsNewsInfo(this.selectedRow.id).subscribe(res => {
+        this.api.getActivityInfo(this.selectedRow.id).subscribe(res => {
           if (res.code === '0') {
             this.selectedRow = { ...this.selectedRow, ...res.data };
             if (type === 'view') {
@@ -202,6 +199,10 @@ export class ActivityComponent implements OnInit {
       this.msg.info('请输入活动标题');
       return false;
     }
+    // if (!this.image) {
+    //   this.msg.info('请上传标题图片');
+    //   return false;
+    // }
     if (!tag) {
       this.msg.info('请选择标签');
       return false;
@@ -210,6 +211,12 @@ export class ActivityComponent implements OnInit {
       this.msg.info('情输入活动概述');
       return false;
     }
+    if (!this.dateRange1) {
+      this.msg.info('请选择活动起始时间');
+      return false;
+    }
+    this.selectedRow.startDate = `${dayjs(this.dateRange1[0]).format('YYYY-MM-DD HH:mm:ss')}`;
+    this.selectedRow.endDate = `${dayjs(this.dateRange1[1]).format('YYYY-MM-DD HH:mm:ss')}`;
     if (!content) {
       this.msg.info('请输入活动内容');
       return false;
@@ -226,7 +233,7 @@ export class ActivityComponent implements OnInit {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deletePoliticsNews([this.selectedRow.id]).subscribe(() => {
+        this.api.deleteActivity([this.selectedRow.id]).subscribe(() => {
           this.getData();
         });
       },
@@ -243,7 +250,7 @@ export class ActivityComponent implements OnInit {
       nzTitle: '是否确定删除选中项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deletePoliticsNews(ids).subscribe(() => {
+        this.api.deleteActivity(ids).subscribe(() => {
           this.getData();
           this.st.clearCheck();
         });

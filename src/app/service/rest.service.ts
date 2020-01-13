@@ -142,6 +142,17 @@ export class RestService {
   saveSense = (params: any) => this.http.post(`${PREFIX}sense/standard/save`, params);
   // 生活小常识-删除
   deleteSense = (params: any) => this.http.post(`${PREFIX}sense/standard/delete`, params);
+
+  // 社区活动 - 列表
+  getActivityList = (params: any) =>
+    this.http.post(`${PREFIX}activity/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 社区活动-删除
+  deleteActivity = (params: any) => this.http.post(`${PREFIX}activity/delete`, params);
+  // 社区活动-新增/修改
+  saveActivity = (params: any) =>
+    this.http.post(`${PREFIX}activity/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 社区活动-详情
+  getActivityInfo = (id: number) => this.http.get(`${PREFIX}activity/info?id=${id}`);
 }
 
 function paramsWithExtraParams(params, community) {
