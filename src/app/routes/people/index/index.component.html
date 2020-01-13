@@ -72,8 +72,8 @@
           </nz-select>
         </se>
         <se label="证件号码" col="2" required>
-          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.credentialNo" (ngModelChange)="inputChange$.next($event)"
-            name="credentialNo" />
+          <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.credentialNo"
+            (ngModelChange)="inputChange$.next($event)" name="credentialNo" />
         </se>
         <se label="姓名" col="2" required>
           <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.name" name="name" />
@@ -185,4 +185,4 @@
   </form>
 </ng-template>
 
-<new-check [show]='showCheck' (save)="handleCheck($event)" (cancel)="showCheck = false"></new-check>
+<app-new-check [show]='showCheck' (save)="handleCheck($event)" (cancel)="showCheck = false"></app-new-check>

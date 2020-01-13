@@ -135,6 +135,7 @@
         "Use specific callable interface instead."
       ]
     ],
-    "no-unused-expression": false
+    "no-unused-expression": false,
+    "no-shadowed-variable":false
   }
 }
