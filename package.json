@@ -9,7 +9,6 @@
     "icon": "ng g ng-alain:plugin icon",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\" --fix",
     "lint:style": "stylelint \"src/**/*.less\" --syntax less --fix",
-    "precommit": "lint-staged",
     "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "private": true,
@@ -91,5 +90,10 @@
       "npm run lint:style",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && validate-commit-msg"
+    }
   }
 }
