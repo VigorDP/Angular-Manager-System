@@ -79,7 +79,8 @@
     "tslint": "5.20.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-language-service": "0.9.9",
-    "typescript": "3.5.3"
+    "typescript": "3.5.3",
+    "validate-commit-msg": "2.14.0"
   },
   "lint-staged": {
     "src/**/*.ts": [
