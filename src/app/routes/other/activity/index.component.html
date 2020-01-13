@@ -63,11 +63,11 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标题" col="1" required>
-<<<<<<< HEAD
+      <<<<<<< HEAD
       <input nz-input [(ngModel)]="selectedRow.title" name="title" />
-=======
+      =======
       <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.title" name="name" />
->>>>>>> cd80b9889f9a339fa6b494b6cc3e8a307e8c4b1d
+      >>>>>>> cd80b9889f9a339fa6b494b6cc3e8a307e8c4b1d
     </se>
     <se label="标题图片" col="1">
       <app-img-upload
@@ -92,22 +92,14 @@
         name="dateRange1"
       ></nz-range-picker>
     </se>
-<<<<<<< HEAD
     <se label="联系电话" col="1" required>
       <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
     </se>
     <se label="活动地址" col="1" required>
       <input nz-input [(ngModel)]="selectedRow.address" name="address" />
-=======
-    <se label="联系电话" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.tel" name="tel" />
-    </se>
-    <se label="活动地址" col="1" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.tel" name="tel" />
->>>>>>> cd80b9889f9a339fa6b494b6cc3e8a307e8c4b1d
     </se>
     <se label="" col="1">
-      <label nz-checkbox [(ngModel)]="selectedRow.isPush" name="push">是否推送到移动端</label>
+      <label nz-checkbox [(ngModel)]="selectedRow.isPush" name="isPush">是否推送到移动端</label>
     </se>
     <se label="" col="1">
       <tinymce [(ngModel)]="selectedRow.content" name="content"></tinymce>
@@ -141,7 +133,6 @@
   </div>
 </ng-template>
 
-<<<<<<< HEAD
 <app-tag-manager
   [show]="showTagManager"
   [noticeCate]="query.cate"
@@ -150,7 +141,3 @@
   [deleteApi]="api.deleteTag"
   (close)="this.getTagData(); showTagManager = false"
 ></app-tag-manager>
-=======
-<app-tag-manager [show]="showTagManager" [noticeCate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
-  [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></app-tag-manager>
->>>>>>> cd80b9889f9a339fa6b494b6cc3e8a307e8c4b1d
