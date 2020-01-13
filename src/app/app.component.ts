@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     private modalSrv: NzModalService,
   ) {
     iconSrv.addIcon(...ICONS_AUTO, ...ICONS);
-    renderer.setAttribute(el.nativeElement, 'ng-alain-version22', VERSION_ALAIN.full);
+    renderer.setAttribute(el.nativeElement, 'ng-alain-version', VERSION_ALAIN.full);
     renderer.setAttribute(el.nativeElement, 'ng-zorro-version', VERSION_ZORRO.full);
     settingSrv.setApp(config.app);
   }
