@@ -1,10 +1,7 @@
 <page-header title="社区活动" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
-    <button
-      nz-button
-      (click)="selectedRow = {}; this.getTagData(); addOrEditOrView(modalContent, 'add')"
-      [nzType]="'primary'"
-    >
+    <button nz-button (click)="selectedRow = {}; this.getTagData(); addOrEditOrView(modalContent, 'add')"
+      [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新建活动</span>
     </button>
@@ -31,11 +28,8 @@
       </nz-select>
     </se>
     <se label="日期范围" col="4">
-      <nz-range-picker
-        [(ngModel)]="dateRange"
-        (ngModelChange)="dateRangeChange($event)"
-        name="dateRange"
-      ></nz-range-picker>
+      <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="dateRangeChange($event)" name="dateRange">
+      </nz-range-picker>
     </se>
     <se>
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -45,18 +39,8 @@
 </nz-card>
 
 <nz-card [nzBordered]="false">
-  <st
-    #st
-    [data]="data"
-    [total]="total"
-    [ps]="query.pageSize"
-    [pi]="query.pageNo"
-    [columns]="columns"
-    [page]="pages"
-    [loading]="loading"
-    (change)="stChange($event)"
-    [scroll]="{ x: '1000px' }"
-  ></st>
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{ x: '1000px' }"></st>
 </nz-card>
 
 <!--新增活动-->
@@ -66,11 +50,8 @@
       <input nz-input [(ngModel)]="selectedRow.title" name="title" placeholder="请输入" />
     </se>
     <se label="标题图片" col="1">
-      <app-img-upload
-        action="/hl/social/uploader/img/upload"
-        (getImgUrl)="getImgUrl($event)"
-        [inputUrls]="[selectedRow.image]"
-      ></app-img-upload>
+      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
+        [inputUrls]="[selectedRow.image]"></app-img-upload>
     </se>
     <se label="文章概述" col="1" required>
       <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.descr" name="descr" />
@@ -81,12 +62,8 @@
       </nz-select>
     </se>
     <se label="活动时间范围" col="1" required>
-      <nz-range-picker
-        [nzShowTime]="{ nzFormat: 'HH:mm:ss' }"
-        nzFormat="yyyy-MM-dd HH:mm:ss"
-        [(ngModel)]="dateRange1"
-        name="dateRange1"
-      ></nz-range-picker>
+      <nz-range-picker [nzShowTime]="{ nzFormat: 'HH:mm:ss' }" nzFormat="yyyy-MM-dd HH:mm:ss" [(ngModel)]="dateRange1"
+        name="dateRange1"></nz-range-picker>
     </se>
     <se label="联系电话" col="1" required>
       <input nz-input [(ngModel)]="selectedRow.tel" name="tel" />
@@ -117,8 +94,7 @@
     <p><strong>标签：</strong>{{ selectedRow.tag }}</p>
     <p><strong>参与人数：</strong>{{ selectedRow.count }}</p>
     <p>
-      <strong>活动状态：</strong
-      >{{ selectedRow.statis === 0 ? '未开始' : selectedRow.status === 1 ? '进行中' : '已结束' }}
+      <strong>活动状态：</strong>{{ selectedRow.statis === 0 ? '未开始' : selectedRow.status === 1 ? '进行中' : '已结束' }}
     </p>
     <p><strong>发布时间：</strong>{{ selectedRow.gmtCreate }}</p>
     <p><strong>开始时间：</strong>{{ selectedRow.startDate }}</p>
@@ -129,11 +105,5 @@
   </div>
 </ng-template>
 
-<app-tag-manager
-  [show]="showTagManager"
-  [noticeCate]="query.cate"
-  [listApi]="api.getTagList"
-  [saveApi]="api.saveTag"
-  [deleteApi]="api.deleteTag"
-  (close)="this.getTagData(); showTagManager = false"
-></app-tag-manager>
+<app-tag-manager [show]="showTagManager" [noticeCate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
+  [deleteApi]="api.deleteTag" (closeEvent)="this.getTagData(); showTagManager = false"></app-tag-manager>
