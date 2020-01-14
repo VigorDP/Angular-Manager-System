@@ -1,6 +1,6 @@
 <page-header title="角色管理" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
-    <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
+    <button nz-button (click)="selectedRow={};moduleIds=[];addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新增角色</span>
     </button>

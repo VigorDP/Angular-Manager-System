@@ -19,7 +19,7 @@ export class SenseComponent implements OnInit {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '标题', index: 'title' },
-    { title: '标题图片', index: 'image' },
+    { title: '标题图片', index: 'image', type: 'img' },
     { title: '文章跳转链接', index: 'url' },
     { title: '发布时间', index: 'gmtCreate' },
     {
@@ -27,6 +27,14 @@ export class SenseComponent implements OnInit {
       fixed: 'right',
       width: 100,
       buttons: [
+        {
+          text: '编辑',
+          icon: 'edit',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.addOrEditOrView(this.tpl, 'edit');
+          },
+        },
         {
           text: '删除',
           icon: 'delete',
@@ -61,7 +69,7 @@ export class SenseComponent implements OnInit {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getPoliticsNewsList(this.query).subscribe(res => {
+    this.api.getSenseList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -100,6 +108,7 @@ export class SenseComponent implements OnInit {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
+    type === 'edit' && (this.image = this.selectedRow.image);
     this.modalSrv.create({
       nzTitle: type === 'add' ? '新建生活小常识' : type === 'edit' ? '编辑生活小常识' : '查看生活小常识',
       nzContent: tpl,
@@ -109,7 +118,7 @@ export class SenseComponent implements OnInit {
         if (this.checkValid()) {
           return new Promise(resolve => {
             this.api
-              .savePoliticsNews({
+              .saveSense({
                 ...this.selectedRow,
                 image: this.image,
               })
@@ -155,7 +164,7 @@ export class SenseComponent implements OnInit {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deletePoliticsNews([this.selectedRow.id]).subscribe(() => {
+        this.api.deleteSense([this.selectedRow.id]).subscribe(() => {
           this.getData();
         });
       },

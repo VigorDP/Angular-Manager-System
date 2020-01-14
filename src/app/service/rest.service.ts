@@ -137,11 +137,11 @@ export class RestService {
   getForumInfo = (id: number) => this.http.get(`${PREFIX}forum/info?id=${id}`);
 
   // 生活小常识-列表
-  getSenseList = (params: any) => this.http.post(`${PREFIX}sense/list`, params);
+  getSenseList = (params: any) => this.http.post(`${PREFIX}commonSense/list`, params);
   // 生活小常识-新增/修改
-  saveSense = (params: any) => this.http.post(`${PREFIX}sense/standard/save`, params);
+  saveSense = (params: any) => this.http.post(`${PREFIX}commonSense/save`, params);
   // 生活小常识-删除
-  deleteSense = (params: any) => this.http.post(`${PREFIX}sense/standard/delete`, params);
+  deleteSense = (params: any) => this.http.post(`${PREFIX}commonSense/delete`, params);
 
   // 社区活动 - 列表
   getActivityList = (params: any) =>
