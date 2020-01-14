@@ -36,6 +36,13 @@ export const menus: Menu[] = [
             reuse: false,
             children: [],
           },
+          {
+            text: '组织架构',
+            name: 'RAM_ROLE',
+            link: '/system/architect',
+            reuse: false,
+            children: [],
+          },
         ],
       },
       {

@@ -15,10 +15,12 @@ import { UserRegisterResultComponent } from './passport/register-result/register
 // 业务页面
 import { PersonComponent } from './system/account/index.component';
 import { RoleComponent } from './system/role/index.component';
+import { ArchitectComponent } from './system/architect/index.component';
 
 export const COMPONENTS = [
   PersonComponent,
   RoleComponent,
+  ArchitectComponent,
   UserLoginComponent,
   UserRegisterComponent,
   UserRegisterResultComponent,
@@ -36,6 +38,7 @@ const routes: Routes = [
           { path: '', redirectTo: 'account', pathMatch: 'full' },
           { path: 'account', component: PersonComponent, data: { title: '物业版-账号管理' } },
           { path: 'role', component: RoleComponent, data: { title: '物业版-角色管理' } },
+          { path: 'architect', component: ArchitectComponent, data: { title: '物业版-组织架构' } },
         ],
       },
       {
