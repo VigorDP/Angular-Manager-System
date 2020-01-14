@@ -6,6 +6,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
@@ -20,7 +21,7 @@ import * as dayjs from 'dayjs';
   styleUrls: [`./index.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AnnounceComponent implements OnInit {
+export class AnnounceComponent implements OnInit, OnDestroy {
   query = query;
   pages = pages;
   total = total;
@@ -127,6 +128,7 @@ export class AnnounceComponent implements OnInit {
   ];
   image = ''; // 小区效果图
   dateRange = null;
+  sub = null;
   constructor(
     public api: RestService,
     public msg: NzMessageService,
@@ -141,10 +143,14 @@ export class AnnounceComponent implements OnInit {
       this.getData();
       this.getTagData();
     }
-    this.settings.notify.subscribe(res => {
+    this.sub = this.settings.notify.subscribe(res => {
       this.getData();
       this.getTagData();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   getData(pageIndex?: number) {

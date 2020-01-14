@@ -1,4 +1,12 @@
-import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy,
+} from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
@@ -22,7 +30,7 @@ const BuildingTypeList = [{ label: '高层', value: 'HIGH' }, { label: '别墅',
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StructureComponent implements OnInit {
+export class StructureComponent implements OnInit, OnDestroy {
   query = query;
   pages = pages;
   total = total;
@@ -73,7 +81,7 @@ export class StructureComponent implements OnInit {
   buildingTypeList = BuildingTypeList;
   cityList = [];
   areaList = [];
-
+  sub = null;
   constructor(
     private api: RestService,
     public msg: NzMessageService,
@@ -87,9 +95,13 @@ export class StructureComponent implements OnInit {
     if (this.settings.app.community) {
       this.getData();
     }
-    this.settings.notify.subscribe(res => {
+    this.sub = this.settings.notify.subscribe(res => {
       this.getData();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   getData(pageIndex?: number) {

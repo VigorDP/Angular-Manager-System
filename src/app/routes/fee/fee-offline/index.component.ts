@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
@@ -32,7 +40,7 @@ const defaultRoom = {
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeeOfflineComponent implements OnInit {
+export class FeeOfflineComponent implements OnInit, OnDestroy {
   query = query;
   pages = pages;
   total = total;
@@ -50,13 +58,15 @@ export class FeeOfflineComponent implements OnInit {
     { title: '应缴纳月份', index: 'startDate' },
     { title: '应缴纳费用', index: 'total' },
     {
-      title: '缴纳状态', index: 'status',
-      format: (item) => item.status ? '已缴纳' : '未缴纳',
+      title: '缴纳状态',
+      index: 'status',
+      format: item => (item.status ? '已缴纳' : '未缴纳'),
     },
     { title: '缴费方式', index: 'channel' },
     {
-      title: '是否催缴', index: 'urged',
-      format: (item) => item.urged ? '已催缴' : '未催缴',
+      title: '是否催缴',
+      index: 'urged',
+      format: item => (item.urged ? '已催缴' : '未催缴'),
     },
     { title: '缴费时间', index: 'startDate' },
     {
@@ -106,15 +116,14 @@ export class FeeOfflineComponent implements OnInit {
   secondLevel = [];
   thirdLevel = [];
   rooms = [{ ...defaultRoom }];
-
+  sub = null;
   constructor(
     private api: RestService,
     public msg: NzMessageService,
     public modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private settings: SettingsService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.query = { ...defaultQuery };
@@ -122,10 +131,14 @@ export class FeeOfflineComponent implements OnInit {
       this.getData();
       this.getSocialProjectStructure();
     }
-    this.settings.notify.subscribe(res => {
+    this.sub = this.settings.notify.subscribe(res => {
       this.getData();
       this.getSocialProjectStructure();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   getData(pageIndex?: number) {
@@ -186,7 +199,6 @@ export class FeeOfflineComponent implements OnInit {
     });
   }
 
-
   getSocialProjectStructure() {
     this.api.getSocialProjectStructure().subscribe(res => {
       if (res.code === '0') {
@@ -211,7 +223,6 @@ export class FeeOfflineComponent implements OnInit {
       .children.map(item => ({ label: item + '室', value: item }));
   }
 
-
   selectDate() {
     if (!this.dateRange) {
       this.query.feesEnd = null;
@@ -221,5 +232,4 @@ export class FeeOfflineComponent implements OnInit {
     this.query.feesStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
     this.query.feesEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
   }
-
 }

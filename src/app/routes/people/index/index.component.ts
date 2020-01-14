@@ -1,5 +1,12 @@
-import { getNameByCode } from './../../../common/utils/city';
-import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy,
+} from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
@@ -22,6 +29,7 @@ import {
   StudyList,
   RalationList,
   CheckList,
+  getNameByCode,
 } from '@app/common';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -55,7 +63,7 @@ const defaultRoom = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PeopleComponent implements OnInit {
+export class PeopleComponent implements OnInit, OnDestroy {
   query = query;
   pages = pages;
   total = total;
@@ -142,6 +150,7 @@ export class PeopleComponent implements OnInit {
   showCheck = false;
   checkData = null;
   inputChange$ = new BehaviorSubject('');
+  sub = null;
 
   constructor(
     private api: RestService,
@@ -157,7 +166,7 @@ export class PeopleComponent implements OnInit {
       this.getData();
       this.getSocialProjectStructure();
     }
-    this.settings.notify.subscribe(res => {
+    this.sub = this.settings.notify.subscribe(res => {
       this.getData();
       this.getSocialProjectStructure();
     });
@@ -167,6 +176,10 @@ export class PeopleComponent implements OnInit {
       .subscribe(e => {
         e && this.handleCredentialNo(e);
       });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   getData(pageIndex?: number) {

@@ -6,6 +6,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
@@ -22,7 +23,7 @@ const OPTION: any = { id: null, descr: '' };
   styleUrls: [`./index.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VoteComponent implements OnInit {
+export class VoteComponent implements OnInit, OnDestroy {
   query = query;
   pages = pages;
   total = total;
@@ -85,7 +86,7 @@ export class VoteComponent implements OnInit {
   viewTpl: TemplateRef<any>;
   @ViewChild('content', { static: false })
   content: ElementRef;
-
+  sub = null;
   image = '';
   dateRange = null;
 
@@ -102,9 +103,13 @@ export class VoteComponent implements OnInit {
     if (this.settings.app.community) {
       this.getData();
     }
-    this.settings.notify.subscribe(() => {
+    this.sub = this.settings.notify.subscribe(() => {
       this.getData();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   getData(pageIndex?: number) {

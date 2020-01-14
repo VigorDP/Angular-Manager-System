@@ -1,4 +1,12 @@
-import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy,
+} from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent } from '@delon/abc';
@@ -9,7 +17,7 @@ import { query, defaultQuery } from '@app/common';
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UsageComponent implements OnInit {
+export class UsageComponent implements OnInit, OnDestroy {
   @ViewChild('st', { static: true })
   st: STComponent;
   @ViewChild('modalContent', { static: true })
@@ -21,7 +29,7 @@ export class UsageComponent implements OnInit {
   secondLevel = [];
   thirdLevel = [];
   statistics = {} as any;
-
+  sub = null;
   constructor(
     private api: RestService,
     public msg: NzMessageService,
@@ -36,10 +44,14 @@ export class UsageComponent implements OnInit {
       this.getBuildingStructure();
       this.getSocialProjectStructure();
     }
-    this.settings.notify.subscribe(() => {
+    this.sub = this.settings.notify.subscribe(() => {
       this.getBuildingStructure();
       this.getSocialProjectStructure();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   // 查询列表用

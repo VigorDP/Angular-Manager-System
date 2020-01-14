@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
@@ -13,7 +21,7 @@ const MONTH_FORMAT = 'yyyy-MM';
   templateUrl: './index.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeeStandardComponent implements OnInit {
+export class FeeStandardComponent implements OnInit, OnDestroy {
   query = query;
   pages = pages;
   total = total;
@@ -107,7 +115,7 @@ export class FeeStandardComponent implements OnInit {
 
   dateRange = null;
   dateFormat = MONTH_FORMAT;
-
+  sub = null;
   constructor(
     private api: RestService,
     public msg: NzMessageService,
@@ -121,9 +129,13 @@ export class FeeStandardComponent implements OnInit {
     if (this.settings.app.community) {
       this.getData();
     }
-    this.settings.notify.subscribe(res => {
+    this.sub = this.settings.notify.subscribe(res => {
       this.getData();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   getData(pageIndex?: number) {
