@@ -22,8 +22,9 @@
       <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
     <se label="职位" col="4">
-      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
-        <nz-option *ngFor="let i of cardList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="selectCate()">
+        <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="手机号" col="4">

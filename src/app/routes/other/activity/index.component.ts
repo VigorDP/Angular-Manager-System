@@ -100,7 +100,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  dateRangeChange(e) {
+  dateRangeChange() {
     let startDate = null;
     let endDate = null;
     if (this.dateRange) {
