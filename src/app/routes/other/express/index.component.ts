@@ -281,7 +281,7 @@ export class ExpressComponent implements OnInit, OnDestroy {
   }
 
   getTagData() {
-    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
+    this.api.getTagList({ noticeCate: this.query.cate }).subscribe(res => {
       this.tagList = res.data || [];
       this.cdr.detectChanges();
     });

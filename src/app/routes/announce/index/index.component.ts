@@ -13,6 +13,7 @@ import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
+import { cloneDeep } from 'lodash';
 import * as dayjs from 'dayjs';
 
 @Component({
@@ -36,7 +37,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
     {
       title: '是否置顶',
       index: 'isTop',
-      format: value => {
+      format: (value, col, index) => {
         return value.isTop ? '是' : '否';
       },
     },
@@ -137,12 +138,12 @@ export class AnnounceComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
     if (this.settings.app.community) {
       this.getData();
       this.getTagData();
     }
-    this.sub = this.settings.notify.subscribe(() => {
+    this.sub = this.settings.notify.subscribe(res => {
       this.getData();
       this.getTagData();
     });
@@ -188,7 +189,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
@@ -209,7 +210,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
             this.api
               .saveAnnounce({
                 ...this.selectedRow,
-                cate: this.query.cate,
+                noticeCate: this.query.noticeCate,
                 image: this.image,
               })
               .subscribe(res => {
@@ -226,7 +227,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
         }
       },
     });
-    modal.afterOpen.subscribe(() => {
+    modal.afterOpen.subscribe(res => {
       if (type === 'edit' || type === 'view') {
         this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
           if (res.code === '0') {
@@ -241,7 +242,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
   }
 
   checkValid() {
-    const { title, descr, content, tag, isTop } = this.selectedRow;
+    const { title, descr, content, image, isPush, tag, type, isTop } = this.selectedRow;
     if (!title) {
       this.msg.info('请输入公告标题');
       return false;
@@ -320,7 +321,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
             .saveAnnounce({
               ...this.selectedRow,
               isTop: true,
-              cate: this.query.cate,
+              noticeCate: this.query.noticeCate,
             })
             .subscribe(res => {
               if (res.code === '0') {
@@ -333,7 +334,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
         });
       },
     });
-    modal.afterOpen.subscribe(() => {
+    modal.afterOpen.subscribe(res => {
       this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
         if (res.code === '0') {
           this.selectedRow = { ...this.selectedRow, ...res.data };
@@ -351,7 +352,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
           isTop: false,
           pinStart: null,
           pinEnd: null,
-          cate: this.query.cate,
+          noticeCate: this.query.noticeCate,
         };
         this.modalSrv.confirm({
           nzTitle: '是否确定取消置顶？',
@@ -367,7 +368,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
   }
 
   getTagData() {
-    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
+    this.api.getTagList({ noticeCate: this.query.noticeCate }).subscribe(res => {
       this.tagList = res.data || [];
       this.cdr.detectChanges();
     });

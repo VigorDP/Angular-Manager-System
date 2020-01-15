@@ -111,7 +111,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
     if (this.settings.app.community) {
       this.getData();
       this.getTagData();
@@ -162,7 +162,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
@@ -183,7 +183,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
             this.api
               .saveAnnounce({
                 ...this.selectedRow,
-                cate: this.query.cate,
+                noticeCate: this.query.noticeCate,
                 image: this.image,
               })
               .subscribe(res => {
@@ -294,7 +294,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
             .saveAnnounce({
               ...this.selectedRow,
               isTop: true,
-              cate: this.query.cate,
+              noticeCate: this.query.noticeCate,
             })
             .subscribe(res => {
               if (res.code === '0') {
@@ -317,7 +317,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   }
 
   getTagData() {
-    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
+    this.api.getTagList({ noticeCate: this.query.noticeCate }).subscribe(res => {
       this.tagList = res.data || [];
       this.cdr.detectChanges();
     });

@@ -19,8 +19,8 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="公告类别" col="4">
-      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
-        <nz-option *ngFor="let i of cateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
+        <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="公告标题" col="4">

@@ -1,0 +1,24 @@
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="label+'管理'" [nzMaskClosable]="false" [nzZIndex]="5" nzWidth="500"
+  [nzContent]="tagContent" (nzOnCancel)="handleClose()" (nzOnOk)="handleClose()">
+  <!--标签管理-->
+  <ng-template #tagContent>
+    <p style="margin-bottom: 50px">
+      <button style="float: left" nz-button (click)="selectedRow={};addOrEditTag(tagModalContent,'add')"
+        [disabled]="data?.length === 10" [nzType]="'primary'">
+        <i nz-icon nzType="plus"></i>
+        <span>新增{{label}}</span>
+      </button>
+    </p>
+    <st #tagSt [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns"
+      [page]="pages" [loading]="loading" (change)="tagStChange($event)"></st>
+  </ng-template>
+</nz-modal>
+
+<!--新增编辑标签-->
+<ng-template #tagModalContent>
+  <form nz-form se-container labelWidth="130">
+    <se [label]="label+'名'" col="1" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.name" name="name" />
+    </se>
+  </form>
+</ng-template>

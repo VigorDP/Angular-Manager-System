@@ -14,6 +14,8 @@ import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
 import * as dayjs from 'dayjs';
+import { IfStmt } from '@angular/compiler';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   templateUrl: './index.component.html',
@@ -100,7 +102,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  dateRangeChange() {
+  dateRangeChange(e) {
     let startDate = null;
     let endDate = null;
     if (this.dateRange) {
@@ -262,7 +264,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
   }
 
   getTagData() {
-    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
+    this.api.getTagList({ noticeCate: this.query.cate }).subscribe(res => {
       this.tagList = res.data || [];
       this.cdr.detectChanges();
     });
