@@ -127,14 +127,16 @@ export class RestService {
 
   // 论坛管理-列表
   getForumList = (params: any) =>
-    this.http.post(`${PREFIX}forum/list`, paramsWithExtraParams(params, this.settings.app.community));
+    this.http.post(`${PREFIX}forum/post/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 论坛管理-删除
-  deleteForum = (params: any) => this.http.post(`${PREFIX}forum/delete`, params);
+  deleteForum = (postId: any) => this.http.get(`${PREFIX}/forum/post/deletePost/${postId}`);
   // 论坛管理-新增/修改
   saveForum = (params: any) =>
     this.http.post(`${PREFIX}forum/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 论坛管理-详情
-  getForumInfo = (id: number) => this.http.get(`${PREFIX}forum/info?id=${id}`);
+  getForumInfo = (postId: any) => this.http.get(`${PREFIX}forum/post/postDetail/${postId}}`);
+  // 论坛管理 - 用户列表
+  getForumUserList = (params: any) => this.http.post(`${PREFIX}forum/post/userList`, params);
 
   // 生活小常识-列表
   getSenseList = (params: any) => this.http.post(`${PREFIX}commonSense/list`, params);

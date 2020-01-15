@@ -1,31 +1,39 @@
 <page-header title="论坛管理" autoBreadcrumb="false" [action]="action">
-  <ng-template #action>
-  </ng-template>
+  <ng-template #action> </ng-template>
 </page-header>
 
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="发布人" col="5">
-      <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.userName" name="userName" />
     </se>
     <se label="发布时间" col="5">
-      <nz-date-picker [ngStyle]="{width:'100px'}" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期"
-        [(ngModel)]="query.beginDate" name="beginDate">
+      <nz-date-picker
+        [ngStyle]="{ width: '100px' }"
+        nzFormat="yyyy-MM-dd"
+        nzPlaceHolder="开始日期"
+        [(ngModel)]="query.beginTime"
+        name="beginTime"
+      >
       </nz-date-picker>
     </se>
     <se label="筛选条件" col="3" labelWidth="74">
       <nz-input-group nzCompact>
-        <nz-select [ngModel]="query.type" name="titl2e" [ngStyle]="{width:'100px'}">
-          <nz-option nzLabel="评论数" nzValue="1"></nz-option>
-          <nz-option nzLabel="点赞数" nzValue="2"></nz-option>
-          <nz-option nzLabel="收藏数" nzValue="3"></nz-option>
+        <nz-select [ngModel]="query.countType" name="countType" [ngStyle]="{ width: '100px' }" nzAllowClear>
+          <nz-option nzLabel="评论数" [nzValue]="1"></nz-option>
+          <nz-option nzLabel="点赞数" [nzValue]="2"></nz-option>
+          <nz-option nzLabel="收藏数" [nzValue]="3"></nz-option>
         </nz-select>
-        <nz-select [ngModel]="query.operator" name="title3" [ngStyle]="{width:'100px'}">
-          <nz-option nzLabel="大于" nzValue="1"></nz-option>
-          <nz-option nzLabel="等于" nzValue="2"></nz-option>
-          <nz-option nzLabel="小于" nzValue="3"></nz-option>
+        <nz-select [ngModel]="query.compareType" name="compareType" [ngStyle]="{ width: '100px' }" nzAllowClear>
+          <nz-option nzLabel="大于" [nzValue]="1"></nz-option>
+          <nz-option nzLabel="小于" [nzValue]="0"></nz-option>
         </nz-select>
-        <nz-input-number [(ngModel)]="query.number" [nzMin]="0" [nzStep]="1" name="title4"></nz-input-number>
+        <nz-input-number
+          [(ngModel)]="query.compareCount"
+          [nzMin]="0"
+          [nzStep]="1"
+          name="compareCount"
+        ></nz-input-number>
       </nz-input-group>
     </se>
     <se col="4" labelWidth="0">
@@ -36,20 +44,84 @@
 </nz-card>
 
 <nz-card [nzBordered]="false">
-  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
-    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+  <st
+    #st
+    [data]="data"
+    [total]="total"
+    [ps]="query.pageSize"
+    [pi]="query.pageNo"
+    [columns]="columns"
+    [page]="pages"
+    [loading]="loading"
+    (change)="stChange($event)"
+    [scroll]="{ x: '1000px' }"
+  ></st>
 </nz-card>
+
+<!--用户列表-->
+<ng-template #userListContent>
+  <st
+    #userSt
+    [data]="userList.data"
+    [total]="userList.total"
+    [ps]="userList.query.pageSize"
+    [pi]="query.pageNo"
+    [columns]="userList.columns"
+    [page]="userList.pages"
+    [loading]="userList.loading"
+    (change)="userStChange($event)"
+  ></st>
+</ng-template>
 
 <!--查看-->
 <ng-template #viewContent>
-  <div>
-    <h1 style="text-align: center">{{selectedRow.title}}</h1>
-    <p class="detail">
-      <span><strong>发布时间：</strong>{{selectedRow.tag}}</span>
-      <span><strong>发布人</strong>{{selectedRow.clicks}}</span>
-    </p>
-    <p><strong>帖子图片：</strong><img class="title-img" *ngIf="selectedRow.image" [src]="selectedRow.image"></p>
-    <p><strong>帖子内容：</strong></p>
-    <div #content></div>
-  </div>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">发布时间</nz-form-label>
+    <nz-form-control [nzSpan]="19">
+      <span>{{ selectedRow.createTime }}</span>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">发布人</nz-form-label>
+    <nz-form-control [nzSpan]="19">
+      <span>{{ selectedRow.userName }}</span>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">帖子内容</nz-form-label>
+    <nz-form-control [nzSpan]="19">
+      <span>{{ selectedRow.content }}</span>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">帖子图片</nz-form-label>
+    <nz-form-control [nzSpan]="19">
+      <ng-container *ngIf="selectedRow.images && selectedRow.images.length">
+        <div
+          style="width: 100px;height: 100px;margin: 5px;overflow: hidden;cursor: zoom-in;display: inline-block"
+          *ngFor="let url of selectedRow.images; let idx = index"
+        >
+          <img style="width: 100px;height: auto" [src]="url" />
+        </div>
+      </ng-container>
+    </nz-form-control>
+  </nz-form-item>
+  <ng-container *ngIf="selectedRow.commentCount">
+    <nz-divider></nz-divider>
+    <p>所有评论（{{ selectedRow.commentCount }}）</p>
+    <div class="comment" *ngFor="let comment of selectedRow.comments">
+      <p>
+        <img [src]="comment.portrait" /><span>{{ comment.userName }}</span>
+      </p>
+      <p>{{ comment.content }}</p>
+      <p>{{ comment.commentTime }}</p>
+      <div class="reply" *ngIf="comment.replies && comment.replies.length">
+        <ng-container *ngFor="let reply of comment.replies">
+          <span>{{ reply.replyTime }}</span
+          ><span style="margin-left: 50px">{{ reply.userName }} 回复 {{ reply.parentUserName }}</span>
+          <p>{{ reply.content }}</p>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
