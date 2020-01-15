@@ -27,6 +27,7 @@
       "@env/*": [
         "src/environments/*"
       ]
-    }
-  }
+    },
+  },
+  "include": ["src","node_modules/ngx-tag-manager"]
 }

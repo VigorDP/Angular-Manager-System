@@ -96,5 +96,5 @@
   </div>
 </ng-template>
 
-<app-tag-manager [show]="showTagManager" [noticeCate]="query.noticeCate" [listApi]="api.getTagList"
-  [saveApi]="api.saveTag" [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></app-tag-manager>
+<ngx-tag-manager [show]="showTagManager" [cate]="query.noticeCate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
+  [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></ngx-tag-manager>

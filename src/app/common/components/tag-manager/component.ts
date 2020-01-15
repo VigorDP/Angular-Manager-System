@@ -15,13 +15,13 @@ import { STChange, STColumn, STComponent } from '@delon/abc';
 import { data, loading, pages, query, selectedRow, selectedRows, total } from '../../interfaces';
 
 @Component({
-  selector: 'app-tag-manager',
+  selector: 'ngx-tag-manager',
   templateUrl: './index.html',
   styles: [],
 })
 export class TagManagerComponent implements OnInit, OnChanges {
   @Input() show = false;
-  @Input() noticeCate;
+  @Input() cate;
   @Input() label = '标签';
   @Input() listApi;
   @Input() saveApi;
@@ -80,7 +80,7 @@ export class TagManagerComponent implements OnInit, OnChanges {
 
   getTagData() {
     this.loading = true;
-    this.listApi({ noticeCate: this.noticeCate }).subscribe(res => {
+    this.listApi({ cate: this.cate }).subscribe(res => {
       this.loading = false;
       this.data = res.data || [];
       this.cdr.detectChanges();
@@ -116,7 +116,7 @@ export class TagManagerComponent implements OnInit, OnChanges {
             this.saveApi({
               ...this.selectedRow,
               agoName: this.agoName,
-              noticeCate: this.noticeCate,
+              cate: this.cate,
             }).subscribe(res => {
               if (res.code === '0') {
                 resolve();
