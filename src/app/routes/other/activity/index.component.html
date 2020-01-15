@@ -23,7 +23,7 @@
       </nz-select>
     </se>
     <se label="状态" col="4">
-      <nz-select [(ngModel)]="query.status" name="noticeCate" [nzPlaceHolder]="'请选择'" nzAllowClear>
+      <nz-select [(ngModel)]="query.status" name="cate" [nzPlaceHolder]="'请选择'" nzAllowClear>
         <nz-option *ngFor="let i of statusList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>

@@ -13,8 +13,6 @@ import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
-import { cloneDeep } from 'lodash';
-import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
@@ -79,7 +77,7 @@ export class GovernmentAffairComponent implements OnInit, OnDestroy {
   @ViewChild('content', { static: false })
   content: ElementRef;
 
-  noticeCateList = [
+  cateList = [
     {
       value: 'PARTY_NEWS',
       label: '党建要闻',
@@ -114,7 +112,7 @@ export class GovernmentAffairComponent implements OnInit, OnDestroy {
       this.getData();
       this.getTagData();
     }
-    this.sub = this.settings.notify.subscribe(res => {
+    this.sub = this.settings.notify.subscribe(() => {
       this.getData();
       this.getTagData();
     });
@@ -199,7 +197,7 @@ export class GovernmentAffairComponent implements OnInit, OnDestroy {
         }
       },
     });
-    modal.afterOpen.subscribe(res => {
+    modal.afterOpen.subscribe(() => {
       if (type === 'edit' || type === 'view') {
         this.api.getPoliticsNewsInfo(this.selectedRow.id).subscribe(res => {
           if (res.code === '0') {
@@ -214,7 +212,7 @@ export class GovernmentAffairComponent implements OnInit, OnDestroy {
   }
 
   checkValid() {
-    const { title, descr, content, image, isPush, tag, type, top } = this.selectedRow;
+    const { title, descr, content, tag } = this.selectedRow;
     if (!title) {
       this.msg.info('请输入文章标题');
       return false;
@@ -269,7 +267,7 @@ export class GovernmentAffairComponent implements OnInit, OnDestroy {
   }
 
   getTagData() {
-    this.api.getTagList({ noticeCate: this.query.cate }).subscribe(res => {
+    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
       this.tagList = res.data || [];
       this.cdr.detectChanges();
     });
