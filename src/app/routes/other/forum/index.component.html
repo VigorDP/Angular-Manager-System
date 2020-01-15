@@ -19,14 +19,21 @@
     </se>
     <se label="筛选条件" col="3" labelWidth="74">
       <nz-input-group nzCompact>
-        <nz-select [ngModel]="query.countType" name="countType" [ngStyle]="{ width: '100px' }" nzAllowClear>
-          <nz-option nzLabel="评论数" [nzValue]="1"></nz-option>
-          <nz-option nzLabel="点赞数" [nzValue]="2"></nz-option>
-          <nz-option nzLabel="收藏数" [nzValue]="3"></nz-option>
+        <nz-select
+          [(ngModel)]="query.countType"
+          name="countType"
+          [nzPlaceHolder]="'请选择'"
+          [ngStyle]="{ width: '100px' }"
+        >
+          <nz-option *ngFor="let i of countTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
-        <nz-select [ngModel]="query.compareType" name="compareType" [ngStyle]="{ width: '100px' }" nzAllowClear>
-          <nz-option nzLabel="大于" [nzValue]="1"></nz-option>
-          <nz-option nzLabel="小于" [nzValue]="0"></nz-option>
+        <nz-select
+          [(ngModel)]="query.compareType"
+          name="compareType"
+          [nzPlaceHolder]="'请选择'"
+          [ngStyle]="{ width: '100px' }"
+        >
+          <nz-option *ngFor="let i of compareTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
         <nz-input-number
           [(ngModel)]="query.compareCount"

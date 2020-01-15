@@ -108,6 +108,10 @@ export class ForumComponent implements OnInit, OnDestroy {
     ],
   };
 
+  countTypeList = [{ value: 1, label: '评论数' }, { value: 2, label: '点赞数' }, { value: 3, label: '收藏数' }];
+
+  compareTypeList = [{ value: 1, label: '大于' }, { value: 0, label: '小于' }];
+
   image = ''; // 小区效果图
   dateRange = null;
   sub = null;
@@ -120,7 +124,7 @@ export class ForumComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, countType: 1, compareType: 1, compareCount: 0 };
+    this.query = { ...defaultQuery };
     if (this.settings.app.community) {
       this.getData();
     }
@@ -169,7 +173,7 @@ export class ForumComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.query = { ...defaultQuery, countType: 1, compareType: 1, compareCount: 0 };
+    this.query = { ...defaultQuery };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
