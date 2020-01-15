@@ -146,5 +146,5 @@
   </form>
 </ng-template>
 
-<ngx-tag-manager [show]="showTagManager" label="岗位" [cate]="query.cate" [listApi]="api.getTagList"
-  [saveApi]="api.saveTag" [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></ngx-tag-manager>
+<app-tag-manager [show]="showTagManager" label="岗位" [noticeCate]="query.noticeCate" [listApi]="api.getTagList"
+  [saveApi]="api.saveTag" [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></app-tag-manager>

@@ -105,5 +105,5 @@
   </div>
 </ng-template>
 
-<ngx-tag-manager [show]="showTagManager" [cate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
-  [deleteApi]="api.deleteTag" (closeEvent)="this.getTagData(); showTagManager = false"></ngx-tag-manager>
+<app-tag-manager [show]="showTagManager" [noticeCate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
+  [deleteApi]="api.deleteTag" (closeEvent)="this.getTagData(); showTagManager = false"></app-tag-manager>
