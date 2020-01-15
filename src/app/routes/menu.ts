@@ -151,6 +151,13 @@ export const menus: Menu[] = [
             reuse: false,
             children: [],
           },
+          {
+            text: '快递',
+            name: 'EXPRESS',
+            link: '/other/express',
+            reuse: false,
+            children: [],
+          },
         ],
       },
     ],

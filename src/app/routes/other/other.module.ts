@@ -5,8 +5,9 @@ import { ActivityComponent } from '@app/routes/other/activity/index.component';
 import { ForumComponent } from '@app/routes/other/forum/index.component';
 import { SenseComponent } from '@app/routes/other/sense/index.component';
 import { VoteComponent } from '@app/routes/other/vote/index.component';
+import { ExpressComponent } from '@app/routes/other/express/index.component';
 
-const COMPONENTS = [ActivityComponent, ForumComponent, SenseComponent, VoteComponent];
+const COMPONENTS = [ActivityComponent, ForumComponent, SenseComponent, VoteComponent, ExpressComponent];
 
 const routes: Routes = [
   { path: '', redirectTo: 'activity', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'vote', component: VoteComponent, data: { title: '物业版-投票管理' } },
   { path: 'forum', component: ForumComponent, data: { title: '物业版-论坛管理' } },
   { path: 'sense', component: SenseComponent, data: { title: '物业版-生活小常识' } },
+  { path: 'express', component: ExpressComponent, data: { title: '物业版-快递' } },
 ];
 
 @NgModule({
