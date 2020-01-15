@@ -241,7 +241,6 @@ export class ForumComponent implements OnInit, OnDestroy {
     });
   }
 
-<<<<<<< HEAD
   getUserListData(pageIndex?: number) {
     this.userList.loading = true;
     this.userList.query.pageNo = pageIndex ? pageIndex : this.userList.query.pageNo;
@@ -254,11 +253,6 @@ export class ForumComponent implements OnInit, OnDestroy {
         ...this.userList.pages,
         total: `共 ${totalItem} 条记录`,
       };
-=======
-  getTagData() {
-    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
-      this.tagList = res.data || [];
->>>>>>> 09361bb38baffd0d7da0ff071acc1124515bfae1
       this.cdr.detectChanges();
     });
   }
