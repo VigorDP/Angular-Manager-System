@@ -138,7 +138,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
     if (this.settings.app.community) {
       this.getData();
       this.getTagData();
@@ -189,7 +189,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.query = { ...defaultQuery, noticeCate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
     this.loading = true;
     setTimeout(() => this.getData(1));
   }
@@ -210,7 +210,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
             this.api
               .saveAnnounce({
                 ...this.selectedRow,
-                noticeCate: this.query.noticeCate,
+                cate: this.query.cate,
                 image: this.image,
               })
               .subscribe(res => {
@@ -321,7 +321,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
             .saveAnnounce({
               ...this.selectedRow,
               isTop: true,
-              noticeCate: this.query.noticeCate,
+              cate: this.query.cate,
             })
             .subscribe(res => {
               if (res.code === '0') {
@@ -352,7 +352,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
           isTop: false,
           pinStart: null,
           pinEnd: null,
-          noticeCate: this.query.noticeCate,
+          cate: this.query.cate,
         };
         this.modalSrv.confirm({
           nzTitle: '是否确定取消置顶？',
@@ -368,7 +368,7 @@ export class AnnounceComponent implements OnInit, OnDestroy {
   }
 
   getTagData() {
-    this.api.getTagList({ noticeCate: this.query.noticeCate }).subscribe(res => {
+    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
       this.tagList = res.data || [];
       this.cdr.detectChanges();
     });

@@ -22,7 +22,7 @@
       <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
     <se label="职位" col="4">
-      <nz-select [(ngModel)]="query.noticeCate" name="noticeCate" [nzPlaceHolder]="'请选择'"
+      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'"
         (ngModelChange)="selectCate()">
         <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
@@ -146,5 +146,5 @@
   </form>
 </ng-template>
 
-<app-tag-manager [show]="showTagManager" label="岗位" [noticeCate]="query.noticeCate" [listApi]="api.getTagList"
-  [saveApi]="api.saveTag" [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></app-tag-manager>
+<ngx-tag-manager [show]="showTagManager" label="岗位" [cate]="query.cate" [listApi]="api.getTagList"
+  [saveApi]="api.saveTag" [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></ngx-tag-manager>

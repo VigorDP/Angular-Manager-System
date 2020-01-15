@@ -16,24 +16,13 @@ import { CountdownModule } from 'ngx-countdown';
 import { NgxTinymceModule } from 'ngx-tinymce';
 // 高德地图
 import { NgxAmapModule } from 'ngx-amap';
+import { NgxTagManagerModule } from 'ngx-tag-manager';
 
-const THIRDMODULES = [NgZorroAntdModule, CountdownModule];
+const THIRDMODULES = [NgZorroAntdModule, CountdownModule, NgxTagManagerModule];
 
 // your componets & directives
-import {
-  ImgUploadComponent,
-  NewCheckComponent,
-  WebCaptureImgComponent,
-  TagManagerComponent,
-  DropdownTableComponent,
-} from '@app/common';
-const COMPONENTS = [
-  ImgUploadComponent,
-  NewCheckComponent,
-  WebCaptureImgComponent,
-  TagManagerComponent,
-  DropdownTableComponent,
-];
+import { ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, DropdownTableComponent } from '@app/common';
+const COMPONENTS = [ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, DropdownTableComponent];
 const DIRECTIVES = [];
 
 export function customUpload(blobInfo, success, failure) {

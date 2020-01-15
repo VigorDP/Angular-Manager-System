@@ -19,7 +19,7 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="公告类别" col="4">
-      <nz-select [(ngModel)]="query.cate" name="noticeCate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
+      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
         <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
@@ -77,5 +77,5 @@
   </div>
 </ng-template>
 
-<app-tag-manager [show]="showTagManager" [noticeCate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
-  [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></app-tag-manager>
+<ngx-tag-manager [show]="showTagManager" [cate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
+  [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></ngx-tag-manager>
