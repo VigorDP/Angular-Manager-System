@@ -37,6 +37,7 @@
     "ng-alain": "^8.4.0",
     "ng-zorro-antd": "^8.4.0",
     "ngx-amap": "^2.2.1",
+    "ngx-architect-tree": "0.0.2",
     "ngx-tag-manager": "1.2.6",
     "ngx-tinymce": "^7.0.0",
     "qrious": "^4.0.2",
@@ -80,7 +81,7 @@
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-language-service": "^0.9.9",
-    "typescript": "^3.5.3",
+    "typescript": "~3.5.3",
     "validate-commit-msg": "^2.14.0"
   },
   "lint-staged": {

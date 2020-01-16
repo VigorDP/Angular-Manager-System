@@ -81,6 +81,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
     },
   ];
   showTagManager = false;
+  showArchitectTree = false;
   tagList = [];
   genderList = GenderList;
   studyList = StudyList;
@@ -90,16 +91,10 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   areaList = [];
   @ViewChild('st', { static: true })
   st: STComponent;
-  @ViewChild('topContent', { static: true })
-  top: TemplateRef<any>;
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
-  @ViewChild('viewContent', { static: true })
-  viewTpl: TemplateRef<any>;
-  @ViewChild('content', { static: false })
-  content: ElementRef;
 
-  image = ''; // 小区效果图
+  image = '';
   dateRange = null;
   sub = null;
   constructor(
@@ -206,7 +201,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
           if (res.code === '0') {
             this.selectedRow = { ...this.selectedRow, ...res.data };
             if (type === 'view') {
-              this.content.nativeElement.innerHTML = this.selectedRow.content;
+              // this.content.nativeElement.innerHTML = this.selectedRow.content;
             }
           }
         });
@@ -274,45 +269,6 @@ export class ArchitectComponent implements OnInit, OnDestroy {
           this.st.clearCheck();
         });
       },
-    });
-  }
-
-  gotoTop() {
-    const modal = this.modalSrv.create({
-      nzTitle: '选择置顶时间',
-      nzContent: this.top,
-      nzWidth: 800,
-      nzOnOk: () => {
-        if (!this.dateRange) {
-          this.msg.info('请选择置顶时间');
-          return false;
-        }
-        this.selectedRow.pinStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
-        this.selectedRow.pinEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
-        return new Promise(resolve => {
-          this.api
-            .saveAnnounce({
-              ...this.selectedRow,
-              isTop: true,
-              cate: this.query.cate,
-            })
-            .subscribe(res => {
-              if (res.code === '0') {
-                resolve();
-                this.getData();
-              } else {
-                resolve(false);
-              }
-            });
-        });
-      },
-    });
-    modal.afterOpen.subscribe(res => {
-      this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
-        if (res.code === '0') {
-          this.selectedRow = { ...this.selectedRow, ...res.data };
-        }
-      });
     });
   }
 

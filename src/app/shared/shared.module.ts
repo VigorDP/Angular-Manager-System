@@ -16,9 +16,12 @@ import { CountdownModule } from 'ngx-countdown';
 import { NgxTinymceModule } from 'ngx-tinymce';
 // 高德地图
 import { NgxAmapModule } from 'ngx-amap';
+// 标签管理
 import { NgxTagManagerModule } from 'ngx-tag-manager';
+// 组织架构管理
+import { NgxArchitectTreeModule } from 'ngx-architect-tree';
 
-const THIRDMODULES = [NgZorroAntdModule, CountdownModule, NgxTagManagerModule];
+const THIRDMODULES = [NgZorroAntdModule, CountdownModule, NgxTagManagerModule, NgxArchitectTreeModule];
 
 // your componets & directives
 import { ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, DropdownTableComponent } from '@app/common';
