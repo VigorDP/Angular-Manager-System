@@ -1,0 +1,43 @@
+input {
+  width: 150px;
+}
+nz-select {
+  width: 150px;
+}
+
+.list-box {
+  width: 45%;
+  height: 300px;
+  padding: 10px;
+  overflow-y: auto;
+  border: 1px solid #000;
+}
+
+.out {
+  input {
+    width: 100%;
+  }
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.in-left {
+  position: relative;
+  width: 45%;
+  height: 300px;
+  padding: 10px;
+  overflow: hidden;
+  border: 1px solid #000;
+}
+
+.data-list {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: scroll;
+  border-top: 1px solid #ededed;
+}

@@ -26,21 +26,14 @@ import {
   CardList,
   ProvinceList,
   getCityOrAreaListByCode,
+  NationUtil,
+  NationEnum,
 } from '@app/common';
 import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
-  styles: [
-    `
-      input {
-        width: 150px;
-      }
-      nz-select {
-        width: 150px;
-      }
-    `,
-  ],
+  styleUrls: [`./index.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArchitectComponent implements OnInit, OnDestroy {
@@ -53,7 +46,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '姓名', index: 'name' },
-    { title: '职位', index: 'position' },
+    { title: '职位', index: 'post' },
     { title: '手机号', index: 'tel' },
     { title: '邮箱', index: 'email' },
     {
@@ -80,6 +73,9 @@ export class ArchitectComponent implements OnInit, OnDestroy {
       ],
     },
   ];
+  communityList = [];
+  ret = [];
+  nationList = NationUtil.getNationList();
   showTagManager = false;
   tagList = [];
   genderList = GenderList;
@@ -99,6 +95,8 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   @ViewChild('content', { static: false })
   content: ElementRef;
 
+  searchName = null;
+
   image = ''; // 小区效果图
   dateRange = null;
   sub = null;
@@ -111,14 +109,14 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery };
     if (this.settings.app.community) {
       this.getData();
-      this.getTagData();
+      this.getSocialList();
     }
     this.sub = this.settings.notify.subscribe(res => {
       this.getData();
-      this.getTagData();
+      this.getSocialList();
     });
   }
 
@@ -129,7 +127,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getAnnounceList(this.query).subscribe(res => {
+    this.api.getStaffList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -162,13 +160,9 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_NOTICE' };
+    this.query = { ...defaultQuery };
     this.loading = true;
     setTimeout(() => this.getData(1));
-  }
-
-  selectCate() {
-    this.getData(1);
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
@@ -277,57 +271,44 @@ export class ArchitectComponent implements OnInit, OnDestroy {
     });
   }
 
-  gotoTop() {
-    const modal = this.modalSrv.create({
-      nzTitle: '选择置顶时间',
-      nzContent: this.top,
-      nzWidth: 800,
-      nzOnOk: () => {
-        if (!this.dateRange) {
-          this.msg.info('请选择置顶时间');
-          return false;
-        }
-        this.selectedRow.pinStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
-        this.selectedRow.pinEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
-        return new Promise(resolve => {
-          this.api
-            .saveAnnounce({
-              ...this.selectedRow,
-              isTop: true,
-              cate: this.query.cate,
-            })
-            .subscribe(res => {
-              if (res.code === '0') {
-                resolve();
-                this.getData();
-              } else {
-                resolve(false);
-              }
-            });
-        });
-      },
-    });
-    modal.afterOpen.subscribe(res => {
-      this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
-        if (res.code === '0') {
-          this.selectedRow = { ...this.selectedRow, ...res.data };
-        }
-      });
-    });
-  }
-
-  getTagData() {
-    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
-      this.tagList = res.data || [];
-      this.cdr.detectChanges();
-    });
-  }
-
   handleProvinceSelected(e) {
     this.cityList = getCityOrAreaListByCode(e);
   }
 
   handleCitySelected(e) {
     this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
+  }
+
+  getSocialList() {
+    this.api.getSocialProjectList({ pageNo: 1, pageSize: 1000 }).subscribe(res => {
+      if (res.code !== '0' || !res.data.rows) {
+        this.communityList = [];
+        return;
+      }
+      const { rows } = res.data;
+      rows.forEach(i => {
+        i.checked = false;
+      });
+      this.communityList = rows;
+    });
+  }
+
+  searchCommunity(socialName: string) {
+    if (!this.searchName || this.searchName.trim() === '') {
+      return true;
+    }
+    if (socialName.indexOf(this.searchName) > -1) {
+      return true;
+    }
+    return false;
+  }
+
+  selectCommunity(item: any) {
+    this.ret.push(item);
+  }
+
+  removeSelectCommunity(item: any, idx: number) {
+    this.ret.splice(idx, 1);
+    item.checked = false;
   }
 }

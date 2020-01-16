@@ -166,6 +166,17 @@ export class RestService {
     this.http.post(`${PREFIX}vote/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 投票管理-详情
   getVoteInfo = (id: number) => this.http.get(`${PREFIX}vote/info?id=${id}`);
+
+  // 组织架构-成员 - 列表
+  getStaffList = (params: any) =>
+    this.http.post(`${PREFIX}staff/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 组织架构-成员-删除
+  deleteStaff = (params: any) => this.http.post(`${PREFIX}staff/delete`, params);
+  // 组织架构-成员-新增/修改
+  saveStaff = (params: any) =>
+    this.http.post(`${PREFIX}staff/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 组织架构-成员-详情
+  getStaffInfo = (id: number) => this.http.get(`${PREFIX}staff/info?id=${id}`);
 }
 
 function paramsWithExtraParams(params, community) {
