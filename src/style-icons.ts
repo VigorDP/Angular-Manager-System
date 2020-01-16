@@ -15,6 +15,8 @@ import {
   NotificationOutline,
   SafetyOutline,
   GoldOutline,
+  PlusSquareOutline,
+  MinusSquareOutline,
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS = [
@@ -32,4 +34,6 @@ export const ICONS = [
   NotificationOutline,
   SafetyOutline,
   GoldOutline,
+  PlusSquareOutline,
+  MinusSquareOutline,
 ];

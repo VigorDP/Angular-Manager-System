@@ -436,6 +436,10 @@ export class PeopleComponent implements OnInit, OnDestroy {
         this.msg.info('请选择角色');
         return false;
       }
+      if (room.residentIdRel === 'MASTER' && !room.area) {
+        this.msg.info('请输入面积');
+        return false;
+      }
     }
     return true;
   }

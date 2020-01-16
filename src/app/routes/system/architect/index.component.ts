@@ -77,6 +77,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   ret = [];
   nationList = NationUtil.getNationList();
   showTagManager = false;
+  showArchitectTree = false;
   tagList = [];
   genderList = GenderList;
   studyList = StudyList;
@@ -86,14 +87,8 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   areaList = [];
   @ViewChild('st', { static: true })
   st: STComponent;
-  @ViewChild('topContent', { static: true })
-  top: TemplateRef<any>;
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
-  @ViewChild('viewContent', { static: true })
-  viewTpl: TemplateRef<any>;
-  @ViewChild('content', { static: false })
-  content: ElementRef;
 
   searchName = null;
 
@@ -200,7 +195,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
           if (res.code === '0') {
             this.selectedRow = { ...this.selectedRow, ...res.data };
             if (type === 'view') {
-              this.content.nativeElement.innerHTML = this.selectedRow.content;
+              // this.content.nativeElement.innerHTML = this.selectedRow.content;
             }
           }
         });

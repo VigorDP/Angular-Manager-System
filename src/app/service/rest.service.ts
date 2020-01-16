@@ -177,6 +177,14 @@ export class RestService {
     this.http.post(`${PREFIX}staff/save`, paramsWithExtraParams(params, this.settings.app.community));
   // 组织架构-成员-详情
   getStaffInfo = (id: number) => this.http.get(`${PREFIX}staff/info?id=${id}`);
+  // 组织架构管理-列表
+  getOrgStructureList = (params: any) =>
+    this.http.post(`${PREFIX}orgStructure/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 组织架构管理-删除
+  deleteOrgStructure = (params: any) => this.http.get(`${PREFIX}orgStructure/delete`, params);
+  // 组织架构管理-新增/修改
+  saveOrgStructure = (params: any) =>
+    this.http.post(`${PREFIX}orgStructure/save`, paramsWithExtraParams(params, this.settings.app.community));
 }
 
 function paramsWithExtraParams(params, community) {

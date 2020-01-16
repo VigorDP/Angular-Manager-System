@@ -4,13 +4,9 @@
       <i nz-icon nzType="plus"></i>
       <span>新建成员</span>
     </button>
-    <button nz-button (click)="showTagManager = true" [nzType]="'primary'">
-      <i nz-icon nzType="copy" nzTheme="outline"></i>
-      <span>岗位管理</span>
-    </button>
-    <button nz-button [nzType]="'primary'" (click)="batchDelete()">
+    <button nz-button [nzType]="'primary'" (click)="showArchitectTree = true">
       <i nz-icon nzType="setting"></i>
-      <span>组织架构管理</span>
+      <span>部门管理</span>
     </button>
   </ng-template>
 </page-header>
@@ -44,15 +40,6 @@
     [scroll]="{ x: '1000px' }"
   ></st>
 </nz-card>
-
-<!--组织架构-->
-<ng-template #topContent>
-  <form nz-form se-container labelWidth="130">
-    <se label="选择置顶时间" col="1" required>
-      <nz-range-picker [(ngModel)]="dateRange" name="dateRange"> </nz-range-picker>
-    </se>
-  </form>
-</ng-template>
 
 <!--新增人员-->
 <ng-template #modalContent>
@@ -215,12 +202,13 @@
   </form>
 </ng-template>
 
-<!-- <ngx-tag-manager
-  [show]="showTagManager"
-  label="岗位"
-  [cate]="query.cate"
-  [listApi]="api.getTagList"
-  [saveApi]="api.saveTag"
-  [deleteApi]="api.deleteTag"
-  (closeEvent)="showTagManager = false"
-></ngx-tag-manager> -->
+<!--部门管理-->
+<ngx-architect-tree
+  [show]="showArchitectTree"
+  label="部门"
+  [listApi]="api.getOrgStructureList"
+  [saveApi]="api.saveOrgStructure"
+  [deleteApi]="api.deleteOrgStructure"
+  (closeEvent)="showArchitectTree = false"
+>
+</ngx-architect-tree>

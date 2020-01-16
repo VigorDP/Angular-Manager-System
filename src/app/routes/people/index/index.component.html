@@ -167,7 +167,7 @@
             <range-picker [(ngModel)]="item.startDate" [(ngModelEnd)]="item.endDate" [nzPlaceHolder]="['开始日期','结束日期']"
               [name]="'residentIdRel2'+i"></range-picker>
           </se>
-          <se label="房屋面积" col="2">
+          <se label="房屋面积" col="2" [required]="item.residentIdRel==='MASTER'">
             <nz-input-group nzSuffix="平方米">
               <input nz-input placeholder="请输入" [(ngModel)]="item.area" [name]="'area'+i" />
             </nz-input-group>
