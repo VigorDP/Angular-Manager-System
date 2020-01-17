@@ -198,7 +198,9 @@ export class ArchitectComponent implements OnInit, OnDestroy {
             this.selectedRow = { ...this.selectedRow, ...res.data };
             if (this.selectedRow.socialIds && this.selectedRow.socialIds.length) {
               this.selectedRow.socialIds.forEach(id => {
-                this.ret.push(this.communityList.filter(i => i.id === id));
+                const select = this.communityList.filter(i => i.id === id)[0];
+                select.checked = true;
+                this.ret.push(select);
               });
             }
           }
@@ -323,7 +325,22 @@ export class ArchitectComponent implements OnInit, OnDestroy {
         this.orgStructureList = [];
         return;
       }
-      this.orgStructureList = res.data || [];
+      this.orgStructureList = this.transformToTreeData(res.data);
     });
+  }
+
+  transformToTreeData(data) {
+    if (!data) return [];
+    const result = data.map(item => {
+      return {
+        key: item.id,
+        title: item.name,
+        parentId: item.parentId,
+        children: this.transformToTreeData(item.vos),
+        isLeaf: !item.vos,
+        checked: false,
+      };
+    });
+    return result;
   }
 }

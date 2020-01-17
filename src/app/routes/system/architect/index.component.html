@@ -72,9 +72,15 @@
       <input nz-input placeholder="请输入" type="password" [(ngModel)]="selectedRow.pwdRepeat" name="pwdRepeat" />
     </se>
     <se label="所在部门" col="2" required>
-      <nz-select [(ngModel)]="selectedRow.orgStructureId" name="orgStructureId" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of orgStructureList" [nzLabel]="i.name" [nzValue]="i.id"></nz-option>
-      </nz-select>
+      <nz-tree-select
+        style="width: 150px;"
+        name="orgStructureId"
+        [nzNodes]="orgStructureList"
+        [nzPlaceHolder]="'请选择'"
+        [(ngModel)]="selectedRow.orgStructureId"
+        (ngModelChange)="onChange($event)"
+      >
+      </nz-tree-select>
     </se>
     <se label="证件类型" col="2" required>
       <nz-select [(ngModel)]="selectedRow.credentialType" name="credentialType" [nzPlaceHolder]="'请选择'">
@@ -204,6 +210,6 @@
   [listApi]="api.getOrgStructureList"
   [saveApi]="api.saveOrgStructure"
   [deleteApi]="api.deleteOrgStructure"
-  (closeEvent)="showArchitectTree = false"
+  (closeEvent)="this.getOrgStructureList(); showArchitectTree = false"
 >
 </ngx-architect-tree>
