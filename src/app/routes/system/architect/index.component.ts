@@ -28,6 +28,8 @@ import {
   getCityOrAreaListByCode,
   NationUtil,
   NationEnum,
+  checkPassword,
+  checkMobile,
 } from '@app/common';
 import * as dayjs from 'dayjs';
 
@@ -59,6 +61,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
           icon: 'edit',
           click: (item: any) => {
             this.selectedRow = item;
+            this.ret = [];
             this.addOrEditOrView(this.tpl, 'edit');
           },
         },
@@ -76,6 +79,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   communityList = [];
   ret = [];
   nationList = NationUtil.getNationList();
+  orgStructureList = [];
   showTagManager = false;
   showArchitectTree = false;
   tagList = [];
@@ -85,6 +89,8 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   provinceList = ProvinceList;
   cityList = [];
   areaList = [];
+  cityList2 = [];
+  areaList2 = [];
   @ViewChild('st', { static: true })
   st: STComponent;
   @ViewChild('modalContent', { static: true })
@@ -108,10 +114,12 @@ export class ArchitectComponent implements OnInit, OnDestroy {
     if (this.settings.app.community) {
       this.getData();
       this.getSocialList();
+      this.getOrgStructureList();
     }
     this.sub = this.settings.notify.subscribe(res => {
       this.getData();
       this.getSocialList();
+      this.getOrgStructureList();
     });
   }
 
@@ -169,20 +177,14 @@ export class ArchitectComponent implements OnInit, OnDestroy {
       nzOnOk: () => {
         if (this.checkValid()) {
           return new Promise(resolve => {
-            this.api
-              .saveAnnounce({
-                ...this.selectedRow,
-                cate: this.query.cate,
-                image: this.image,
-              })
-              .subscribe(res => {
-                if (res.code === '0') {
-                  resolve();
-                  this.getData();
-                } else {
-                  resolve(false);
-                }
-              });
+            this.api.saveStaff(this.selectedRow).subscribe(res => {
+              if (res.code === '0') {
+                resolve();
+                this.getData();
+              } else {
+                resolve(false);
+              }
+            });
           });
         } else {
           return false;
@@ -191,11 +193,13 @@ export class ArchitectComponent implements OnInit, OnDestroy {
     });
     modal.afterOpen.subscribe(res => {
       if (type === 'edit' || type === 'view') {
-        this.api.getAnnounceInfo(this.selectedRow.id).subscribe(res => {
+        this.api.getStaffInfo(this.selectedRow.id).subscribe(res => {
           if (res.code === '0') {
             this.selectedRow = { ...this.selectedRow, ...res.data };
-            if (type === 'view') {
-              // this.content.nativeElement.innerHTML = this.selectedRow.content;
+            if (this.selectedRow.socialIds && this.selectedRow.socialIds.length) {
+              this.selectedRow.socialIds.forEach(id => {
+                this.ret.push(this.communityList.filter(i => i.id === id));
+              });
             }
           }
         });
@@ -204,36 +208,35 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   }
 
   checkValid() {
-    const { title, descr, content, image, isPush, tag, type, isTop } = this.selectedRow;
-    if (!title) {
-      this.msg.info('请输入成员标题');
+    const { name, gender, tel, pwd, pwdRepeat, orgStructureId } = this.selectedRow;
+    if (!name) {
+      this.msg.info('请输入姓名');
       return false;
     }
-    if (!tag) {
-      this.msg.info('请选择标签');
+    if (!gender) {
+      this.msg.info('请选择性别');
       return false;
     }
-    if (!descr) {
-      this.msg.info('请输入文章概述');
+    if (!checkMobile(tel)) {
+      this.msg.info('请输入正确的手机号');
       return false;
     }
-    if (isTop) {
-      if (!this.dateRange) {
-        this.msg.info('请选择置顶开始、置顶结束时间');
-        return false;
-      }
-      this.selectedRow.pinStart = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
-      this.selectedRow.pinEnd = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
-    }
-    if (!content) {
-      this.msg.info('请输入文章内容');
+    if (!pwd || !pwdRepeat) {
+      this.msg.info('请输入密码或确认密码');
       return false;
+    }
+    if (pwdRepeat !== pwd) {
+      this.msg.info('密码输入不一致');
+      return false;
+    }
+    if (!orgStructureId) {
+      this.msg.info('请选择所在部门');
+      return false;
+    }
+    if (this.ret.length) {
+      this.selectedRow.socialIds = this.ret.map(i => i.id);
     }
     return true;
-  }
-
-  getImgUrl(e) {
-    this.image = e[0];
   }
 
   delete() {
@@ -241,7 +244,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteAnnounce([this.selectedRow.id]).subscribe(() => {
+        this.api.deleteStaff([this.selectedRow.id]).subscribe(() => {
           this.getData();
         });
       },
@@ -258,7 +261,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
       nzTitle: '是否确定删除选中项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteAnnounce(ids).subscribe(() => {
+        this.api.deleteStaff(ids).subscribe(() => {
           this.getData();
           this.st.clearCheck();
         });
@@ -270,8 +273,15 @@ export class ArchitectComponent implements OnInit, OnDestroy {
     this.cityList = getCityOrAreaListByCode(e);
   }
 
+  handleProvinceSelected2(e) {
+    this.cityList2 = getCityOrAreaListByCode(e);
+  }
+
   handleCitySelected(e) {
     this.areaList = getCityOrAreaListByCode(this.query.provinceCode || this.selectedRow.provinceCode, e);
+  }
+  handleCitySelected2(e) {
+    this.areaList2 = getCityOrAreaListByCode(this.query.provinceCode2 || this.selectedRow.provinceCode2, e);
   }
 
   getSocialList() {
@@ -305,5 +315,15 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   removeSelectCommunity(item: any, idx: number) {
     this.ret.splice(idx, 1);
     item.checked = false;
+  }
+
+  getOrgStructureList() {
+    this.api.getOrgStructureList({}).subscribe(res => {
+      if (res.code !== '0') {
+        this.orgStructureList = [];
+        return;
+      }
+      this.orgStructureList = res.data || [];
+    });
   }
 }

@@ -1,6 +1,6 @@
 <page-header title="组织架构" autoBreadcrumb="false" [action]="action">
   <ng-template #action>
-    <button nz-button (click)="selectedRow = {}; addOrEditOrView(modalContent, 'add')" [nzType]="'primary'">
+    <button nz-button (click)="selectedRow = {}; ret = []; addOrEditOrView(modalContent, 'add')" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
       <span>新建成员</span>
     </button>
@@ -48,7 +48,7 @@
       <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.name" name="name" />
     </se>
     <se label="性别" col="2" required>
-      <nz-select [(ngModel)]="selectedRow.tag" name="tag" [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="selectedRow.gender" name="gender" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of genderList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
@@ -73,20 +73,15 @@
     </se>
     <se label="所在部门" col="2" required>
       <nz-select [(ngModel)]="selectedRow.orgStructureId" name="orgStructureId" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of tagList" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
+        <nz-option *ngFor="let i of orgStructureList" [nzLabel]="i.name" [nzValue]="i.id"></nz-option>
       </nz-select>
     </se>
-    <se label="所属岗位" col="2" required>
-      <nz-select [(ngModel)]="selectedRow.post" name="post" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of tagList" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
-      </nz-select>
-    </se>
-    <se label="证件类型" col="2">
+    <se label="证件类型" col="2" required>
       <nz-select [(ngModel)]="selectedRow.credentialType" name="credentialType" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of cardList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="证件号码" col="2">
+    <se label="证件号码" col="2" require>
       <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.credentialNo" name="credentialNo" />
     </se>
     <se label="邮箱" col="2">
@@ -134,7 +129,7 @@
           [(ngModel)]="selectedRow.provinceCode2"
           name="provinceCode2"
           [nzPlaceHolder]="'请选择省份'"
-          (ngModelChange)="handleProvinceSelected($event)"
+          (ngModelChange)="handleProvinceSelected2($event)"
         >
           <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
@@ -142,17 +137,17 @@
           [(ngModel)]="selectedRow.cityCode2"
           name="cityCode2"
           [nzPlaceHolder]="'请选择城市'"
-          (ngModelChange)="handleCitySelected($event)"
+          (ngModelChange)="handleCitySelected2($event)"
         >
-          <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+          <nz-option *ngFor="let i of cityList2" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
         <nz-select [(ngModel)]="selectedRow.districtCode2" name="districtCode2" [nzPlaceHolder]="'请选择区/县'">
-          <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+          <nz-option *ngFor="let i of areaList2" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
       </div>
     </se>
     <se label="备注" col="1">
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.descr" name="descr" />
+      <textarea nz-input placeholder="请输入" [(ngModel)]="selectedRow.descr" name="descr"></textarea>
     </se>
     <se label="关联小区" col="1">
       <div class="out">
@@ -203,7 +198,7 @@
 </ng-template>
 
 <!--部门管理-->
-<ngx-architect-tree
+<!-- <ngx-architect-tree
   [show]="showArchitectTree"
   label="部门"
   [listApi]="api.getOrgStructureList"
@@ -211,4 +206,4 @@
   [deleteApi]="api.deleteOrgStructure"
   (closeEvent)="showArchitectTree = false"
 >
-</ngx-architect-tree>
+</ngx-architect-tree> -->
