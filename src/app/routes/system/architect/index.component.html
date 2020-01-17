@@ -14,10 +14,19 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="姓名" col="4">
-      <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
     <se label="手机号" col="4">
-      <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.tel" name="tel" />
+    </se>
+    <se label="所在部门" col="4">
+      <nz-tree-select
+        name="orgStructureId"
+        [nzNodes]="orgStructureList"
+        [nzPlaceHolder]="'请选择'"
+        [(ngModel)]="query.orgStructureId"
+      >
+      </nz-tree-select>
     </se>
     <se col="4">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
@@ -58,7 +67,7 @@
     <se label="出生日期" col="2">
       <nz-date-picker
         class="input"
-        [nzStyle]="{ width: '100%' }"
+        [nzStyle]="{ width: '150px' }"
         nzFormat="yyyy-MM-dd"
         nzPlaceHolder="请选择"
         [(ngModel)]="selectedRow.birthday"
@@ -70,6 +79,14 @@
     </se>
     <se label="确认密码" col="2" required>
       <input nz-input placeholder="请输入" type="password" [(ngModel)]="selectedRow.pwdRepeat" name="pwdRepeat" />
+    </se>
+    <se label="" col="2">
+      <label nz-checkbox [(ngModel)]="selectedRow.app" name="app">作为物业端app账号登陆</label>
+    </se>
+    <se label="所属角色" col="2" *ngIf="selectedRow.app" required>
+      <nz-select [(ngModel)]="selectedRow.ramId" name="ramId" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
+        <nz-option *ngFor="let i of roleList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
     </se>
     <se label="所在部门" col="2" required>
       <nz-tree-select

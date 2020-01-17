@@ -48,7 +48,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   selectedRow = selectedRow;
   columns: STColumn[] = [
     { title: '姓名', index: 'name' },
-    { title: '职位', index: 'post' },
+    { title: '角色', index: 'role' },
     { title: '手机号', index: 'tel' },
     { title: '邮箱', index: 'email' },
     {
@@ -91,6 +91,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   areaList = [];
   cityList2 = [];
   areaList2 = [];
+  roleList = [];
   @ViewChild('st', { static: true })
   st: STComponent;
   @ViewChild('modalContent', { static: true })
@@ -115,11 +116,13 @@ export class ArchitectComponent implements OnInit, OnDestroy {
       this.getData();
       this.getSocialList();
       this.getOrgStructureList();
+      this.getRoleList();
     }
     this.sub = this.settings.notify.subscribe(res => {
       this.getData();
       this.getSocialList();
       this.getOrgStructureList();
+      this.getRoleList();
     });
   }
 
@@ -195,7 +198,14 @@ export class ArchitectComponent implements OnInit, OnDestroy {
       if (type === 'edit' || type === 'view') {
         this.api.getStaffInfo(this.selectedRow.id).subscribe(res => {
           if (res.code === '0') {
-            this.selectedRow = { ...this.selectedRow, ...res.data };
+            this.selectedRow = {
+              ...this.selectedRow,
+              ...res.data,
+            };
+            this.selectedRow.pwdRepeat = this.selectedRow.pwd;
+            if (this.selectedRow.ramId) {
+              this.selectedRow.app = true;
+            }
             if (this.selectedRow.socialIds && this.selectedRow.socialIds.length) {
               this.selectedRow.socialIds.forEach(id => {
                 const select = this.communityList.filter(i => i.id === id)[0];
@@ -210,7 +220,18 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   }
 
   checkValid() {
-    const { name, gender, tel, pwd, pwdRepeat, orgStructureId, credentialType, credentialNo } = this.selectedRow;
+    const {
+      name,
+      gender,
+      tel,
+      pwd,
+      pwdRepeat,
+      orgStructureId,
+      credentialType,
+      credentialNo,
+      app,
+      ramId,
+    } = this.selectedRow;
     if (!name) {
       this.msg.info('请输入姓名');
       return false;
@@ -230,6 +251,16 @@ export class ArchitectComponent implements OnInit, OnDestroy {
     if (pwdRepeat !== pwd) {
       this.msg.info('密码输入不一致');
       return false;
+    }
+    if (app) {
+      if (!ramId) {
+        this.msg.info('请选择所属角色');
+        return false;
+      }
+      this.selectedRow.roleCateEnum = this.roleList.find(role => role.value === this.selectedRow.ramId).value2;
+    } else {
+      this.selectedRow.roleCateEnum = null;
+      this.selectedRow.ramId = null;
     }
     if (!orgStructureId) {
       this.msg.info('请选择所在部门');
@@ -350,5 +381,12 @@ export class ArchitectComponent implements OnInit, OnDestroy {
       };
     });
     return result;
+  }
+
+  getRoleList() {
+    this.api.getRoleList({ pageNo: 1, pageSize: 100 }).subscribe(res => {
+      const { rows } = res.data || { rows: [] };
+      this.roleList = rows.map(row => ({ label: row.name, value: row.id, value2: row.value }));
+    });
   }
 }
