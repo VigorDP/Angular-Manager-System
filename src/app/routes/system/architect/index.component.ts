@@ -210,7 +210,7 @@ export class ArchitectComponent implements OnInit, OnDestroy {
   }
 
   checkValid() {
-    const { name, gender, tel, pwd, pwdRepeat, orgStructureId } = this.selectedRow;
+    const { name, gender, tel, pwd, pwdRepeat, orgStructureId, credentialType, credentialNo } = this.selectedRow;
     if (!name) {
       this.msg.info('请输入姓名');
       return false;
@@ -233,6 +233,14 @@ export class ArchitectComponent implements OnInit, OnDestroy {
     }
     if (!orgStructureId) {
       this.msg.info('请选择所在部门');
+      return false;
+    }
+    if (!credentialType) {
+      this.msg.info('请选择证件类型');
+      return false;
+    }
+    if (!credentialNo || !credentialNo.trim().length) {
+      this.msg.info('请输入证件号码');
       return false;
     }
     if (this.ret.length) {
