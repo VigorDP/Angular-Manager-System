@@ -4,7 +4,7 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { AllowList } from '../../interfaces';
 
 @Component({
-  selector: 'new-check',
+  selector: 'app-new-check',
   templateUrl: './new-check.html',
   styles: [],
 })
