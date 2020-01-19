@@ -73,7 +73,7 @@ export class UsageComponent implements OnInit, OnDestroy {
     this.api.getSocialProjectStructure().subscribe(res => {
       if (res.code === '0') {
         this.firstLevel = res.data.map(item => ({
-          label: item.building + '栋',
+          label: item.building,
           value: item.building,
           children: item.socialUnitVos,
         }));
