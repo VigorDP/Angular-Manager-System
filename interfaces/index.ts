@@ -2,6 +2,7 @@ import { STData, STPage } from '@delon/abc';
 
 export * from './community';
 export * from './select_option';
+export * from './Nation';
 
 // 页面配置相关
 export const query: any = {
