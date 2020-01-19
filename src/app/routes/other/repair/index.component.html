@@ -1,0 +1,110 @@
+<page-header title="报修管理" autoBreadcrumb="false" [action]="action">
+  <ng-template #action> </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="130">
+    <se label="报修人" col="5">
+      <input nz-input placeholder="请输入" [(ngModel)]="query.userName" name="userName" />
+    </se>
+    <se label="处理人" col="5">
+      <input nz-input placeholder="请输入" [(ngModel)]="query.userName" name="userName" />
+    </se>
+    <se label="报修类别" col="5">
+      <nz-select [(ngModel)]="query.type" name="type" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of bugfixTypeList" [nzLabel]="i.name" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="报修提交时间" col="5">
+      <nz-date-picker
+        [ngStyle]="{ width: '100px' }"
+        nzFormat="yyyy-MM-dd"
+        nzPlaceHolder="开始日期"
+        [(ngModel)]="query.beginTime"
+        name="beginTime"
+      >
+      </nz-date-picker>
+    </se>
+
+    <se col="4" labelWidth="0">
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+  <st
+    #st
+    [data]="data"
+    [total]="total"
+    [ps]="query.pageSize"
+    [pi]="query.pageNo"
+    [columns]="columns"
+    [page]="pages"
+    [loading]="loading"
+    (change)="stChange($event)"
+    [scroll]="{ x: '1000px' }"
+  ></st>
+</nz-card>
+
+<!--查看-->
+<ng-template #viewContent>
+  <st #viewSt [data]="viewData" [columns]="viewColumns" [page]="{ show: false }"></st>
+  <nz-divider></nz-divider>
+  <p><strong>报修内容:</strong></p>
+  <div class="description">
+    {{ this.selectedRow.description }}
+  </div>
+  <div class="img-box" *ngIf="this.selectedRow.images && this.selectedRow.images.length > 0">
+    <img *ngFor="let path of this.selectedRow.images" [src]="path" (click)="handlePreviewImg(path)" />
+  </div>
+  <p style="margin-top: 20px"><strong>报修跟踪:</strong></p>
+  <div class="fix-follow-box" *ngIf="this.selectedRow.bugfixProcess && this.selectedRow.bugfixProcess.length > 0">
+    <div class="each" *ngFor="let process of this.selectedRow.bugfixProcess; let i = index">
+      <div class="main">
+        <img
+          *ngIf="process.processPersonImage"
+          [src]="process.processPersonImage"
+          style="width: 80px;height: 80px;border-radius: 40px"
+        />
+        <!-- <img
+          *ngIf="!process.processPersonImage"
+          [src]="defaultAva"
+          style="width: 80px;height: 80px;border-radius: 40px"
+        /> -->
+        <p
+          style="width:100%;height:30px;line-height:30px;text-align:center;margin: 0;color: rgb(92,175,255)"
+          *ngIf="process.status"
+        >
+          {{ process.status }}
+          <span style="display:inline-block;width: 50%" *ngIf="process.evaluateStar">
+            <i
+              class="anticon anticon-star"
+              *ngFor="let i of size"
+              [ngClass]="{ red: i <= process.evaluateStar, grey: i > process.evaluateStar }"
+            ></i>
+          </span>
+        </p>
+        <p style="margin: 0;padding: 5px" *ngIf="process.dateCreated">
+          {{ process.dateCreated | date: 'yyyy-MM-dd HH:mm:ss' }}
+        </p>
+        <p style="width:100%;text-align:center;margin: 0;padding: 5px" *ngIf="process.description">
+          {{ process.description }}
+        </p>
+        <ng-container *ngIf="!!!process.description"> </ng-container>
+        <div style="width: 100%;overflow: hidden" *ngIf="process.images && process.images.length > 0">
+          <img
+            *ngFor="let path of process.images"
+            [src]="path"
+            style="width: 27%;height:60px;margin:2%;cursor: zoom-in"
+            (click)="handlePreviewImg(path)"
+          />
+        </div>
+      </div>
+      <div class="arrow" *ngIf="i < this.selectedRow.bugfixProcess.length - 1">
+        <i class="anticon anticon-double-right"></i>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -158,6 +158,13 @@ export const menus: Menu[] = [
             reuse: false,
             children: [],
           },
+          {
+            text: '报修',
+            name: 'REPAIR',
+            link: '/other/repair',
+            reuse: false,
+            children: [],
+          },
         ],
       },
     ],
