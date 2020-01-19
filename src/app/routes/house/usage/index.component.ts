@@ -74,7 +74,7 @@ export class UsageComponent implements OnInit, OnDestroy {
       if (res.code === '0') {
         this.firstLevel = res.data.map(item => ({
           label: item.building,
-          value: item.building,
+          value: item.buildingNo,
           children: item.socialUnitVos,
         }));
       }
