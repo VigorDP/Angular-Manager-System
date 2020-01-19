@@ -31,7 +31,7 @@ export class RepairComponent implements OnInit, OnDestroy {
   columns: STColumn[] = [
     { title: '报修单号', index: 'bugfixNo' },
     { title: '报修人姓名', index: 'bugfixName' },
-    { title: '报修类别', index: 'conbugfixTypetent' },
+    { title: '报修类别', index: 'bugfixType' },
     { title: '处理状态', index: 'status' },
     { title: '处理人', index: 'handleName' },
     { title: '提交时间', index: 'dateCreated' },
@@ -67,6 +67,10 @@ export class RepairComponent implements OnInit, OnDestroy {
   @ViewChild('viewContent', { static: true })
   viewTpl: TemplateRef<any>;
 
+  typeList = [
+    { label: '个人报修', value: 'person' },
+    { label: '公共报修', value: 'public' },
+  ];
   size = [1, 2, 3, 4, 5];
   viewData = cloneDeep(data);
   viewColumns: STColumn[] = [

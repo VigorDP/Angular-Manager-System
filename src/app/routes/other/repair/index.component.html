@@ -12,7 +12,7 @@
     </se>
     <se label="报修类别" col="5">
       <nz-select [(ngModel)]="query.type" name="type" [nzPlaceHolder]="'请选择'">
-        <nz-option *ngFor="let i of bugfixTypeList" [nzLabel]="i.name" [nzValue]="i.value"></nz-option>
+        <nz-option *ngFor="let i of typeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="报修提交时间" col="5">
