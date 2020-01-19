@@ -20,12 +20,8 @@
       <input nz-input placeholder="请输入" [(ngModel)]="query.tel" name="tel" />
     </se>
     <se label="所在部门" col="4">
-      <nz-tree-select
-        name="orgStructureId"
-        [nzNodes]="orgStructureList"
-        [nzPlaceHolder]="'请选择'"
-        [(ngModel)]="query.orgStructureId"
-      >
+      <nz-tree-select name="orgStructureId" [nzNodes]="orgStructureList" [nzPlaceHolder]="'请选择'"
+        [(ngModel)]="query.orgStructureId">
       </nz-tree-select>
     </se>
     <se col="4">
@@ -36,18 +32,8 @@
 </nz-card>
 
 <nz-card [nzBordered]="false">
-  <st
-    #st
-    [data]="data"
-    [total]="total"
-    [ps]="query.pageSize"
-    [pi]="query.pageNo"
-    [columns]="columns"
-    [page]="pages"
-    [loading]="loading"
-    (change)="stChange($event)"
-    [scroll]="{ x: '1000px' }"
-  ></st>
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{ x: '1000px' }"></st>
 </nz-card>
 
 <!--新增人员-->
@@ -65,14 +51,8 @@
       <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.tel" name="tel" />
     </se>
     <se label="出生日期" col="2">
-      <nz-date-picker
-        class="input"
-        [nzStyle]="{ width: '150px' }"
-        nzFormat="yyyy-MM-dd"
-        nzPlaceHolder="请选择"
-        [(ngModel)]="selectedRow.birthday"
-        name="birthday"
-      ></nz-date-picker>
+      <nz-date-picker class="input" [nzStyle]="{ width: '150px' }" nzFormat="yyyy-MM-dd" nzPlaceHolder="请选择"
+        [(ngModel)]="selectedRow.birthday" name="birthday"></nz-date-picker>
     </se>
     <se label="密码" col="2" required>
       <input nz-input placeholder="请输入" type="password" [(ngModel)]="selectedRow.pwd" name="pwd" />
@@ -89,13 +69,8 @@
       </nz-select>
     </se>
     <se label="所在部门" col="2" required>
-      <nz-tree-select
-        style="width: 150px;"
-        name="orgStructureId"
-        [nzNodes]="orgStructureList"
-        [nzPlaceHolder]="'请选择'"
-        [(ngModel)]="selectedRow.orgStructureId"
-      >
+      <nz-tree-select style="width: 150px;" name="orgStructureId" [nzNodes]="orgStructureList" [nzPlaceHolder]="'请选择'"
+        [(ngModel)]="selectedRow.orgStructureId">
       </nz-tree-select>
     </se>
     <se label="证件类型" col="2" required>
@@ -124,20 +99,12 @@
     </se>
     <se label="户籍" col="1">
       <div style="display: flex;justify-content: space-between;margin-top: 4px;">
-        <nz-select
-          [(ngModel)]="selectedRow.provinceCode"
-          name="provinceCode"
-          [nzPlaceHolder]="'请选择省份'"
-          (ngModelChange)="handleProvinceSelected($event)"
-        >
+        <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择省份'"
+          (ngModelChange)="handleProvinceSelected($event)">
           <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
-        <nz-select
-          [(ngModel)]="selectedRow.cityCode"
-          name="cityCode"
-          [nzPlaceHolder]="'请选择城市'"
-          (ngModelChange)="handleCitySelected($event)"
-        >
+        <nz-select [(ngModel)]="selectedRow.cityCode" name="cityCode" [nzPlaceHolder]="'请选择城市'"
+          (ngModelChange)="handleCitySelected($event)">
           <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
         <nz-select [(ngModel)]="selectedRow.districtCode" name="districtCode" [nzPlaceHolder]="'请选择区/县'">
@@ -147,20 +114,12 @@
     </se>
     <se label="籍贯" col="1">
       <div style="display: flex;justify-content: space-between;margin-top: 4px;">
-        <nz-select
-          [(ngModel)]="selectedRow.provinceCode2"
-          name="provinceCode2"
-          [nzPlaceHolder]="'请选择省份'"
-          (ngModelChange)="handleProvinceSelected2($event)"
-        >
+        <nz-select [(ngModel)]="selectedRow.provinceCode2" name="provinceCode2" [nzPlaceHolder]="'请选择省份'"
+          (ngModelChange)="handleProvinceSelected2($event)">
           <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
-        <nz-select
-          [(ngModel)]="selectedRow.cityCode2"
-          name="cityCode2"
-          [nzPlaceHolder]="'请选择城市'"
-          (ngModelChange)="handleCitySelected2($event)"
-        >
+        <nz-select [(ngModel)]="selectedRow.cityCode2" name="cityCode2" [nzPlaceHolder]="'请选择城市'"
+          (ngModelChange)="handleCitySelected2($event)">
           <nz-option *ngFor="let i of cityList2" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
         <nz-select [(ngModel)]="selectedRow.districtCode2" name="districtCode2" [nzPlaceHolder]="'请选择区/县'">
@@ -179,38 +138,23 @@
           </nz-input-group>
           <div class="data-list">
             <p style="margin:0 5px;padding: 0" *ngFor="let item of communityList; let idx = index">
-              <label
-                [name]="'checked' + idx"
-                nz-checkbox
-                [(ngModel)]="item.checked"
-                [nzDisabled]="item.checked"
+              <label [name]="'checked' + idx" nz-checkbox [(ngModel)]="item.checked" [nzDisabled]="item.checked"
                 *ngIf="this.searchCommunity(item.socialName)"
-                (ngModelChange)="selectCommunity(item)"
-                >{{ item.socialName }}</label
-              >
+                (ngModelChange)="selectCommunity(item)">{{ item.socialName }}</label>
             </p>
           </div>
         </div>
         <div class="list-box">
           <div *ngIf="ret.length > 0">
-            <p
-              style="margin:0 5px;padding: 0;
+            <p style="margin:0 5px;padding: 0;
               overflow: hidden;
-              font-size: 14px"
-              *ngFor="let item of ret; let i = index"
-            >
-              <span
-                style="float: left;width: 60%;
+              font-size: 14px" *ngFor="let item of ret; let i = index">
+              <span style="float: left;width: 60%;
                 overflow: hidden;text-overflow: ellipsis;
-                white-space: nowrap"
-                [title]="item.socialName"
-                >{{ item.socialName }}</span
-              >
-              <i
-                class="anticon anticon-close-circle-o able"
+                white-space: nowrap" [title]="item.socialName">{{ item.socialName }}</span>
+              <i class="anticon anticon-close-circle-o able"
                 style="float: right;margin-left: 10px;cursor: pointer;margin-top: 10px;"
-                (click)="removeSelectCommunity(item, i)"
-              ></i>
+                (click)="removeSelectCommunity(item, i)"></i>
             </p>
           </div>
         </div>
@@ -220,12 +164,7 @@
 </ng-template>
 
 <!--部门管理-->
-<ngx-architect-tree
-  [show]="showArchitectTree"
-  label="部门"
-  [listApi]="api.getOrgStructureList"
-  [saveApi]="api.saveOrgStructure"
-  [deleteApi]="api.deleteOrgStructure"
-  (closeEvent)="this.getOrgStructureList(); showArchitectTree = false"
->
+<ngx-architect-tree [show]="showArchitectTree" label="部门" [listApi]="api.getOrgStructureList"
+  [saveApi]="api.saveOrgStructure" [deleteApi]="api.deleteOrgStructure"
+  (closeEvent)="getOrgStructureList(); showArchitectTree = false">
 </ngx-architect-tree>
