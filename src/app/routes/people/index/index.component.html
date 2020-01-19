@@ -23,13 +23,13 @@
       </nz-select>
     </se>
     <se label="所在楼栋" col="4">
-      <nz-select [(ngModel)]="query.building" (ngModelChange)="selectSecondLevel($event)" name="building"
-        [nzPlaceHolder]="'请选择'">
+      <nz-select [(ngModel)]="query.building" (ngModelChange)="query.unit=null;selectSecondLevel($event)"
+        name="building" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of firstLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="所在单元" col="4">
-      <nz-select [(ngModel)]="query.unit" (ngModelChange)="selectThirdLevel($event)" name="unit"
+      <nz-select [(ngModel)]="query.unit" (ngModelChange)="query.roomNo=null;selectThirdLevel($event)" name="unit"
         [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of secondLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
@@ -141,11 +141,11 @@
           <se [label]="'所在户室'+(i+1)" col="1" required>
             <div style="display: flex;justify-content: space-between;margin-top: 4px;">
               <nz-select [(ngModel)]="item.firstLevel" [name]="'firstLevel'+i" [nzPlaceHolder]="'请选择楼栋'"
-                (ngModelChange)="selectSecondLevel($event)">
+                (ngModelChange)="item.secondLevel=null;selectSecondLevel($event)">
                 <nz-option *ngFor="let i of firstLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
               </nz-select>
               <nz-select [(ngModel)]="item.secondLevel" [name]="'secondLevel'+i" [nzPlaceHolder]="'请选择单元'"
-                (ngModelChange)="selectThirdLevel($event)">
+                (ngModelChange)="item.roomNumber=null;selectThirdLevel($event)">
                 <nz-option *ngFor="let i of secondLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
               </nz-select>
               <nz-select [(ngModel)]="item.roomNumber" [name]="'roomNumber'+i" [nzPlaceHolder]="'请选择房间'">
