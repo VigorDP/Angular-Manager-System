@@ -20,12 +20,23 @@ import { NgxAmapModule } from 'ngx-amap';
 import { NgxTagManagerModule } from 'ngx-tag-manager';
 // 组织架构管理
 import { NgxArchitectTreeModule } from 'ngx-architect-tree';
+// 图片上传（附带预览和删除功能）
+import { NgxImgUploadModule } from 'ngx-img-upload';
+// 下拉 table（附带查找和翻页功能）
+import { NgxDropdownTableModule } from 'ngx-dropdown-table';
 
-const THIRDMODULES = [NgZorroAntdModule, CountdownModule, NgxTagManagerModule, NgxArchitectTreeModule];
+const THIRDMODULES = [
+  NgZorroAntdModule,
+  CountdownModule,
+  NgxTagManagerModule,
+  NgxArchitectTreeModule,
+  NgxImgUploadModule,
+  NgxDropdownTableModule,
+];
 
 // your componets & directives
-import { ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, DropdownTableComponent } from '@app/common';
-const COMPONENTS = [ImgUploadComponent, NewCheckComponent, WebCaptureImgComponent, DropdownTableComponent];
+import { NewCheckComponent, WebCaptureImgComponent } from '@app/common';
+const COMPONENTS = [NewCheckComponent, WebCaptureImgComponent];
 const DIRECTIVES = [];
 
 export function customUpload(blobInfo, success, failure) {

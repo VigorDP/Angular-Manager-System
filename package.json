@@ -38,6 +38,8 @@
     "ng-zorro-antd": "^8.4.0",
     "ngx-amap": "^2.2.1",
     "ngx-architect-tree": "0.0.7",
+    "ngx-dropdown-table": "^1.0.2",
+    "ngx-img-upload": "^1.0.2",
     "ngx-tag-manager": "1.2.6",
     "ngx-tinymce": "^7.0.0",
     "qrious": "^4.0.2",

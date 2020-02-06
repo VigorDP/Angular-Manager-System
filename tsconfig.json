@@ -29,5 +29,5 @@
       ]
     }
   },
-  "include": ["src","node_modules/ngx-tag-manager","node_modules/ngx-architect-tree"]
+  "include": ["src","node_modules/ngx-tag-manager","node_modules/ngx-architect-tree","node_modules/ngx-img-upload","node_modules/ngx-dropdown-table"]
 }
