@@ -15,6 +15,7 @@ import { query, defaultQuery } from '@app/common';
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls: ['../../../common/styles/common.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsageComponent implements OnInit, OnDestroy {

@@ -8,22 +8,22 @@
 </page-header>
 
 <nz-card [nzBordered]="false">
-  <form nz-form se-container labelWidth="60">
-    <se label="姓名" col="5" style="margin-bottom: 0;">
+  <form nz-form se-container labelWidth="120">
+    <se label="姓名" col="4">
       <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
-    <se label="用户名" col="5" style="margin-bottom: 0;">
+    <se label="用户名" col="4">
       <input nz-input placeholder="请输入" [(ngModel)]="query.account" name="account" />
     </se>
-    <se label="角色" col="5" style="margin-bottom: 0">
+    <se label="角色" col="4">
       <nz-select [(ngModel)]="query.roleName" name="roleName" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
         <nz-option *ngFor="let i of roleList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="手机号" col="5" style="margin-bottom: 0;">
-      <input nz-input placeholder="请输入" [(ngModel)]="query.tel" name="tel" />
+    <se label="手机号" col="4">
+      <input class="mobile" nz-input placeholder="请输入" [(ngModel)]="query.tel" name="tel" />
     </se>
-    <se col="5">
+    <se col="1">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>

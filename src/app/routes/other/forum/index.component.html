@@ -4,46 +4,29 @@
 
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
-    <se label="发布人" col="5">
+    <se label="发布人" col="4">
       <input nz-input placeholder="请输入" [(ngModel)]="query.userName" name="userName" />
     </se>
-    <se label="发布时间" col="5">
-      <nz-date-picker
-        [ngStyle]="{ width: '100px' }"
-        nzFormat="yyyy-MM-dd"
-        nzPlaceHolder="开始日期"
-        [(ngModel)]="query.beginTime"
-        name="beginTime"
-      >
+    <se label="发布时间" col="4">
+      <nz-date-picker [ngStyle]="{ width: '120px' }" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期"
+        [(ngModel)]="query.beginTime" name="beginTime">
       </nz-date-picker>
     </se>
-    <se label="筛选条件" col="3" labelWidth="74">
+    <se label="筛选条件" col="2" labelWidth="74">
       <nz-input-group nzCompact>
-        <nz-select
-          [(ngModel)]="query.countType"
-          name="countType"
-          [nzPlaceHolder]="'请选择'"
-          [ngStyle]="{ width: '100px' }"
-        >
+        <nz-select [(ngModel)]="query.countType" name="countType" [nzPlaceHolder]="'请选择'"
+          [ngStyle]="{ width: '100px' }">
           <nz-option *ngFor="let i of countTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
-        <nz-select
-          [(ngModel)]="query.compareType"
-          name="compareType"
-          [nzPlaceHolder]="'请选择'"
-          [ngStyle]="{ width: '100px' }"
-        >
+        <nz-select [(ngModel)]="query.compareType" name="compareType" [nzPlaceHolder]="'请选择'"
+          [ngStyle]="{ width: '100px' }">
           <nz-option *ngFor="let i of compareTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
         </nz-select>
-        <nz-input-number
-          [(ngModel)]="query.compareCount"
-          [nzMin]="0"
-          [nzStep]="1"
-          name="compareCount"
-        ></nz-input-number>
+        <nz-input-number [(ngModel)]="query.compareCount" [nzMin]="0" [nzStep]="1" name="compareCount">
+        </nz-input-number>
       </nz-input-group>
     </se>
-    <se col="4" labelWidth="0">
+    <se col="2">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>
@@ -51,33 +34,15 @@
 </nz-card>
 
 <nz-card [nzBordered]="false">
-  <st
-    #st
-    [data]="data"
-    [total]="total"
-    [ps]="query.pageSize"
-    [pi]="query.pageNo"
-    [columns]="columns"
-    [page]="pages"
-    [loading]="loading"
-    (change)="stChange($event)"
-    [scroll]="{ x: '1000px' }"
-  ></st>
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{ x: '1000px' }"></st>
 </nz-card>
 
 <!--用户列表-->
 <ng-template #userListContent>
-  <st
-    #userSt
-    [data]="userList.data"
-    [total]="userList.total"
-    [ps]="userList.query.pageSize"
-    [pi]="query.pageNo"
-    [columns]="userList.columns"
-    [page]="userList.pages"
-    [loading]="userList.loading"
-    (change)="userStChange($event)"
-  ></st>
+  <st #userSt [data]="userList.data" [total]="userList.total" [ps]="userList.query.pageSize" [pi]="query.pageNo"
+    [columns]="userList.columns" [page]="userList.pages" [loading]="userList.loading" (change)="userStChange($event)">
+  </st>
 </ng-template>
 
 <!--查看-->
@@ -104,10 +69,8 @@
     <nz-form-label [nzSpan]="4">帖子图片</nz-form-label>
     <nz-form-control [nzSpan]="19">
       <ng-container *ngIf="selectedRow.images && selectedRow.images.length">
-        <div
-          style="width: 100px;height: 100px;margin: 5px;overflow: hidden;cursor: zoom-in;display: inline-block"
-          *ngFor="let url of selectedRow.images; let idx = index"
-        >
+        <div style="width: 100px;height: 100px;margin: 5px;overflow: hidden;cursor: zoom-in;display: inline-block"
+          *ngFor="let url of selectedRow.images; let idx = index">
           <img style="width: 100px;height: auto" [src]="url" />
         </div>
       </ng-container>
@@ -124,8 +87,8 @@
       <p>{{ comment.commentTime }}</p>
       <div class="reply" *ngIf="comment.replies && comment.replies.length">
         <ng-container *ngFor="let reply of comment.replies">
-          <span>{{ reply.replyTime }}</span
-          ><span style="margin-left: 50px">{{ reply.userName }} 回复 {{ reply.parentUserName }}</span>
+          <span>{{ reply.replyTime }}</span><span style="margin-left: 50px">{{ reply.userName }} 回复
+            {{ reply.parentUserName }}</span>
           <p>{{ reply.content }}</p>
         </ng-container>
       </div>

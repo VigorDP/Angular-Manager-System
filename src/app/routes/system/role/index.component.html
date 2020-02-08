@@ -12,7 +12,7 @@
     <se label="角色名称" col="4" style="margin-bottom: 0">
       <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
-    <se col="4">
+    <se col="4" labelWidth="0">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>

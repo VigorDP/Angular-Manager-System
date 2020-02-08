@@ -20,15 +20,14 @@
 
   <form nz-form se-container labelWidth="130">
     <se label="公告类别" col="4">
-      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'"
-        (ngModelChange)="selectCate()">
+      <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'" (ngModelChange)="selectCate()">
         <nz-option *ngFor="let i of noticeCateList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="公告标题" col="4">
       <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
-    <se>
+    <se col="4" labelWidth="0">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>
@@ -96,5 +95,5 @@
   </div>
 </ng-template>
 
-<ngx-tag-manager [show]="showTagManager" [cate]="query.cate" [listApi]="api.getTagList"
-  [saveApi]="api.saveTag" [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></ngx-tag-manager>
+<ngx-tag-manager [show]="showTagManager" [cate]="query.cate" [listApi]="api.getTagList" [saveApi]="api.saveTag"
+  [deleteApi]="api.deleteTag" (closeEvent)="showTagManager=false"></ngx-tag-manager>

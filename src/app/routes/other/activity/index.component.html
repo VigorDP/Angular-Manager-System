@@ -14,24 +14,24 @@
 
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
-    <se label="发布人" col="4">
+    <se label="发布人" col="3">
       <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
-    <se label="标签" col="4">
+    <se label="标签" col="3">
       <nz-select [(ngModel)]="query.tag" name="tag" [nzPlaceHolder]="'请选择'" nzAllowClear>
         <nz-option *ngFor="let i of tagList" [nzLabel]="i.name" [nzValue]="i.name"></nz-option>
       </nz-select>
     </se>
-    <se label="状态" col="4">
+    <se label="状态" col="3">
       <nz-select [(ngModel)]="query.status" name="cate" [nzPlaceHolder]="'请选择'" nzAllowClear>
         <nz-option *ngFor="let i of statusList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="日期范围" col="4">
+    <se label="日期范围" col="3">
       <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="dateRangeChange($event)" name="dateRange">
       </nz-range-picker>
     </se>
-    <se>
+    <se col="2">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>

@@ -35,7 +35,7 @@ import * as dayjs from 'dayjs';
 
 @Component({
   templateUrl: './index.component.html',
-  styleUrls: [`./index.scss`],
+  styleUrls: [`./index.scss`, '../../../common/styles/common.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArchitectComponent implements OnInit, OnDestroy {

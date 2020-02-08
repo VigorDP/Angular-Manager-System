@@ -13,22 +13,14 @@
       <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
     <se label="所在楼栋" col="4">
-      <nz-select
-        [(ngModel)]="query.firstLevel"
-        (ngModelChange)="selectSecondLevel($event)"
-        name="firstLevel"
-        [nzPlaceHolder]="'请选择'"
-      >
+      <nz-select [(ngModel)]="query.firstLevel" (ngModelChange)="selectSecondLevel($event)" name="firstLevel"
+        [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of firstLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
     <se label="所在单元" col="4">
-      <nz-select
-        [(ngModel)]="query.secondLevel"
-        (ngModelChange)="selectThirdLevel($event)"
-        name="secondLevel"
-        [nzPlaceHolder]="'请选择'"
-      >
+      <nz-select [(ngModel)]="query.secondLevel" (ngModelChange)="selectThirdLevel($event)" name="secondLevel"
+        [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of secondLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
@@ -45,10 +37,10 @@
         <nz-option *ngFor="let i of paidStatusList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se label="缴费时间" col="4">
+    <se label="缴费时间" col="2">
       <nz-range-picker [(ngModel)]="dateRange" name="dateRange" (ngModelChange)="selectDate()"></nz-range-picker>
     </se>
-    <se>
+    <se col="2">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>
@@ -56,18 +48,8 @@
 </nz-card>
 
 <nz-card [nzBordered]="false">
-  <st
-    #st
-    [data]="data"
-    [total]="total"
-    [ps]="query.pageSize"
-    [pi]="query.pageNo"
-    [columns]="columns"
-    [page]="pages"
-    [loading]="loading"
-    (change)="stChange($event)"
-    [scroll]="{ x: '1000px' }"
-  ></st>
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{ x: '1000px' }"></st>
 </nz-card>
 
 <ng-template #modalContent>

@@ -26,7 +26,7 @@
     <se label="公告标题" col="4">
       <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
-    <se>
+    <se col="4" labelWidth="0">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>

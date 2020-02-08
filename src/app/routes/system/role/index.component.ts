@@ -15,6 +15,7 @@ import { query, defaultQuery, pages, total, loading, data, selectedRows, selecte
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls: ['../../../common/styles/common.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoleComponent implements OnInit, OnDestroy {

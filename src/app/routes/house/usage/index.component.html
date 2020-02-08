@@ -20,7 +20,7 @@
         <nz-option *ngFor="let i of thirdLevel" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se col="4">
+    <se col="4" labelWidth="0">
       <button nz-button [nzType]="'primary'" (click)="getBuildingStructure()">查询</button>
       <button nz-button (click)="reset()">重置</button>
     </se>

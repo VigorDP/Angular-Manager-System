@@ -28,6 +28,7 @@ import {
 const BuildingTypeList = [{ label: '高层', value: 'HIGH' }, { label: '别墅', value: 'VILLA' }];
 @Component({
   templateUrl: './index.component.html',
+  styleUrls: ['../../../common/styles/common.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StructureComponent implements OnInit, OnDestroy {

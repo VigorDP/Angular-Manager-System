@@ -7,6 +7,7 @@ import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, t
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls: ['../../../common/styles/common.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SenseComponent implements OnInit {

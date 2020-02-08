@@ -16,14 +16,14 @@
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
     <se label="标题" col="1" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.title" name="name" />
+      <input nz-input style="width:100%" placeholder="请输入" [(ngModel)]="selectedRow.title" name="name" />
     </se>
     <se label="标题图片" col="1">
       <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
         [inputUrls]="[selectedRow.image]"></app-img-upload>
     </se>
     <se label="文章跳转链接" col="1" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.url" name="url" />
+      <input nz-input style="width:100%" placeholder="请输入" [(ngModel)]="selectedRow.url" name="url" />
     </se>
   </form>
 </ng-template>

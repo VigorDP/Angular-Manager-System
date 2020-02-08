@@ -9,10 +9,10 @@
 
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
-    <se label="发布人" col="4">
+    <se label="发布人" col="3">
       <input nz-input placeholder="请输入" [(ngModel)]="query.title" name="title" />
     </se>
-    <se label="状态" col="4">
+    <se label="状态" col="3">
       <nz-select [(ngModel)]="query.status" name="status" [nzPlaceHolder]="'请选择'">
         <nz-option *ngFor="let i of statusList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
@@ -27,10 +27,10 @@
         name="beginDate"
       ></nz-date-picker>
     </se> -->
-    <se label="投票起始日期" col="4">
+    <se label="投票起始日期" col="3">
       <range-picker [(ngModel)]="query.startDate" [(ngModelEnd)]="query.endDate" name="date"></range-picker>
     </se>
-    <se>
+    <se col="1">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>
@@ -38,18 +38,8 @@
 </nz-card>
 
 <nz-card [nzBordered]="false">
-  <st
-    #st
-    [data]="data"
-    [total]="total"
-    [ps]="query.pageSize"
-    [pi]="query.pageNo"
-    [columns]="columns"
-    [page]="pages"
-    [loading]="loading"
-    (change)="stChange($event)"
-    [scroll]="{ x: '1000px' }"
-  ></st>
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{ x: '1000px' }"></st>
 </nz-card>
 
 <!--新增投票-->
@@ -59,42 +49,24 @@
       <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.title" name="title" />
     </se>
     <se label="图片" col="1">
-      <app-img-upload
-        action="/hl/social/uploader/img/upload"
-        (getImgUrl)="getImgUrl($event)"
-        [inputUrls]="[selectedRow.image]"
-      ></app-img-upload>
+      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
+        [inputUrls]="[selectedRow.image]"></app-img-upload>
     </se>
     <se label="投票时间范围" col="1" required>
-      <nz-range-picker
-        [nzShowTime]="{ nzFormat: 'HH:mm:ss' }"
-        nzFormat="yyyy-MM-dd HH:mm:ss"
-        [(ngModel)]="dateRange"
-        name="dateRange"
-      ></nz-range-picker>
+      <nz-range-picker [nzShowTime]="{ nzFormat: 'HH:mm:ss' }" nzFormat="yyyy-MM-dd HH:mm:ss" [(ngModel)]="dateRange"
+        name="dateRange"></nz-range-picker>
     </se>
     <se label="内容描述" col="1" required>
-      <textarea
-        rows="4"
-        nz-input
-        [(ngModel)]="selectedRow.descr"
-        maxlength="50"
-        name="descr"
-        placeholder="不超过50个字"
-      ></textarea>
+      <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" maxlength="50" name="descr"
+        placeholder="不超过50个字"></textarea>
     </se>
     <ng-container *ngFor="let option of this.selectedRow.dtos; let idx = index">
       <se [label]="'选项' + (idx + 1)" col="2" required>
         <input nz-input placeholder="请输入" [(ngModel)]="option.descr" [name]="'descr' + idx" />
       </se>
       <se label="" col="2">
-        <button
-          nz-button
-          style="border: none;"
-          nzType="danger"
-          (click)="removeOptions(idx)"
-          [disabled]="this.selectedRow.dtos.length === 2"
-        >
+        <button nz-button style="border: none;" nzType="danger" (click)="removeOptions(idx)"
+          [disabled]="this.selectedRow.dtos.length === 2">
           <i nz-icon nzType="delete" nzTheme="outline"></i>删除
         </button>
       </se>
@@ -117,26 +89,19 @@
   <nz-divider></nz-divider>
   <nz-form-item *ngFor="let option of selectedRow.dtos">
     <nz-form-control [nzSpan]="3">
-      <p
-        [title]="option.descr"
-        style="margin:0 5%;text-align:right;overflow:hidden;white-space: nowrap;overflow: hidden;text-overflow: ellipsis"
-      >
+      <p [title]="option.descr"
+        style="margin:0 5%;text-align:right;overflow:hidden;white-space: nowrap;overflow: hidden;text-overflow: ellipsis">
         {{ option.descr }}
       </p>
     </nz-form-control>
     <nz-form-control [nzSpan]="14">
-      <nz-progress
-        [nzPercent]="((option.count * 100) / this.voteTotal).toFixed(0)"
-        nzSize="small"
-        [nzShowInfo]="false"
-        [nzStrokeWidth]="15"
-      >
+      <nz-progress [nzPercent]="((option.count * 100) / this.voteTotal).toFixed(0)" nzSize="small" [nzShowInfo]="false"
+        [nzStrokeWidth]="15">
       </nz-progress>
     </nz-form-control>
     <nz-form-control [nzSpan]="3">
-      <span style="display:inline-block;width: 50px"
-        >{{ this.voteTotal ? ((option.count * 100) / this.voteTotal).toFixed(0) : 0 }}%</span
-      ><span>{{ option.count }}票</span>
+      <span
+        style="display:inline-block;width: 50px">{{ this.voteTotal ? ((option.count * 100) / this.voteTotal).toFixed(0) : 0 }}%</span><span>{{ option.count }}票</span>
     </nz-form-control>
     <!-- <nz-form-control [nzSpan]="2" *ngIf="selectedRow.status == '已结束'">
       <span

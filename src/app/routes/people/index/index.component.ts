@@ -48,6 +48,7 @@ const defaultRoom = {
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls: ['../../../common/styles/common.css'],
   styles: [
     `
       nz-select {

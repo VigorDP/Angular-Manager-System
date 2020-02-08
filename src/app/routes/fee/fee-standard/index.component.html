@@ -13,12 +13,12 @@
 
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
-    <se label="收费规则类型" col="4">
+    <se label="收费规则类型" col="3">
       <nz-select [(ngModel)]="query.cate" name="cate" [nzPlaceHolder]="'请选择'" nzAllowClear (ngModelChange)="getData(1)">
         <nz-option *ngFor="let i of feeTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
       </nz-select>
     </se>
-    <se>
+    <se col="3" labelWidth="0">
       <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
       <button nz-button (click)="reset()" [disabled]="loading">重置</button>
     </se>

@@ -19,6 +19,7 @@ const MONTH_FORMAT = 'yyyy-MM';
 
 @Component({
   templateUrl: './index.component.html',
+  styleUrls: ['../../../common/styles/common.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeeStandardComponent implements OnInit, OnDestroy {
