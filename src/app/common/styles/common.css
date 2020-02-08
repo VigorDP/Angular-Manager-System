@@ -3,5 +3,9 @@ input {
 }
 
 nz-select {
-  width: 120px
+  width: 120px;
+}
+
+nz-date-picker {
+  width: 120px;
 }
