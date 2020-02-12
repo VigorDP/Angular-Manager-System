@@ -29,12 +29,12 @@ export class RepairComponent implements OnInit, OnDestroy {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '报修单号', index: 'bugfixNo' },
-    { title: '报修人姓名', index: 'bugfixName' },
-    { title: '报修类别', index: 'bugfixType' },
+    { title: '报修单号', index: 'orderNo' },
+    { title: '报修人姓名', index: 'name' },
+    { title: '报修类别', index: 'type' },
     { title: '处理状态', index: 'status' },
-    { title: '处理人', index: 'handleName' },
-    { title: '提交时间', index: 'dateCreated' },
+    { title: '处理人', index: 'assignee' },
+    { title: '提交时间', index: 'time' },
     {
       title: '操作',
       fixed: 'right',
@@ -74,9 +74,9 @@ export class RepairComponent implements OnInit, OnDestroy {
   size = [1, 2, 3, 4, 5];
   viewData = cloneDeep(data);
   viewColumns: STColumn[] = [
-    { title: '报修类型', index: 'bugfixType' },
-    { title: '报修类别', index: 'bugfixCategory' },
-    { title: '联系电话', index: 'contactPhone' },
+    { title: '报修类型', index: 'type' },
+    { title: '报修类别', index: 'device' },
+    { title: '联系电话', index: 'tel' },
     { title: '报修地址', index: 'address' },
   ];
 
@@ -106,7 +106,7 @@ export class RepairComponent implements OnInit, OnDestroy {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getForumList(this.query).subscribe(res => {
+    this.api.getRepairList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -154,7 +154,7 @@ export class RepairComponent implements OnInit, OnDestroy {
     });
     modal.afterOpen.subscribe(() => {
       if (type === 'edit' || type === 'view') {
-        this.api.getForumInfo(this.selectedRow.id).subscribe(res => {
+        this.api.getRepairInfo(this.selectedRow.id).subscribe(res => {
           if (res.code === '0') {
             this.selectedRow = { ...this.selectedRow, ...res.data };
           }
@@ -168,30 +168,12 @@ export class RepairComponent implements OnInit, OnDestroy {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteForum(this.selectedRow.id).subscribe(() => {
+        this.api.deleteRepair(this.selectedRow.id).subscribe(() => {
           this.getData();
         });
       },
     });
   }
-
-  // batchDelete() {
-  //   if (!this.selectedRows.length) {
-  //     this.msg.info('请选择删除项');
-  //     return false;
-  //   }
-  //   const ids = this.selectedRows.map(item => item.id);
-  //   this.modalSrv.confirm({
-  //     nzTitle: '是否确定删除选中项？',
-  //     nzOkType: 'danger',
-  //     nzOnOk: () => {
-  //       this.api.deletePoliticsNews(ids).subscribe(() => {
-  //         this.getData();
-  //         this.st.clearCheck();
-  //       });
-  //     },
-  //   });
-  // }
 
   handlePreviewImg(src) {}
 }

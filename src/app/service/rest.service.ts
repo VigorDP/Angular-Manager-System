@@ -185,6 +185,14 @@ export class RestService {
   // 组织架构管理-新增/修改
   saveOrgStructure = (params: any) =>
     this.http.post(`${PREFIX}orgStructure/save`, paramsWithExtraParams(params, this.settings.app.community));
+
+  // 报修管理 - 列表
+  getRepairList = (params: any) =>
+    this.http.post(`${PREFIX}repair/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 报修管理-删除
+  deleteRepair = (params: any) => this.http.post(`${PREFIX}repair/delete`, params);
+  // 报修管理-详情
+  getRepairInfo = (id: number) => this.http.get(`${PREFIX}repair/info?id=${id}`);
 }
 
 function paramsWithExtraParams(params, community) {

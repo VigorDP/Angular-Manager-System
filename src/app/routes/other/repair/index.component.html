@@ -5,10 +5,10 @@
 <nz-card [nzBordered]="false">
   <form nz-form se-container labelWidth="130">
     <se label="报修人" col="4">
-      <input nz-input placeholder="请输入" [(ngModel)]="query.userName" name="userName" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
     </se>
     <se label="处理人" col="4">
-      <input nz-input placeholder="请输入" [(ngModel)]="query.userName" name="userName" />
+      <input nz-input placeholder="请输入" [(ngModel)]="query.assignee" name="assignee" />
     </se>
     <se label="报修类别" col="4">
       <nz-select [(ngModel)]="query.type" name="type" [nzPlaceHolder]="'请选择'">
@@ -16,8 +16,8 @@
       </nz-select>
     </se>
     <se label="提交时间" col="4">
-      <nz-date-picker style="width:120px" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期" [(ngModel)]="query.beginTime"
-        name="beginTime">
+      <nz-date-picker style="width:120px" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期" [(ngModel)]="query.startTime"
+        name="startTime">
       </nz-date-picker>
     </se>
     <se col="2">
@@ -37,15 +37,15 @@
   <st #viewSt [data]="viewData" [columns]="viewColumns" [page]="{ show: false }"></st>
   <nz-divider></nz-divider>
   <p><strong>报修内容:</strong></p>
-  <div class="description">
-    {{ this.selectedRow.description }}
+  <div class="descr">
+    {{ selectedRow.descr }}
   </div>
-  <div class="img-box" *ngIf="this.selectedRow.images && this.selectedRow.images.length > 0">
-    <img *ngFor="let path of this.selectedRow.images" [src]="path" (click)="handlePreviewImg(path)" />
+  <div class="img-box" *ngIf="selectedRow.images && selectedRow.images.length > 0">
+    <img *ngFor="let path of selectedRow.images" [src]="path" (click)="handlePreviewImg(path)" />
   </div>
   <p style="margin-top: 20px"><strong>报修跟踪:</strong></p>
-  <div class="fix-follow-box" *ngIf="this.selectedRow.bugfixProcess && this.selectedRow.bugfixProcess.length > 0">
-    <div class="each" *ngFor="let process of this.selectedRow.bugfixProcess; let i = index">
+  <div class="fix-follow-box" *ngIf="selectedRow.vos && selectedRow.vos.length > 0">
+    <div class="each" *ngFor="let process of selectedRow.vos; let i = index">
       <div class="main">
         <img *ngIf="process.processPersonImage" [src]="process.processPersonImage"
           style="width: 80px;height: 80px;border-radius: 40px" />
@@ -62,19 +62,19 @@
               [ngClass]="{ red: i <= process.evaluateStar, grey: i > process.evaluateStar }"></i>
           </span>
         </p>
-        <p style="margin: 0;padding: 5px" *ngIf="process.dateCreated">
-          {{ process.dateCreated | date: 'yyyy-MM-dd HH:mm:ss' }}
+        <p style="margin: 0;padding: 5px" *ngIf="process.time">
+          {{ process.time | date: 'yyyy-MM-dd HH:mm:ss' }}
         </p>
         <p style="width:100%;text-align:center;margin: 0;padding: 5px" *ngIf="process.description">
-          {{ process.description }}
+          {{ process.descr }}
         </p>
-        <ng-container *ngIf="!!!process.description"> </ng-container>
+        <ng-container *ngIf="!!!process.descr"> </ng-container>
         <div style="width: 100%;overflow: hidden" *ngIf="process.images && process.images.length > 0">
           <img *ngFor="let path of process.images" [src]="path" style="width: 27%;height:60px;margin:2%;cursor: zoom-in"
             (click)="handlePreviewImg(path)" />
         </div>
       </div>
-      <div class="arrow" *ngIf="i < this.selectedRow.bugfixProcess.length - 1">
+      <div class="arrow" *ngIf="i < selectedRow.vos.length - 1">
         <i class="anticon anticon-double-right"></i>
       </div>
     </div>
