@@ -193,6 +193,12 @@ export class RestService {
   deleteRepair = (params: any) => this.http.post(`${PREFIX}repair/delete`, params);
   // 报修管理-详情
   getRepairInfo = (id: number) => this.http.get(`${PREFIX}repair/info?id=${id}`);
+
+  // 快递管理 - 列表
+  getExpressList = (params: any) =>
+    this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 快递管理-删除
+  deleteExpress = (params: any) => this.http.post(`${PREFIX}logistics/delete`, params);
 }
 
 function paramsWithExtraParams(params, community) {

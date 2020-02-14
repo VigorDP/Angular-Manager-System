@@ -13,9 +13,6 @@ import { SettingsService } from '@delon/theme';
 import { STChange, STColumn, STComponent } from '@delon/abc';
 import { RestService } from '@app/service';
 import { data, defaultQuery, loading, pages, query, selectedRow, selectedRows, total } from '@app/common';
-import * as dayjs from 'dayjs';
-import { IfStmt } from '@angular/compiler';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   templateUrl: './index.component.html',
@@ -31,34 +28,22 @@ export class ExpressComponent implements OnInit, OnDestroy {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '订单编号', index: 'title' },
-    { title: '预约人姓名', index: 'creator' },
-    { title: '房间地址', index: 'tag' },
-    {
-      title: '联系方式',
-      index: 'status',
-      format: item => this.statusList.filter(i => i.value === item.status)[0].label,
-    },
-    { title: '快递方式', index: 'count' },
-    { title: '期望上门时间', index: 'gmtCreate' },
-    { title: '物品类型', index: 'gmtCreate' },
-    { title: '留言', index: 'gmtCreate' },
-    { title: '订单状态', index: 'gmtCreate' },
-    { title: '支付状态', index: 'gmtCreate' },
-    { title: '下单时间', index: 'gmtCreate' },
+    { title: '订单编号', index: 'orderNo' },
+    { title: '预约人姓名', index: 'name' },
+    { title: '房间地址', index: 'address' },
+    { title: '联系方式', index: 'tel' },
+    { title: '快递方式', index: 'expressWay' },
+    { title: '期望上门时间', index: 'arrived' },
+    { title: '物品类型', index: 'cate' },
+    { title: '留言', index: 'descr' },
+    { title: '订单状态', index: 'orderStatus' },
+    { title: '支付状态', index: 'paid' },
+    { title: '下单时间', index: 'time' },
     {
       title: '操作',
       fixed: 'right',
       width: 100,
       buttons: [
-        {
-          text: '查看',
-          icon: 'eye',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.addOrEditOrView(this.viewTpl, 'view');
-          },
-        },
         {
           text: '删除',
           icon: 'delete',
@@ -78,23 +63,25 @@ export class ExpressComponent implements OnInit, OnDestroy {
       ],
     },
   ];
-  showTagManager = false;
-  tagList = [];
-  statusList = [{ value: 0, label: '未开始' }, { value: 1, label: '进行中' }, { value: 2, label: '已结束' }];
+  expressList = [
+    {
+      label: '普件',
+      value: '普件',
+    },
+    {
+      label: '快件',
+      value: '快件',
+    },
+    {
+      label: '物流',
+      value: '物流',
+    },
+  ];
+  sub = null;
 
   @ViewChild('st', { static: true })
   st: STComponent;
-  @ViewChild('modalContent', { static: true })
-  tpl: TemplateRef<any>;
-  @ViewChild('viewContent', { static: true })
-  viewTpl: TemplateRef<any>;
-  @ViewChild('content', { static: false })
-  content: ElementRef;
 
-  image = ''; // 小区效果图
-  dateRange = null;
-  dateRange1 = null;
-  sub = null;
   constructor(
     public api: RestService,
     public msg: NzMessageService,
@@ -104,14 +91,12 @@ export class ExpressComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_ACTIVITY' };
+    this.query = { ...defaultQuery, expressWay: '普件' };
     if (this.settings.app.community) {
       this.getData();
-      this.getTagData();
     }
     this.sub = this.settings.notify.subscribe(() => {
       this.getData();
-      this.getTagData();
     });
   }
 
@@ -119,24 +104,10 @@ export class ExpressComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  dateRangeChange(e) {
-    let startDate = null;
-    let endDate = null;
-    if (this.dateRange) {
-      startDate = `${dayjs(this.dateRange[0]).format('YYYY-MM-DD')} 00:00:00`;
-      endDate = `${dayjs(this.dateRange[1]).format('YYYY-MM-DD')} 23:59:59`;
-    }
-    this.query = {
-      ...this.query,
-      startDate,
-      endDate,
-    };
-  }
-
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getActivityList(this.query).subscribe(res => {
+    this.api.getExpressList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -169,85 +140,9 @@ export class ExpressComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.query = { ...defaultQuery, cate: 'SOCIAL_ACTIVITY' };
+    this.query = { ...defaultQuery, expressWay: '普件' };
     this.loading = true;
     setTimeout(() => this.getData(1));
-  }
-
-  addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
-    const modal = this.modalSrv.create({
-      nzTitle: type === 'add' ? '新建活动' : type === 'edit' ? '编辑活动' : '查看活动',
-      nzContent: tpl,
-      nzOkDisabled: type === 'view',
-      nzWidth: 800,
-      nzOnOk: () => {
-        if (this.checkValid()) {
-          return new Promise(resolve => {
-            this.api
-              .saveActivity({
-                ...this.selectedRow,
-              })
-              .subscribe(res => {
-                if (res.code === '0') {
-                  resolve();
-                  this.getData();
-                } else {
-                  resolve(false);
-                }
-              });
-          });
-        } else {
-          return false;
-        }
-      },
-    });
-    modal.afterOpen.subscribe(() => {
-      if (type === 'edit' || type === 'view') {
-        this.api.getActivityInfo(this.selectedRow.id).subscribe(res => {
-          if (res.code === '0') {
-            this.selectedRow = { ...this.selectedRow, ...res.data };
-            if (type === 'view') {
-              this.content.nativeElement.innerHTML = this.selectedRow.content;
-            }
-          }
-        });
-      }
-    });
-  }
-
-  checkValid() {
-    const { title, descr, content, tag } = this.selectedRow;
-    if (!title) {
-      this.msg.info('请输入活动标题');
-      return false;
-    }
-    // if (!this.image) {
-    //   this.msg.info('请上传标题图片');
-    //   return false;
-    // }
-    if (!tag) {
-      this.msg.info('请选择标签');
-      return false;
-    }
-    if (!descr) {
-      this.msg.info('情输入活动概述');
-      return false;
-    }
-    if (!this.dateRange1) {
-      this.msg.info('请选择活动起始时间');
-      return false;
-    }
-    this.selectedRow.startDate = `${dayjs(this.dateRange1[0]).format('YYYY-MM-DD HH:mm:ss')}`;
-    this.selectedRow.endDate = `${dayjs(this.dateRange1[1]).format('YYYY-MM-DD HH:mm:ss')}`;
-    if (!content) {
-      this.msg.info('请输入活动内容');
-      return false;
-    }
-    return true;
-  }
-
-  getImgUrl(e) {
-    this.image = e[0];
   }
 
   delete() {
@@ -255,35 +150,10 @@ export class ExpressComponent implements OnInit, OnDestroy {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteActivity([this.selectedRow.id]).subscribe(() => {
+        this.api.deleteExpress([this.selectedRow.id]).subscribe(() => {
           this.getData();
         });
       },
-    });
-  }
-
-  batchDelete() {
-    if (!this.selectedRows.length) {
-      this.msg.info('请选择删除项');
-      return false;
-    }
-    const ids = this.selectedRows.map(item => item.id);
-    this.modalSrv.confirm({
-      nzTitle: '是否确定删除选中项？',
-      nzOkType: 'danger',
-      nzOnOk: () => {
-        this.api.deleteActivity(ids).subscribe(() => {
-          this.getData();
-          this.st.clearCheck();
-        });
-      },
-    });
-  }
-
-  getTagData() {
-    this.api.getTagList({ cate: this.query.cate }).subscribe(res => {
-      this.tagList = res.data || [];
-      this.cdr.detectChanges();
     });
   }
 }
