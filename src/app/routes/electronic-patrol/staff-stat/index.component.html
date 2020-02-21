@@ -1,0 +1,44 @@
+<page-header title="巡更人员统计" autoBreadcrumb="false" [action]="action">
+  <ng-template #action>
+    <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
+      <i nz-icon nzType="plus"></i>
+      <span>新建结构</span>
+    </button>
+  </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+</nz-card>
+
+<ng-template #modalContent>
+  <form nz-form se-container labelWidth="130">
+    <se label="楼栋编号" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingNo" name="buildingNo" />
+    </se>
+    <se label="楼栋名称" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingName" name="buildingName" />
+    </se>
+    <se label="地上楼层数" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.upstairFloors" name="upstairFloors" />
+    </se>
+    <se label="地下楼层数" col="2">
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.downstairFloors" name="downstairFloors" />
+    </se>
+    <se label="每层户数" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.households" name="households" />
+    </se>
+    <se label="楼栋单元数量" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingUnit" name="buildingUnit" />
+    </se>
+    <se label="楼栋类型" col="2" required>
+      <nz-select [(ngModel)]="selectedRow.cate" name="cate" [nzPlaceHolder]="'请选择楼栋类别'">
+        <nz-option *ngFor="let i of buildingTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="备注" col="1">
+      <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>
+    </se>
+  </form>
+</ng-template>
