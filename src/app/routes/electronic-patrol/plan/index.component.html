@@ -2,10 +2,26 @@
   <ng-template #action>
     <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
-      <span>新建结构</span>
+      <span>新建巡更计划</span>
+    </button>
+    <button nz-button (click)="patchDelete()" [nzType]="'primary'">
+      <i nz-icon nzType="delete"></i>
+      <span>批量删除</span>
     </button>
   </ng-template>
 </page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="130">
+    <se label="计划名称" col="3">
+      <input nz-input style="width:100%" placeholder="请输入计划名称" [(ngModel)]="selectedRow.buildingNo" name="buildingNo" />
+    </se>
+    <se col="3" labelWidth="0">
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
 
 <nz-card [nzBordered]="false">
   <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
@@ -14,31 +30,18 @@
 
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
-    <se label="楼栋编号" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingNo" name="buildingNo" />
+    <se label="计划名称" col="1" required>
+      <input nz-input style="width:100%" placeholder="请输入二维码名称,长度不超过20个字" [(ngModel)]="selectedRow.buildingNo"
+        name="buildingNo" />
     </se>
-    <se label="楼栋名称" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingName" name="buildingName" />
+    <se label="起止时间" col="1" required>
+      <nz-date-picker class="input" style="width:100%" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期"
+        [(ngModel)]="selectedRow.beginDate"></nz-date-picker>
     </se>
-    <se label="地上楼层数" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.upstairFloors" name="upstairFloors" />
-    </se>
-    <se label="地下楼层数" col="2">
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.downstairFloors" name="downstairFloors" />
-    </se>
-    <se label="每层户数" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.households" name="households" />
-    </se>
-    <se label="楼栋单元数量" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingUnit" name="buildingUnit" />
-    </se>
-    <se label="楼栋类型" col="2" required>
-      <nz-select [(ngModel)]="selectedRow.cate" name="cate" [nzPlaceHolder]="'请选择楼栋类别'">
-        <nz-option *ngFor="let i of buildingTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="备注" col="1">
-      <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>
+    <se label="巡更类型" col="1" required>
+      <nz-radio-group [(ngModel)]="selectedRow.type">
+        <label nz-radio [nzValue]="o.value" *ngFor="let o of genderList">{{ o.label}}</label>
+      </nz-radio-group>
     </se>
   </form>
 </ng-template>

@@ -43,36 +43,12 @@ export class RecordComponent implements OnInit, OnDestroy {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '楼栋名称', index: 'name' },
-    { title: '单元数量', index: 'buildingUnit' },
-    { title: '地上层数', index: 'upstairFloors' },
-    { title: '地下层数', index: 'downstairFloors' },
-    { title: '每层户数', index: 'households' },
-    { title: '楼栋类型', index: 'cate' },
-    { title: '备注', index: 'descr' },
-    {
-      title: '操作',
-      fixed: 'right',
-      width: 100,
-      buttons: [
-        {
-          text: '编辑',
-          icon: 'edit',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'edit');
-          },
-        },
-        {
-          text: '删除',
-          icon: 'delete',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.delete();
-          },
-        },
-      ],
-    },
+    { title: '时间', index: 'name' },
+    { title: '人员编号', index: 'buildingUnit' },
+    { title: '姓名', index: 'upstairFloors' },
+    { title: '路线名称', index: 'downstairFloors' },
+    { title: '巡更点名称', index: 'households' },
+    { title: '定位位置', index: 'cate' },
   ];
 
   @ViewChild('st', { static: true })

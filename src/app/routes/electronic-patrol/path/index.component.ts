@@ -43,13 +43,14 @@ export class PathComponent implements OnInit, OnDestroy {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '楼栋名称', index: 'name' },
-    { title: '单元数量', index: 'buildingUnit' },
-    { title: '地上层数', index: 'upstairFloors' },
-    { title: '地下层数', index: 'downstairFloors' },
-    { title: '每层户数', index: 'households' },
-    { title: '楼栋类型', index: 'cate' },
-    { title: '备注', index: 'descr' },
+    { title: '', index: 'id', type: 'checkbox' },
+    { title: '路线名称', index: 'name' },
+    { title: '计划名称', index: 'buildingUnit' },
+    { title: '巡更计划', index: 'upstairFloors' },
+    { title: '巡更对象', index: 'downstairFloors' },
+    { title: '巡更点顺序', index: 'households' },
+    { title: '巡更点名称', index: 'cate' },
+    { title: '状态', index: 'descr' },
     {
       title: '操作',
       fixed: 'right',
@@ -69,6 +70,14 @@ export class PathComponent implements OnInit, OnDestroy {
           click: (item: any) => {
             this.selectedRow = item;
             this.delete();
+          },
+        },
+        {
+          text: '停用',
+          icon: 'stop',
+          click: (item: any) => {
+            this.selectedRow = item;
+            this.stop();
           },
         },
       ],
@@ -158,7 +167,7 @@ export class PathComponent implements OnInit, OnDestroy {
       });
     }
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增结构' : '编辑结构',
+      nzTitle: type === 'add' ? '新增巡更路线' : '编辑巡更路线',
       nzContent: tpl,
       nzOkDisabled: type === 'view',
       nzWidth: 800,
@@ -192,6 +201,10 @@ export class PathComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  patchDelete() {}
+
+  stop() {}
 
   checkValid() {
     const { buildingName, buildingNo, upstairFloors, households, buildingUnit, cate } = this.selectedRow;

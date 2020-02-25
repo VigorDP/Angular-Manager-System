@@ -43,36 +43,14 @@ export class StaffStatComponent implements OnInit, OnDestroy {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '楼栋名称', index: 'name' },
-    { title: '单元数量', index: 'buildingUnit' },
-    { title: '地上层数', index: 'upstairFloors' },
-    { title: '地下层数', index: 'downstairFloors' },
-    { title: '每层户数', index: 'households' },
-    { title: '楼栋类型', index: 'cate' },
-    { title: '备注', index: 'descr' },
-    {
-      title: '操作',
-      fixed: 'right',
-      width: 100,
-      buttons: [
-        {
-          text: '编辑',
-          icon: 'edit',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.addOrEditOrView(this.tpl, 'edit');
-          },
-        },
-        {
-          text: '删除',
-          icon: 'delete',
-          click: (item: any) => {
-            this.selectedRow = item;
-            this.delete();
-          },
-        },
-      ],
-    },
+    { title: '人员编号', index: 'name' },
+    { title: '计划名称', index: 'buildingUnit' },
+    { title: '路线名称', index: 'upstairFloors' },
+    { title: '统计时间', index: 'downstairFloors' },
+    { title: '应巡次数', index: 'households' },
+    { title: '实巡次数', index: 'cate' },
+    { title: '缺勤次数', index: 'descr' },
+    { title: '巡更对象', index: 'descr' },
   ];
 
   @ViewChild('st', { static: true })

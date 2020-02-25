@@ -43,21 +43,19 @@ export class QrComponent implements OnInit, OnDestroy {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '楼栋名称', index: 'name' },
-    { title: '单元数量', index: 'buildingUnit' },
-    { title: '地上层数', index: 'upstairFloors' },
-    { title: '地下层数', index: 'downstairFloors' },
-    { title: '每层户数', index: 'households' },
-    { title: '楼栋类型', index: 'cate' },
-    { title: '备注', index: 'descr' },
+    { title: '', index: 'id', type: 'checkbox' },
+    { title: '二维码名称', index: 'name' },
+    { title: '二维码编号', index: 'buildingUnit' },
+    { title: '创建时间', index: 'upstairFloors' },
+    { title: '二维码', index: 'downstairFloors' },
     {
       title: '操作',
       fixed: 'right',
       width: 100,
       buttons: [
         {
-          text: '编辑',
-          icon: 'edit',
+          text: '下载',
+          icon: 'download',
           click: (item: any) => {
             this.selectedRow = item;
             this.addOrEditOrView(this.tpl, 'edit');
@@ -158,7 +156,7 @@ export class QrComponent implements OnInit, OnDestroy {
       });
     }
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增结构' : '编辑结构',
+      nzTitle: type === 'add' ? '新增二维码' : '编辑二维码',
       nzContent: tpl,
       nzOkDisabled: type === 'view',
       nzWidth: 800,
@@ -192,6 +190,12 @@ export class QrComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  patchDelete() {}
+
+  patchSave() {}
+
+  allSave() {}
 
   checkValid() {
     const { buildingName, buildingNo, upstairFloors, households, buildingUnit, cate } = this.selectedRow;

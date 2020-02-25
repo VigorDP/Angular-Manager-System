@@ -2,7 +2,19 @@
   <ng-template #action>
     <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
       <i nz-icon nzType="plus"></i>
-      <span>新建结构</span>
+      <span>新建二维码</span>
+    </button>
+    <button nz-button (click)="patchDelete()" [nzType]="'primary'">
+      <i nz-icon nzType="delete"></i>
+      <span>批量删除</span>
+    </button>
+    <button nz-button (click)="patchSave()" [nzType]="'primary'">
+      <i nz-icon nzType="download"></i>
+      <span>批量下载</span>
+    </button>
+    <button nz-button (click)="allSave()" [nzType]="'primary'">
+      <i nz-icon nzType="download"></i>
+      <span>全部下载</span>
     </button>
   </ng-template>
 </page-header>
@@ -14,31 +26,9 @@
 
 <ng-template #modalContent>
   <form nz-form se-container labelWidth="130">
-    <se label="楼栋编号" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingNo" name="buildingNo" />
-    </se>
-    <se label="楼栋名称" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingName" name="buildingName" />
-    </se>
-    <se label="地上楼层数" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.upstairFloors" name="upstairFloors" />
-    </se>
-    <se label="地下楼层数" col="2">
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.downstairFloors" name="downstairFloors" />
-    </se>
-    <se label="每层户数" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.households" name="households" />
-    </se>
-    <se label="楼栋单元数量" col="2" required>
-      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.buildingUnit" name="buildingUnit" />
-    </se>
-    <se label="楼栋类型" col="2" required>
-      <nz-select [(ngModel)]="selectedRow.cate" name="cate" [nzPlaceHolder]="'请选择楼栋类别'">
-        <nz-option *ngFor="let i of buildingTypeList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
-      </nz-select>
-    </se>
-    <se label="备注" col="1">
-      <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>
+    <se label="二维码名称" col="1" required>
+      <input nz-input style="width:100%" placeholder="请输入二维码名称,长度不超过15" [(ngModel)]="selectedRow.buildingNo"
+        name="buildingNo" />
     </se>
   </form>
 </ng-template>

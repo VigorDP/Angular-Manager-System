@@ -43,13 +43,11 @@ export class PlanComponent implements OnInit, OnDestroy {
   selectedRows = selectedRows;
   selectedRow = selectedRow;
   columns: STColumn[] = [
-    { title: '楼栋名称', index: 'name' },
-    { title: '单元数量', index: 'buildingUnit' },
-    { title: '地上层数', index: 'upstairFloors' },
-    { title: '地下层数', index: 'downstairFloors' },
-    { title: '每层户数', index: 'households' },
-    { title: '楼栋类型', index: 'cate' },
-    { title: '备注', index: 'descr' },
+    { title: '', index: 'id', type: 'checkbox' },
+    { title: '计划名称', index: 'name' },
+    { title: '计划类型', index: 'buildingUnit' },
+    { title: '巡更计划', index: 'upstairFloors' },
+    { title: '时间段', index: 'downstairFloors' },
     {
       title: '操作',
       fixed: 'right',
@@ -158,7 +156,7 @@ export class PlanComponent implements OnInit, OnDestroy {
       });
     }
     this.modalSrv.create({
-      nzTitle: type === 'add' ? '新增结构' : '编辑结构',
+      nzTitle: type === 'add' ? '新增巡更计划' : '编辑巡更计划',
       nzContent: tpl,
       nzOkDisabled: type === 'view',
       nzWidth: 800,
@@ -192,6 +190,8 @@ export class PlanComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  patchDelete() {}
 
   checkValid() {
     const { buildingName, buildingNo, upstairFloors, households, buildingUnit, cate } = this.selectedRow;

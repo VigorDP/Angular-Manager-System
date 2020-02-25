@@ -18,6 +18,7 @@ import {
   PlusSquareOutline,
   MinusSquareOutline,
   GlobalOutline,
+  StopOutline,
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS = [
@@ -38,4 +39,5 @@ export const ICONS = [
   PlusSquareOutline,
   MinusSquareOutline,
   GlobalOutline,
+  StopOutline,
 ];
