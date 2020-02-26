@@ -29,7 +29,9 @@
             "styles": [
               "src/styles.less"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/qrious/dist/qrious.min.js"
+            ]
           },
           "configurations": {
             "production": {

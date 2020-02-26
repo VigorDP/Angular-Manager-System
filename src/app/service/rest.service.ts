@@ -199,6 +199,49 @@ export class RestService {
     this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
   // 快递管理-删除
   deleteExpress = (params: any) => this.http.post(`${PREFIX}logistics/delete`, params);
+
+  // 电子巡更-二维码管理-列表
+  getPetrolQrCodeList = (params: any) =>
+    this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 电子巡更-二维码管理-删除
+  deletePetrolQrCode = (params: any) => this.http.post(`${PREFIX}logistics/delete`, params);
+  // 电子巡更-二维码管理-新增
+  savePetrolQrCode = (params: any) =>
+    this.http.post(`${PREFIX}orgStructure/save`, paramsWithExtraParams(params, this.settings.app.community));
+
+  // 电子巡更-巡更计划-列表
+  getPetrolPlanList = (params: any) =>
+    this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 电子巡更-巡更计划-删除
+  deletePetrolPlan = (params: any) => this.http.post(`${PREFIX}logistics/delete`, params);
+  // 电子巡更-巡更计划-新增
+  savePetrolPlan = (params: any) =>
+    this.http.post(`${PREFIX}orgStructure/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 电子巡更-巡更计划-详情
+  getPetrolPlanInfo = (id: number) => this.http.get(`${PREFIX}repair/info?id=${id}`);
+
+  // 电子巡更-巡更路线-列表
+  getPetrolPathList = (params: any) =>
+    this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
+  // 电子巡更-巡更路线-删除
+  deletePetrolPath = (params: any) => this.http.post(`${PREFIX}logistics/delete`, params);
+  // 电子巡更-巡更路线-新增
+  savePetrolPath = (params: any) =>
+    this.http.post(`${PREFIX}orgStructure/save`, paramsWithExtraParams(params, this.settings.app.community));
+  // 电子巡更-巡更路线-详情
+  getPetrolPathInfo = (id: number) => this.http.get(`${PREFIX}repair/info?id=${id}`);
+
+  // 电子巡更-巡更记录-列表
+  getPetrolRecordList = (params: any) =>
+    this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
+
+  // 电子巡更-巡更路线统计-列表
+  getPetrolPathStatList = (params: any) =>
+    this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
+
+  // 电子巡更-巡更人员统计-列表
+  getPetrolStaffStatList = (params: any) =>
+    this.http.post(`${PREFIX}logistics/list`, paramsWithExtraParams(params, this.settings.app.community));
 }
 
 function paramsWithExtraParams(params, community) {

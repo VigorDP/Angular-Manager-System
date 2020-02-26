@@ -47,7 +47,7 @@ export class QrComponent implements OnInit, OnDestroy {
     { title: '二维码名称', index: 'name' },
     { title: '二维码编号', index: 'buildingUnit' },
     { title: '创建时间', index: 'upstairFloors' },
-    { title: '二维码', index: 'downstairFloors' },
+    { title: '二维码', index: 'location' },
     {
       title: '操作',
       fixed: 'right',
@@ -109,10 +109,18 @@ export class QrComponent implements OnInit, OnDestroy {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getBuildingList(this.query).subscribe(res => {
+    this.api.getPetrolQrCodeList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
+      this.data.forEach(item => {
+        const o = {
+          id: item.id,
+          type: 'hmf',
+          location: item.location,
+        };
+        item.qrdata = JSON.stringify(o);
+      });
       this.total = totalItem;
       this.pages = {
         ...this.pages,
@@ -148,36 +156,98 @@ export class QrComponent implements OnInit, OnDestroy {
   }
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
-    if (type === 'edit') {
-      this.api.getBuildingInfo({ id: this.selectedRow.id }).subscribe(res => {
-        if (res.code === '0') {
-          this.selectedRow = { ...this.selectedRow, ...res.data };
-        }
-      });
-    }
     this.modalSrv.create({
       nzTitle: type === 'add' ? '新增二维码' : '编辑二维码',
-      nzContent: tpl,
-      nzOkDisabled: type === 'view',
       nzWidth: 800,
-      nzOnOk: () => {
-        if (this.checkValid()) {
-          return new Promise(resolve => {
-            this.api.saveBuilding(this.selectedRow).subscribe(res => {
-              if (res.code === '0') {
-                resolve();
-                this.getData();
-              } else {
-                resolve(false);
-              }
-            });
-          });
-        } else {
-          return false;
-        }
-      },
+      nzContent: tpl,
+      nzFooter: !this.selectedRow.qrdata
+        ? [
+            {
+              label: '生成二维码',
+              type: 'primary',
+              onClick: this.handleOk.bind(this),
+            },
+          ]
+        : [
+            {
+              label: '立即保存',
+              type: 'primary',
+              onClick: this.saveImg.bind(this),
+            },
+            {
+              label: '稍后保存',
+              type: 'primary',
+              onClick: () => {
+                return new Promise(res => res());
+              },
+            },
+            {
+              label: '继续生成',
+              type: 'primary',
+              onClick: () => (this.selectedRow = {}),
+            },
+          ],
     });
   }
+
+  public handleOk(): any {
+    if (this.checkValid()) {
+      return new Promise(resolve => {
+        this.api.savePetrolQrCode(this.selectedRow).subscribe(res => {
+          if (res.code === '0') {
+            resolve();
+            const data = {
+              type: 'hmf',
+              ...res.data,
+            };
+            this.selectedRow.qrdata = JSON.stringify(data);
+            this.selectedRow.id = res.data.id;
+          } else {
+            resolve(false);
+          }
+        });
+      });
+    } else {
+      return false;
+    }
+  }
+
+  private checkValid() {
+    if (!this.selectedRow.location || !this.selectedRow.location.trim()) {
+      this.msg.info('二维码名称不能为空');
+      return;
+    }
+    return true;
+  }
+
+  // 下载二维码图片
+  public saveImg(src) {
+    setTimeout(() => {
+      const image = new Image();
+      // 解决跨域 Canvas 污染问题
+      image.setAttribute('crossOrigin', 'anonymous');
+      image.src = src;
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const url = canvas.toDataURL('image/png');
+        // 生成一个a元素
+        const a = document.createElement('a');
+        // 创建一个单击事件
+        const event = new MouseEvent('click');
+        // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
+        a.download = this.selectedRow.location || '下载图片名称';
+        // 将生成的URL设置为a.href属性
+        a.href = url;
+        // 触发a的单击事件
+        a.dispatchEvent(event);
+      };
+    }, 0);
+  }
+
   delete() {
     this.modalSrv.confirm({
       nzTitle: '是否确定删除该项？',
@@ -191,38 +261,30 @@ export class QrComponent implements OnInit, OnDestroy {
     });
   }
 
-  patchDelete() {}
+  batchDelete() {
+    if (!this.selectedRows.length) {
+      this.msg.info('请选择删除项');
+      return false;
+    }
+    const ids = this.selectedRows.map(item => item.id);
+    this.modalSrv.confirm({
+      nzTitle: '是否确认删除？',
+      nzOkType: 'danger',
+      nzOnOk: () => {
+        this.api.deleteFeeStandard(ids).subscribe(() => {
+          this.getData();
+          this.st.clearCheck();
+        });
+      },
+    });
+  }
 
-  patchSave() {}
+  batchSave() {
+    if (!this.selectedRows.length) {
+      this.msg.info('请选择下载项');
+      return false;
+    }
+  }
 
   allSave() {}
-
-  checkValid() {
-    const { buildingName, buildingNo, upstairFloors, households, buildingUnit, cate } = this.selectedRow;
-    if (!buildingNo) {
-      this.msg.info('请输入楼栋编号');
-      return false;
-    }
-    if (!buildingName) {
-      this.msg.info('请输入楼栋名称');
-      return false;
-    }
-    if (!upstairFloors) {
-      this.msg.info('请输入地上楼层数');
-      return false;
-    }
-    if (!households) {
-      this.msg.info('请输入每层户数');
-      return false;
-    }
-    if (!buildingUnit) {
-      this.msg.info('请输入楼栋单元数量');
-      return false;
-    }
-    if (!cate) {
-      this.msg.info('请输入楼栋类别');
-      return false;
-    }
-    return true;
-  }
 }

@@ -157,3 +157,85 @@ export const RalationList = [
     label: '其他',
   },
 ];
+
+export const WeekList = [
+  {
+    value: '星期一',
+    label: '1',
+  },
+  {
+    value: '星期二',
+    label: '2',
+  },
+  {
+    value: '星期三',
+    label: '3',
+  },
+  {
+    value: '星期四',
+    label: '4',
+  },
+  {
+    value: '星期五',
+    label: '5',
+  },
+  {
+    value: '星期六',
+    label: '6',
+  },
+  {
+    value: '星期日',
+    label: '7',
+  },
+];
+
+export const MonthList = [
+  {
+    value: '一月',
+    label: '1',
+  },
+  {
+    value: '二月',
+    label: '2',
+  },
+  {
+    value: '三月',
+    label: '3',
+  },
+  {
+    value: '四月',
+    label: '4',
+  },
+  {
+    value: '五月',
+    label: '5',
+  },
+  {
+    value: '六月',
+    label: '6',
+  },
+  {
+    value: '七月',
+    label: '7',
+  },
+  {
+    value: '八月',
+    label: '6',
+  },
+  {
+    value: '九月',
+    label: '7',
+  },
+  {
+    value: '十月',
+    label: '6',
+  },
+  {
+    value: '十一月',
+    label: '7',
+  },
+  {
+    value: '十二月',
+    label: '6',
+  },
+];

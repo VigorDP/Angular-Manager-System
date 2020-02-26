@@ -12,9 +12,8 @@ import { _HttpClient, SettingsService } from '@delon/theme';
 import { STComponent, STChange, STColumn } from '@delon/abc';
 import { RestService } from '@app/service';
 import {
-  ProvinceList,
-  getCityOrAreaListByCode,
-  GenderList,
+  WeekList,
+  MonthList,
   query,
   defaultQuery,
   pages,
@@ -25,10 +24,6 @@ import {
   selectedRow,
 } from '@app/common';
 
-const BuildingTypeList = [
-  { label: '高层', value: 'HIGH' },
-  { label: '别墅', value: 'VILLA' },
-];
 @Component({
   templateUrl: './index.component.html',
   styleUrls: ['../../../common/styles/common.css'],
@@ -78,11 +73,23 @@ export class PlanComponent implements OnInit, OnDestroy {
   @ViewChild('modalContent', { static: true })
   tpl: TemplateRef<any>;
 
-  genderList = GenderList;
-  provinceList = ProvinceList;
-  buildingTypeList = BuildingTypeList;
-  cityList = [];
-  areaList = [];
+  dateRangeList = [[]];
+  weekList = WeekList;
+  monthList = MonthList;
+  patrolTypeList = [
+    {
+      label: '按日期',
+      value: 'BY_DAY',
+    },
+    {
+      label: '按星期',
+      value: 'BY_WEEK',
+    },
+    {
+      label: '按月份',
+      value: 'BY_MONTH',
+    },
+  ];
   sub = null;
   constructor(
     private api: RestService,
@@ -109,7 +116,7 @@ export class PlanComponent implements OnInit, OnDestroy {
   getData(pageIndex?: number) {
     this.loading = true;
     this.query.pageNo = pageIndex ? pageIndex : this.query.pageNo;
-    this.api.getBuildingList(this.query).subscribe(res => {
+    this.api.getPetrolPlanList(this.query).subscribe(res => {
       this.loading = false;
       const { rows, total: totalItem } = res.data || { rows: [], total: 0 };
       this.data = rows;
@@ -149,7 +156,7 @@ export class PlanComponent implements OnInit, OnDestroy {
 
   addOrEditOrView(tpl: TemplateRef<{}>, type: 'add' | 'edit' | 'view') {
     if (type === 'edit') {
-      this.api.getBuildingInfo({ id: this.selectedRow.id }).subscribe(res => {
+      this.api.getPetrolPlanInfo(this.selectedRow.id).subscribe(res => {
         if (res.code === '0') {
           this.selectedRow = { ...this.selectedRow, ...res.data };
         }
@@ -163,7 +170,7 @@ export class PlanComponent implements OnInit, OnDestroy {
       nzOnOk: () => {
         if (this.checkValid()) {
           return new Promise(resolve => {
-            this.api.saveBuilding(this.selectedRow).subscribe(res => {
+            this.api.savePetrolPlan(this.selectedRow).subscribe(res => {
               if (res.code === '0') {
                 resolve();
                 this.getData();
@@ -183,7 +190,7 @@ export class PlanComponent implements OnInit, OnDestroy {
       nzTitle: '是否确定删除该项？',
       nzOkType: 'danger',
       nzOnOk: () => {
-        this.api.deleteBuilding([this.selectedRow.id]).subscribe(() => {
+        this.api.deletePetrolPlan([this.selectedRow.id]).subscribe(() => {
           this.getData();
           this.st.clearCheck();
         });
@@ -191,7 +198,23 @@ export class PlanComponent implements OnInit, OnDestroy {
     });
   }
 
-  patchDelete() {}
+  batchDelete() {
+    if (!this.selectedRows.length) {
+      this.msg.info('请选择删除项');
+      return false;
+    }
+    const ids = this.selectedRows.map(item => item.id);
+    this.modalSrv.confirm({
+      nzTitle: '是否确认删除？',
+      nzOkType: 'danger',
+      nzOnOk: () => {
+        this.api.deletePetrolPlan(ids).subscribe(() => {
+          this.getData();
+          this.st.clearCheck();
+        });
+      },
+    });
+  }
 
   checkValid() {
     const { buildingName, buildingNo, upstairFloors, households, buildingUnit, cate } = this.selectedRow;

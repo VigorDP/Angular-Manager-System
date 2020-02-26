@@ -4,7 +4,7 @@
       <i nz-icon nzType="plus"></i>
       <span>新建巡更计划</span>
     </button>
-    <button nz-button (click)="patchDelete()" [nzType]="'primary'">
+    <button nz-button (click)="batchDelete()" [nzType]="'primary'">
       <i nz-icon nzType="delete"></i>
       <span>批量删除</span>
     </button>
@@ -35,12 +35,23 @@
         name="buildingNo" />
     </se>
     <se label="起止时间" col="1" required>
-      <nz-date-picker class="input" style="width:100%" nzFormat="yyyy-MM-dd" nzPlaceHolder="开始日期"
-        [(ngModel)]="selectedRow.beginDate"></nz-date-picker>
+      <div *ngFor="let item of dateRangeList;index as i;" name="i">
+        <nz-range-picker [(ngModel)]="item" [name]="i"></nz-range-picker>
+        <button *ngIf="i < dateRangeList.length-1||dateRangeList.length===1" nz-button (click)="dateRangeList.push([])"
+          [nzType]="'primary'">
+          <i nz-icon nzType="plus"></i>
+          <span>增加</span>
+        </button>
+        <button *ngIf="i===dateRangeList.length-1&&dateRangeList.length>1" nz-button (click)="dateRangeList.splice(i,1)"
+          [nzType]="'primary'">
+          <i nz-icon nzType="delete"></i>
+          <span>删除</span>
+        </button>
+      </div>
     </se>
     <se label="巡更类型" col="1" required>
-      <nz-radio-group [(ngModel)]="selectedRow.type">
-        <label nz-radio [nzValue]="o.value" *ngFor="let o of genderList">{{ o.label}}</label>
+      <nz-radio-group [(ngModel)]="selectedRow.type" name="group">
+        <label nz-radio [nzValue]="o.value" *ngFor="let o of patrolTypeList">{{ o.label}}</label>
       </nz-radio-group>
     </se>
   </form>
