@@ -45,6 +45,12 @@ export const menus: Menu[] = [
           },
         ],
       },
+      {
+        text: '社区管理',
+        name: 'SOCIAL',
+        link: '/social',
+        icon: 'anticon-home',
+      },
     ],
   },
 ];
