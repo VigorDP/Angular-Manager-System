@@ -45,34 +45,6 @@ const routes: Routes = [
         path: 'social',
         loadChildren: () => import('./social/social.module').then(m => m.SocialModule),
       },
-      {
-        path: 'house',
-        loadChildren: () => import('./house/house.module').then(m => m.HouseModule),
-      },
-      {
-        path: 'electronic-patrol',
-        loadChildren: () => import('./electronic-patrol/patrol.module').then(m => m.PatrolModule),
-      },
-      {
-        path: 'people',
-        loadChildren: () => import('./people/people.module').then(m => m.PeopleModule),
-      },
-      {
-        path: 'fee',
-        loadChildren: () => import('./fee/fee.module').then(m => m.FeeModule),
-      },
-      {
-        path: 'announce',
-        loadChildren: () => import('./announce/announce.module').then(m => m.AnnounceModule),
-      },
-      {
-        path: 'government',
-        loadChildren: () => import('./government/government.module').then(m => m.GovernmentModule),
-      },
-      {
-        path: 'other',
-        loadChildren: () => import('./other/other.module').then(m => m.OtherModule),
-      },
     ],
   },
   {

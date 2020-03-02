@@ -26,5 +26,8 @@
     "*.json": "jsonc",
     ".prettierrc": "jsonc",
     ".stylelintrc": "jsonc"
-  }
+  },
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#68e768"
+    }
 }
