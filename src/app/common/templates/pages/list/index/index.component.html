@@ -1,0 +1,107 @@
+<page-header title="社区管理" autoBreadcrumb="false" [action]="action">
+  <ng-template #action>
+    <button nz-button (click)="selectedRow={};addOrEditOrView(modalContent,'add')" [nzType]="'primary'">
+      <i nz-icon nzType="plus"></i>
+      <span>新建社区</span>
+    </button>
+  </ng-template>
+</page-header>
+
+<nz-card [nzBordered]="false">
+  <form nz-form se-container labelWidth="130">
+    <se label="所属省份" col="4">
+      <nz-select [(ngModel)]="query.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleProvinceSelected($event)">
+        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属城市" col="4">
+      <nz-select [(ngModel)]="query.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleCitySelected($event)">
+        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属区/县" col="4">
+      <nz-select [(ngModel)]="query.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="社区名称" col="4">
+      <input nz-input placeholder="请输入" [(ngModel)]="query.name" name="name" />
+    </se>
+    <se label="社区负责人" col="4">
+      <input nz-input placeholder="请输入" [(ngModel)]="query.contact" name="contact " />
+    </se>
+    <se label="联系电话" col="4">
+      <input nz-input placeholder="请输入" [(ngModel)]="query.contactTel" name="contactTel" />
+    </se>
+    <se col="2">
+      <button nz-button [nzType]="'primary'" (click)="getData(1)" [nzLoading]="loading">查询</button>
+      <button nz-button (click)="reset()" [disabled]="loading">重置</button>
+    </se>
+  </form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+  <st #st [data]="data" [total]="total" [ps]="query.pageSize" [pi]="query.pageNo" [columns]="columns" [page]="pages"
+    [loading]="loading" (change)="stChange($event)" [scroll]="{x: '1000px'}"></st>
+</nz-card>
+
+<ng-template #modalContent>
+  <form nz-form se-container labelWidth="130">
+    <se label="社区名称" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.name" name="name" />
+    </se>
+    <se label="所属省份" col="2" required>
+      <nz-select [(ngModel)]="selectedRow.provinceCode" name="provinceCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleProvinceSelected($event)">
+        <nz-option *ngFor="let i of provinceList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属城市" col="2" required>
+      <nz-select [(ngModel)]="selectedRow.cityCode" name="cityCode" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="handleCitySelected($event)">
+        <nz-option *ngFor="let i of cityList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="所属区/县" col="2" required>
+      <nz-select [(ngModel)]="selectedRow.districtCode" name="districtCode" [nzPlaceHolder]="'请选择'">
+        <nz-option *ngFor="let i of areaList" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+      </nz-select>
+    </se>
+    <se label="项目详细地址" col="1">
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.address" name="address" (input)="searchChange()" />
+    </se>
+    <se label="" col="1">
+      <ngx-amap style="height:200px" [zoom]="16" [center]="center"></ngx-amap>
+    </se>
+    <se label="经度" col="2">
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.longitude" name="longitude" disabled />
+    </se>
+    <se label="纬度" col="2">
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.latitude" name="latitude" disabled />
+    </se>
+    <se label="管理面积" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.area" name="area" />
+    </se>
+    <se label="负责人" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.contact" name="contact" />
+    </se>
+    <se label="负责人手机号" col="2" required>
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.contactTel" name="contactTel" />
+    </se>
+    <se label="小区ID" col="2">
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.socialNo" name="socialNo" />
+    </se>
+    <se label="公安服务信息" col="2">
+      <input nz-input placeholder="请输入" [(ngModel)]="selectedRow.policeJson" name="policeJson" />
+    </se>
+    <se label="小区效果图" col="1">
+      <app-img-upload action="/hl/social/uploader/img/upload" (getImgUrl)="getImgUrl($event)"
+        [inputUrls]="[selectedRow.images]"></app-img-upload>
+    </se>
+    <se label="备注" col="1">
+      <textarea rows="4" nz-input [(ngModel)]="selectedRow.descr" name="descr"></textarea>
+    </se>
+  </form>
+</ng-template>
